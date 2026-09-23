@@ -1,0 +1,45 @@
+# Dependencies
+node_modules/
+
+# Production build artifacts
+dist/
+build/
+server.js
+server.cjs
+server.cjs.map
+
+# Android generated files & local SDK configs
+.gradle/
+local.properties
+android/local.properties
+android/.gradle/
+android/build/
+android/.kotlin/
+android/.idea/
+android/app/build/
+android/capacitor-cordova-android-plugins/build/
+
+# Vite dependency cache
+.vite/
+
+# Agent / local tool config
+.claude/
+
+# Application binaries
+*.apk
+*.aab
+releases/
+app/*.apk
+
+# IDE & OS files
+.idea/
+.vscode/
+.DS_Store
+*.log
+Thumbs.db
+
+# Environment configs
+.env
+.env.local
+.env.*.local
+!.env.example

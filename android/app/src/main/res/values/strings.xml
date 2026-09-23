@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">دانشجویار</string>
+    <string name="title_activity_main">دانشجویار</string>
+    <string name="package_name">ir.ac.tabrizu.student_assistant</string>
+    <string name="custom_url_scheme">ir.ac.tabrizu.student_assistant</string>
+</resources>

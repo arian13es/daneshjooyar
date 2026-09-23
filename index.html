@@ -1,0 +1,231 @@
+<!doctype html>
+<!--
+  ============================================================================
+  Project: دانشجویار دانشگاه تبریز (Tabriz University Student Assistant)
+  Author: Arian
+  Telegram: https://t.me/arian13es
+  Copyright © 2026 Arian. All rights reserved.
+  ============================================================================
+-->
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content" />
+    <meta name="theme-color" content="#f8fafc" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)" />
+    <title>سامانه دانشجویار تبریز | دانشگاه تبریز</title>
+    <link rel="preload" href="/fonts/vazirmatn.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+    <style>
+      @font-face {
+        font-family: 'Vazirmatn';
+        src: url('/fonts/vazirmatn.woff2') format('woff2');
+        font-weight: 100 900;
+        font-style: normal;
+        font-display: block;
+      }
+      @font-face {
+        font-family: 'Vazirmatn Variable';
+        src: url('/fonts/vazirmatn.woff2') format('woff2');
+        font-weight: 100 900;
+        font-style: normal;
+        font-display: block;
+      }
+      /*
+       * CRITICAL FIRST-PAINT CSS
+       * These styles render BEFORE any JS executes (~2ms parse).
+       * They must match the native Android splashBackground color exactly
+       * so the transition from OS SplashScreen → WebView is invisible.
+       *
+       * The motion logo animates via pure CSS keyframes on the compositor
+       * thread (transform + opacity only), guaranteeing 60fps even while
+       * the 672KB React bundle downloads and parses on the main thread.
+       */
+
+      /* 1. Page foundation — color-matched to native splashBackground */
+      html, body {
+        margin: 0; padding: 0;
+        width: 100%; height: 100%;
+        overflow: hidden;
+        font-family: 'Vazirmatn Variable', 'Vazirmatn', ui-sans-serif, system-ui, sans-serif;
+        background-color: #f8fafc;
+        color-scheme: light;
+      }
+      html.dark, html.dark body { background-color: #0f172a; color-scheme: dark; }
+      body, #root { background-color: inherit; width: 100%; height: 100%; }
+
+      /* 2. Splash overlay — full-screen container */
+      .splash-overlay {
+        position: fixed; inset: 0; z-index: 200;
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        gap: 1.5rem; user-select: none;
+        background-color: #f8fafc;
+        transition: opacity 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+        will-change: opacity;
+      }
+      html.dark .splash-overlay { background-color: #0f172a; }
+      .splash-overlay.is-fading { opacity: 0; pointer-events: none; }
+
+      /* 3. Splash content wrapper — smooth dissolve on exit */
+      .splash-content {
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center; gap: 1.25rem;
+        will-change: transform, opacity;
+        transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.5s ease-out;
+      }
+      .splash-overlay.is-fading .splash-content { transform: scale(0.97); opacity: 0; }
+
+      /* 4. Logo card — spring entrance + living breathing */
+      .splash-logo {
+        height: 7rem; width: 7rem;
+        background-color: #ffffff;
+        border-radius: 2.5rem; padding: 1.25rem;
+        box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+        border: 1px solid #f1f5f9;
+        display: flex; align-items: center; justify-content: center;
+        animation:
+          splash-spring-in 0.95s cubic-bezier(0.22, 1.2, 0.36, 1) both,
+          splash-breathe-loop 2.2s ease-in-out 0.95s infinite;
+        will-change: transform, box-shadow;
+        transform-origin: center center;
+      }
+      html.dark .splash-logo { background-color: #1e293b; border-color: #334155; }
+
+      /* 5. Logo image — fade-in + pulse */
+      .splash-logo-img {
+        height: 100%; width: 100%;
+        object-fit: contain; pointer-events: none;
+        animation:
+          splash-img-in 0.8s ease-out both,
+          splash-img-pulse 2.2s ease-in-out 0.95s infinite;
+        will-change: transform;
+      }
+
+      /* 6. Title block */
+      .splash-title {
+        text-align: center;
+        animation:
+          splash-title-in 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both,
+          splash-title-breathe 2.2s ease-in-out 0.95s infinite;
+        will-change: transform, opacity;
+      }
+      .splash-title h2 {
+        margin: 0; font-size: 1.5rem; font-weight: 900;
+        letter-spacing: -0.025em; color: #0f172a;
+        font-family: 'Vazirmatn', sans-serif;
+      }
+      html.dark .splash-title h2 { color: #ffffff; }
+      .splash-title p {
+        margin: 0.25rem 0 0 0; font-size: 0.75rem;
+        font-weight: 700; color: #94a3b8;
+        font-family: 'Vazirmatn', sans-serif;
+      }
+
+      /* 7. Accent bar */
+      .splash-bar {
+        width: 4rem; height: 0.25rem;
+        background-color: #6366f1; border-radius: 9999px;
+        animation:
+          splash-bar-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.25s both,
+          splash-bar-pulse 1.8s ease-in-out 0.95s infinite;
+        will-change: transform, opacity;
+        transform-origin: center center;
+      }
+
+      /* ── KEYFRAMES ── */
+
+      /* Elastic spring entrance: small → overshoot → contract → settle */
+      @keyframes splash-spring-in {
+        0%   { opacity: 0; transform: scale(0.35) translateY(32px); }
+        35%  { opacity: 1; transform: scale(1.18) translateY(-8px); }
+        55%  { transform: scale(0.90) translateY(4px); }
+        75%  { transform: scale(1.06) translateY(-2px); }
+        90%  { transform: scale(0.98) translateY(1px); }
+        100% { opacity: 1; transform: scale(1) translateY(0); }
+      }
+
+      /* Continuous breathing: gentle scale + float + shadow glow */
+      @keyframes splash-breathe-loop {
+        0%, 100% {
+          transform: scale(1) translateY(0);
+          box-shadow: 0 20px 30px -10px rgba(99,102,241,0.18), 0 8px 10px -6px rgba(0,0,0,0.08);
+        }
+        50% {
+          transform: scale(1.08) translateY(-6px);
+          box-shadow: 0 30px 45px -5px rgba(99,102,241,0.35), 0 12px 16px -4px rgba(0,0,0,0.15);
+        }
+      }
+
+      @keyframes splash-img-in {
+        0%   { opacity: 0; transform: scale(0.7); }
+        100% { opacity: 1; transform: scale(1); }
+      }
+      @keyframes splash-img-pulse {
+        0%, 100% { transform: scale(1); }
+        50%      { transform: scale(1.05); }
+      }
+      @keyframes splash-title-in {
+        from { opacity: 0; transform: translateY(14px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+      @keyframes splash-title-breathe {
+        0%, 100% { transform: translateY(0); opacity: 0.92; }
+        50%      { transform: translateY(-2px); opacity: 1; }
+      }
+      @keyframes splash-bar-in {
+        from { opacity: 0; transform: scaleX(0); }
+        to   { opacity: 1; transform: scaleX(1); }
+      }
+      @keyframes splash-bar-pulse {
+        0%, 100% { transform: scaleX(0.75); opacity: 0.65; }
+        50%      { transform: scaleX(1.25); opacity: 1; }
+      }
+    </style>
+    <script>
+      // Detect persisted theme BEFORE first paint to prevent color mismatch.
+      (function () {
+        try {
+          var raw = localStorage.getItem("tabriz_theme_v3");
+          var dark = raw === "dark" || (!raw && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          if (dark) document.documentElement.classList.add("dark");
+          var tc = document.querySelector('meta[name="theme-color"]:not([media])');
+          if (!tc) {
+            tc = document.createElement("meta");
+            tc.setAttribute("name", "theme-color");
+            document.head.appendChild(tc);
+          }
+          tc.setAttribute("content", dark ? "#0f172a" : "#f8fafc");
+          document.documentElement.style.backgroundColor = dark ? "#0f172a" : "#f8fafc";
+        } catch (e) { /* storage blocked — default light */ }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="native-splash">
+      <div class="splash-overlay">
+        <div class="splash-content">
+          <div class="splash-logo">
+            <img
+              src="./app_logo.jpg"
+              alt="دانشجویار"
+              class="splash-logo-img"
+              style="border-radius: 1rem;"
+              loading="eager"
+              decoding="sync"
+              fetchpriority="high"
+            />
+          </div>
+          <div class="splash-title">
+            <h2>دانشجویار</h2>
+            <p>دانشگاه تبریز</p>
+          </div>
+          <div class="splash-bar"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- React App Root -->
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

@@ -1,0 +1,17 @@
+{
+    "appId":  "ir.ac.tabrizu.student_assistant",
+    "appName":  "دانشجویار دانشگاه تبریز",
+    "webDir":  "dist",
+    "bundledWebRuntime":  false,
+    "plugins":  {
+                    "SplashScreen":  {
+                                         "launchShowDuration":  0,
+                                         "launchFadeOutDuration":  0
+                                     },
+                    "StatusBar":  {
+                                      "overlaysWebView":  true,
+                                      "style":  "DEFAULT"
+                                  }
+                },
+    "backgroundColor":  "#00000000"
+}

@@ -1,0 +1,225 @@
+/**
+ * ============================================================================
+ * Project: دانشجویار دانشگاه تبریز (Tabriz University Student Assistant)
+ * Author: Arian
+ * Telegram: https://t.me/arian13es
+ * Copyright © 2026 Arian. All rights reserved.
+ * ============================================================================
+ */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --app-height: 100%;
+  --font-sans: 'Vazirmatn Variable', 'Vazirmatn', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  height: 100dvh;
+  min-height: 100dvh;
+  overflow: hidden;
+  position: fixed;
+  font-family: var(--font-sans);
+  background-color: #f8fafc; /* slate-50 */
+  color: #0f172a;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  /* Fixed dark mode transition delay */
+  transition: none;
+  color-scheme: light;
+}
+
+html.dark, html.dark body {
+  background-color: #0f172a; /* slate-900 */
+  color: #f8fafc; /* slate-50 */
+  color-scheme: dark;
+}
+
+button, input, optgroup, select, textarea {
+  font-family: inherit;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Splash CSS is inlined in index.html for instant first-paint rendering */
+
+/* Safe-area insets utilities for modern notched / edge-to-edge screens */
+.safe-area-top {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Removed global backface-visibility to prevent severe GPU memory exhaustion and heavy loading */
+* {
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Hide custom scrollbars to prevent ugly white bar */
+*, *::-webkit-scrollbar {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+*::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+*::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+*::-webkit-scrollbar-thumb {
+  background: transparent !important;
+}
+
+/* Utility to completely hide scrollbars but keep functionality */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none !important;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
+/* Typography: Guarantee both Vazirmatn Variable and Vazirmatn load the font correctly */
+@font-face {
+  font-family: 'Vazirmatn';
+  src: url('/fonts/vazirmatn.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Vazirmatn Variable';
+  src: url('/fonts/vazirmatn.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Leaflet Persian Typography Unification (Strict Vazirmatn Variable) */
+.leaflet-container,
+.leaflet-container *,
+.leaflet-tooltip,
+.leaflet-popup,
+.leaflet-popup-content,
+.leaflet-control {
+  font-family: 'Vazirmatn Variable', Vazirmatn, var(--font-sans), system-ui, sans-serif !important;
+}
+
+/* Force Leaflet map engine and all coordinate panes to LTR to prevent mathematical projection distortion in RTL DOM */
+.leaflet-container,
+.leaflet-container *,
+.leaflet-pane,
+.leaflet-map-pane,
+.leaflet-marker-pane,
+.leaflet-tooltip-pane,
+.leaflet-popup-pane {
+  direction: ltr !important;
+}
+
+/* Base positioning fix for tooltips & popups in absolute coordinates */
+.leaflet-tooltip,
+.leaflet-popup {
+  left: 0 !important;
+  top: 0 !important;
+}
+
+/* Reset default leaflet-div-icon white box so custom HTML icons render clean */
+.leaflet-div-icon {
+  background: transparent !important;
+  border: none !important;
+}
+
+/* Modern Campus Tooltip - Adaptive Light & Dark */
+.leaflet-tooltip.campus-modern-tooltip {
+  background: rgba(255, 255, 255, 0.96) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  color: #0f172a !important;
+  border: 1px solid rgba(0, 0, 0, 0.12) !important;
+  border-radius: 12px !important;
+  padding: 5px 11px !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12) !important;
+  max-width: 280px !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  text-align: center !important;
+  line-height: 1.35 !important;
+  pointer-events: none !important;
+  z-index: 9999 !important;
+  direction: rtl !important;
+  unicode-bidi: isolate !important;
+}
+.leaflet-tooltip-top.campus-modern-tooltip::before {
+  border-top-color: rgba(255, 255, 255, 0.96) !important;
+}
+
+html.dark .leaflet-tooltip.campus-modern-tooltip {
+  background: rgba(15, 23, 42, 0.95) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  box-shadow: 0 8px 24px -2px rgba(0, 0, 0, 0.55) !important;
+}
+html.dark .leaflet-tooltip-top.campus-modern-tooltip::before {
+  border-top-color: rgba(15, 23, 42, 0.95) !important;
+}
+
+/* Modern 3D & Glowing Map Pin Effects */
+@keyframes pin-radar-wave {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(2.3);
+    opacity: 0;
+  }
+}
+
+.pin-radar-ring {
+  position: absolute;
+  inset: -6px;
+  border-radius: 9999px;
+  pointer-events: none;
+  animation: pin-radar-wave 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+.modern-map-pin {
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+  will-change: transform;
+}
+
+.modern-map-pin:hover {
+  transform: translateY(-4px) scale(1.15);
+}
+
+.modern-map-pin.is-selected {
+  transform: translateY(-6px) scale(1.25);
+}
+
+/* Route Polyline High-Visibility Glow */
+.route-polyline-glow {
+  filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.5));
+}
+
+
+

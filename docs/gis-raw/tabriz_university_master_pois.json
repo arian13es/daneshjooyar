@@ -1,0 +1,4461 @@
+[
+  {
+    "id": 12238816071,
+    "type": "node",
+    "name": "Cafe Walton | کافه والتون",
+    "name_en": "",
+    "amenity": "cafe",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "addr:city": "تبریز",
+      "addr:street": "مهرگان",
+      "amenity": "cafe",
+      "cuisine": "cafe",
+      "name": "Cafe Walton | کافه والتون",
+      "opening_hours": "Mo-Su 07:30-23:00",
+      "outdoor_seating": "no",
+      "phone": "+98 914 116 7311",
+      "website": "https://www.instagram.com/cafe.walton?igsh=dmpqcDZid21uZ2Nq"
+    },
+    "lat": 38.0652859,
+    "lon": 46.3243818
+  },
+  {
+    "id": 360673467,
+    "type": "way",
+    "name": "آب منطقه ای آذربایجان شرقی",
+    "name_en": "Regional Water Company",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "addr:city": "تبریز",
+      "addr:street": "۲۹ بهمن",
+      "landuse": "commercial",
+      "man_made": "water_works",
+      "name": "آب منطقه ای آذربایجان شرقی",
+      "name:en": "Regional Water Company",
+      "office": "government"
+    },
+    "lat": 38.0609011,
+    "lon": 46.3369955
+  },
+  {
+    "id": 13341915241,
+    "type": "node",
+    "name": "آجيل سرای تبريز",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "name": "آجيل سرای تبريز",
+      "shop": "nuts"
+    },
+    "lat": 38.0657219,
+    "lon": 46.324418
+  },
+  {
+    "id": 4761601727,
+    "type": "node",
+    "name": "آجیلی تبریز",
+    "name_en": "Tabriz Nut",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "addr:street": "جام جم",
+      "name": "آجیلی تبریز",
+      "name:en": "Tabriz Nut",
+      "shop": "nuts"
+    },
+    "lat": 38.0625929,
+    "lon": 46.3319007
+  },
+  {
+    "id": 9065285650,
+    "type": "node",
+    "name": "آزمایشگاه دکتر مظفری",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "healthcare": "laboratory",
+      "name": "آزمایشگاه دکتر مظفری"
+    },
+    "lat": 38.059663,
+    "lon": 46.3254806
+  },
+  {
+    "id": 509421879,
+    "type": "way",
+    "name": "آمفی تئاتر (چاله دانشگاه)",
+    "name_en": "",
+    "amenity": "theatre",
+    "building": "yes",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "theatre",
+      "building": "yes",
+      "name": "آمفی تئاتر (چاله دانشگاه)",
+      "name:tr": "Anfi Tiyatro"
+    },
+    "lat": 38.0620827,
+    "lon": 46.3277526
+  },
+  {
+    "id": 11304036269,
+    "type": "node",
+    "name": "آموزشگاه رویش خرد",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "name": "آموزشگاه رویش خرد",
+      "office": "educational_institution"
+    },
+    "lat": 38.0622279,
+    "lon": 46.3264543
+  },
+  {
+    "id": 4240851503,
+    "type": "node",
+    "name": "آموزشگاه علامه",
+    "name_en": "",
+    "amenity": "school",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "addr:street": "مهرگان",
+      "amenity": "school",
+      "name": "آموزشگاه علامه"
+    },
+    "lat": 38.065211,
+    "lon": 46.32458
+  },
+  {
+    "id": 5900840979,
+    "type": "node",
+    "name": "آنالار آتالار باغی",
+    "name_en": "Analar Atalar",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "name": "آنالار آتالار باغی",
+      "name:en": "Analar Atalar",
+      "name:tr": "Analar Atalar Bağı",
+      "place": "neighbourhood",
+      "source": "snapp"
+    },
+    "lat": 38.0647948,
+    "lon": 46.3338741
+  },
+  {
+    "id": 4539058713,
+    "type": "node",
+    "name": "اداره بازرگانی",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "name": "اداره بازرگانی",
+      "office": "government"
+    },
+    "lat": 38.0609357,
+    "lon": 46.3361729
+  },
+  {
+    "id": 503196606,
+    "type": "way",
+    "name": "اداره حراست و حفاظت فیزیکی دانشگاه تبریز",
+    "name_en": "",
+    "amenity": "",
+    "building": "university",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "building": "university",
+      "name": "اداره حراست و حفاظت فیزیکی دانشگاه تبریز"
+    },
+    "lat": 38.0604637,
+    "lon": 46.3312246
+  },
+  {
+    "id": 495258473,
+    "type": "way",
+    "name": "اداره کل نوسازی مدارس استان آذربایجان شرقی",
+    "name_en": "",
+    "amenity": "",
+    "building": "yes",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "building": "yes",
+      "name": "اداره کل نوسازی مدارس استان آذربایجان شرقی",
+      "office": "government"
+    },
+    "lat": 38.0651449,
+    "lon": 46.3254601
+  },
+  {
+    "id": 389834721,
+    "type": "way",
+    "name": "ادبیات و زبانهای خارجی",
+    "name_en": "",
+    "amenity": "",
+    "building": "college",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "building": "college",
+      "building:levels": "3",
+      "name": "ادبیات و زبانهای خارجی",
+      "name:tr": "Edebiyat- Yabancı Diller Fakültesi"
+    },
+    "lat": 38.0620913,
+    "lon": 46.3284531
+  },
+  {
+    "id": 5197900892,
+    "type": "node",
+    "name": "اردوگاه آزاد تبریز",
+    "name_en": "Tebriz Free Camping",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "name": "اردوگاه آزاد تبریز",
+      "name:en": "Tebriz Free Camping",
+      "tourism": "camp_site"
+    },
+    "lat": 38.0654423,
+    "lon": 46.3308524
+  },
+  {
+    "id": 300519262,
+    "type": "way",
+    "name": "اردیبهشت",
+    "name_en": "Ordibehesht",
+    "amenity": "",
+    "building": "",
+    "highway": "footway",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "highway": "footway",
+      "name": "اردیبهشت",
+      "name:en": "Ordibehesht"
+    },
+    "lat": 38.0633567,
+    "lon": 46.3268324
+  },
+  {
+    "id": 367867755,
+    "type": "way",
+    "name": "استاد شهریار",
+    "name_en": "",
+    "amenity": "",
+    "building": "station",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "building": "station",
+      "name": "استاد شهریار"
+    },
+    "lat": 38.0606198,
+    "lon": 46.340966
+  },
+  {
+    "id": 379872542,
+    "type": "way",
+    "name": "استخر مخابرات",
+    "name_en": "",
+    "amenity": "",
+    "building": "public",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "building": "public",
+      "building:levels": "5",
+      "name": "استخر مخابرات"
+    },
+    "lat": 38.0530887,
+    "lon": 46.3389662
+  },
+  {
+    "id": 6926607056,
+    "type": "node",
+    "name": "استخر پتروشیمی تبریز",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "leisure": "swimming_pool",
+      "name": "استخر پتروشیمی تبریز",
+      "sport": "swimming"
+    },
+    "lat": 38.0630204,
+    "lon": 46.3391395
+  },
+  {
+    "id": 6926613063,
+    "type": "node",
+    "name": "اسکیت پتروشیمی تبریز",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "name": "اسکیت پتروشیمی تبریز",
+      "sport": "roller_skating"
+    },
+    "lat": 38.0632024,
+    "lon": 46.3397355
+  },
+  {
+    "id": 465831829,
+    "type": "way",
+    "name": "اقامتگاه اساتید",
+    "name_en": "",
+    "amenity": "",
+    "building": "apartments",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "building": "apartments",
+      "name": "اقامتگاه اساتید"
+    },
+    "lat": 38.0574287,
+    "lon": 46.3328346
+  },
+  {
+    "id": 4329818877,
+    "type": "node",
+    "name": "ایستگاه برق",
+    "name_en": "Bargh bus station",
+    "amenity": "",
+    "building": "",
+    "highway": "bus_stop",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "bench": "yes",
+      "highway": "bus_stop",
+      "name": "ایستگاه برق",
+      "name:en": "Bargh bus station",
+      "public_transport": "platform"
+    },
+    "lat": 38.0570215,
+    "lon": 46.3400135
+  },
+  {
+    "id": 5160940298,
+    "type": "node",
+    "name": "ایستگاه مترو استاد شهریار",
+    "name_en": "Ostad Shahriar metro station",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "name": "ایستگاه مترو استاد شهریار",
+      "name:en": "Ostad Shahriar metro station",
+      "public_transport": "stop_position",
+      "railway": "stop_position",
+      "subway": "yes"
+    },
+    "lat": 38.0606371,
+    "lon": 46.3409751
+  },
+  {
+    "id": 3717346467,
+    "type": "node",
+    "name": "ایستگاه مترو دانشگاه",
+    "name_en": "Daneshgah metro station",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "name": "ایستگاه مترو دانشگاه",
+      "name:en": "Daneshgah metro station",
+      "public_transport": "stop_position",
+      "railway": "stop_position",
+      "subway": "yes"
+    },
+    "lat": 38.0643766,
+    "lon": 46.3301318
+  },
+  {
+    "id": 5258048223,
+    "type": "node",
+    "name": "ایستگاه کتابخانه مرکزی",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "bus_stop",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "bench": "no",
+      "bin": "no",
+      "highway": "bus_stop",
+      "lit": "no",
+      "name": "ایستگاه کتابخانه مرکزی",
+      "shelter": "no"
+    },
+    "lat": 38.0472068,
+    "lon": 46.332018
+  },
+  {
+    "id": 330437569,
+    "type": "way",
+    "name": "بازار جواهر",
+    "name_en": "",
+    "amenity": "",
+    "building": "yes",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "bridge": "yes",
+      "building": "yes",
+      "height": "20",
+      "layer": "1",
+      "name": "بازار جواهر",
+      "name:tr": "Cevahir Kuyumcu Çarşısı",
+      "shop": "mall"
+    },
+    "lat": 38.0648054,
+    "lon": 46.3305746
+  },
+  {
+    "id": 5257926406,
+    "type": "node",
+    "name": "بازارچه دانشجویی دانشگاه تبریز",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "name": "بازارچه دانشجویی دانشگاه تبریز",
+      "shop": "yes"
+    },
+    "lat": 38.0583725,
+    "lon": 46.3297746
+  },
+  {
+    "id": 4817407421,
+    "type": "node",
+    "name": "باغ اساتید دانشگاه تبریز",
+    "name_en": "",
+    "amenity": "library",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "library",
+      "name": "باغ اساتید دانشگاه تبریز"
+    },
+    "lat": 38.0586521,
+    "lon": 46.3353739
+  },
+  {
+    "id": 10276552,
+    "type": "relation",
+    "name": "باغ گیاهشناسی",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "landuse": "forest",
+      "name": "باغ گیاهشناسی",
+      "type": "multipolygon"
+    },
+    "lat": 38.058878,
+    "lon": 46.335359
+  },
+  {
+    "id": 3373974844,
+    "type": "node",
+    "name": "بانک تجارت",
+    "name_en": "Tejarat Bank",
+    "amenity": "bank",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "addr:city": "تبریز",
+      "addr:street": "دانشگاه",
+      "amenity": "bank",
+      "brand": "بانک تجارت",
+      "brand:wikidata": "Q7695198",
+      "name": "بانک تجارت",
+      "name:en": "Tejarat Bank"
+    },
+    "lat": 38.0615274,
+    "lon": 46.3265841
+  },
+  {
+    "id": 4591988090,
+    "type": "node",
+    "name": "بانک مسکن",
+    "name_en": "Bank Maskan",
+    "amenity": "bank",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "bank",
+      "brand": "بانک مسکن",
+      "brand:en": "Bank Maskan",
+      "brand:wikidata": "Q4855942",
+      "name": "بانک مسکن",
+      "name:en": "Bank Maskan"
+    },
+    "lat": 38.0474789,
+    "lon": 46.3405219
+  },
+  {
+    "id": 3904330382,
+    "type": "node",
+    "name": "بانک ملی",
+    "name_en": "Bank Melli Iran",
+    "amenity": "bank",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "bank",
+      "branch": "زعفرانیه",
+      "brand": "بانک ملی",
+      "brand:en": "Bank Melli Iran",
+      "brand:wikidata": "Q806640",
+      "brand:wikipedia": "en:Bank Melli Iran",
+      "name": "بانک ملی",
+      "name:en": "Bank Melli Iran"
+    },
+    "lat": 38.0481926,
+    "lon": 46.3401256
+  },
+  {
+    "id": 6172399486,
+    "type": "node",
+    "name": "بانک پارسیان",
+    "name_en": "Parsian Bank",
+    "amenity": "bank",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "bank",
+      "brand": "بانک پارسیان",
+      "brand:en": "Parsian Bank",
+      "brand:wikidata": "Q2410404",
+      "name": "بانک پارسیان",
+      "name:en": "Parsian Bank"
+    },
+    "lat": 38.0655488,
+    "lon": 46.3253799
+  },
+  {
+    "id": 3393082218,
+    "type": "node",
+    "name": "برج ساعت دانشگاه تبریز",
+    "name_en": "Clock Tower",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "man_made": "tower",
+      "name": "برج ساعت دانشگاه تبریز",
+      "name:en": "Clock Tower",
+      "tower:type": "clock"
+    },
+    "lat": 38.0639055,
+    "lon": 46.3297977
+  },
+  {
+    "id": 379872703,
+    "type": "way",
+    "name": "برج شهر",
+    "name_en": "",
+    "amenity": "",
+    "building": "commercial",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "addr:city": "تبریز",
+      "addr:street": "بلوار ٢٩ بهمن",
+      "building": "commercial",
+      "building:levels": "14",
+      "building:material": "mirror",
+      "height": "50 m",
+      "name": "برج شهر"
+    },
+    "lat": 38.0621287,
+    "lon": 46.3339874
+  },
+  {
+    "id": 196217007,
+    "type": "way",
+    "name": "بزرگراه استاد شهریار",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "trunk_link",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "highway": "trunk_link",
+      "name": "بزرگراه استاد شهریار",
+      "name:tr": "Üstad Şehriyar Otoyolu",
+      "oneway": "yes",
+      "surface": "asphalt"
+    },
+    "lat": 38.0656537,
+    "lon": 46.3292512
+  },
+  {
+    "id": 3393082239,
+    "type": "node",
+    "name": "بسیج شهری",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "military": "barracks",
+      "name": "بسیج شهری"
+    },
+    "lat": 38.0624949,
+    "lon": 46.3331517
+  },
+  {
+    "id": 5410466421,
+    "type": "node",
+    "name": "بلوار شهید اسماعیلزاده",
+    "name_en": "Shahid Esmaeilzade Av",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "addr:street": "خیابان شهید اسماعیل زاده",
+      "historic": "castle",
+      "name": "بلوار شهید اسماعیلزاده",
+      "name:en": "Shahid Esmaeilzade Av"
+    },
+    "lat": 38.056256,
+    "lon": 46.3392633
+  },
+  {
+    "id": 300040220,
+    "type": "way",
+    "name": "بلوار شکوفه",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "secondary",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "highway": "secondary",
+      "name": "بلوار شکوفه",
+      "oneway": "yes"
+    },
+    "lat": 38.0659547,
+    "lon": 46.3358051
+  },
+  {
+    "id": 331133226,
+    "type": "way",
+    "name": "بنیاد شهید و امور ایثارگران آذربایجان شرقی",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "landuse": "commercial",
+      "name": "بنیاد شهید و امور ایثارگران آذربایجان شرقی"
+    },
+    "lat": 38.0637452,
+    "lon": 46.3344658
+  },
+  {
+    "id": 1044171722,
+    "type": "way",
+    "name": "بیمارستان تخصصی اعصاب و روان فجر",
+    "name_en": "",
+    "amenity": "hospital",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "hospital",
+      "healthcare": "hospital",
+      "name": "بیمارستان تخصصی اعصاب و روان فجر"
+    },
+    "lat": 38.0653381,
+    "lon": 46.3358298
+  },
+  {
+    "id": 10276551,
+    "type": "relation",
+    "name": "بیمارستان شهید مدنی",
+    "name_en": "Shahid Madani Hospital",
+    "amenity": "hospital",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "addr:city": "تبریز",
+      "addr:street": "دانشگاه",
+      "amenity": "hospital",
+      "healthcare": "hospital",
+      "name": "بیمارستان شهید مدنی",
+      "name:az": "Şəhid Mədəni Xəstəxanası",
+      "name:en": "Shahid Madani Hospital",
+      "name:tr": "Şehit Medeni Hastanesi",
+      "type": "multipolygon"
+    },
+    "lat": 38.0594029,
+    "lon": 46.3275524
+  },
+  {
+    "id": 5257921521,
+    "type": "node",
+    "name": "تالار وحدت دانشگاه تبریز",
+    "name_en": "",
+    "amenity": "",
+    "building": "yes",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "building": "yes",
+      "name": "تالار وحدت دانشگاه تبریز",
+      "name:tr": "Vahdet Toplantı Salonu"
+    },
+    "lat": 38.0606662,
+    "lon": 46.328234
+  },
+  {
+    "id": 5257921522,
+    "type": "node",
+    "name": "تاکسی دانشگاه تبریز",
+    "name_en": "",
+    "amenity": "taxi",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "taxi",
+      "name": "تاکسی دانشگاه تبریز"
+    },
+    "lat": 38.0600186,
+    "lon": 46.3278103
+  },
+  {
+    "id": 10066668518,
+    "type": "node",
+    "name": "تبریز آیلتس",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "name": "تبریز آیلتس",
+      "office": "educational_institution"
+    },
+    "lat": 38.0655728,
+    "lon": 46.3245797
+  },
+  {
+    "id": 4752269823,
+    "type": "node",
+    "name": "تله مارکت",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "name": "تله مارکت",
+      "shop": "supermarket"
+    },
+    "lat": 38.0475472,
+    "lon": 46.3380817
+  },
+  {
+    "id": 4307104791,
+    "type": "node",
+    "name": "جام جم",
+    "name_en": "Jamejam",
+    "amenity": "",
+    "building": "",
+    "highway": "bus_stop",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "bench": "yes",
+      "bus": "yes",
+      "highway": "bus_stop",
+      "name": "جام جم",
+      "name:en": "Jamejam",
+      "public_transport": "platform",
+      "shelter": "yes"
+    },
+    "lat": 38.0610131,
+    "lon": 46.3352728
+  },
+  {
+    "id": 5900843025,
+    "type": "node",
+    "name": "جمعیت هلال احمر-آبرسان",
+    "name_en": "Helal Ahmar",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "name": "جمعیت هلال احمر-آبرسان",
+      "name:en": "Helal Ahmar",
+      "place": "neighbourhood",
+      "source": "snapp"
+    },
+    "lat": 38.0656271,
+    "lon": 46.3260967
+  },
+  {
+    "id": 5160940297,
+    "type": "node",
+    "name": "جنوبی",
+    "name_en": "Southern",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "name": "جنوبی",
+      "name:en": "Southern",
+      "railway": "subway_entrance"
+    },
+    "lat": 38.0605013,
+    "lon": 46.340952
+  },
+  {
+    "id": 4966576477,
+    "type": "node",
+    "name": "حوزه علمیه",
+    "name_en": "Elmiyeh School",
+    "amenity": "",
+    "building": "",
+    "highway": "bus_stop",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "bench": "yes",
+      "bus": "yes",
+      "highway": "bus_stop",
+      "name": "حوزه علمیه",
+      "name:en": "Elmiyeh School",
+      "public_transport": "platform",
+      "shelter": "yes",
+      "wheelchair": "yes"
+    },
+    "lat": 38.0594519,
+    "lon": 46.3394128
+  },
+  {
+    "id": 332123804,
+    "type": "way",
+    "name": "حوزه علمیه ولیعصر",
+    "name_en": "",
+    "amenity": "school",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "school",
+      "name": "حوزه علمیه ولیعصر",
+      "religion": "muslim"
+    },
+    "lat": 38.0603425,
+    "lon": 46.3394626
+  },
+  {
+    "id": 435047244,
+    "type": "way",
+    "name": "خوابگاه دخترانه شهدا",
+    "name_en": "",
+    "amenity": "",
+    "building": "dormitory",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "building": "dormitory",
+      "name": "خوابگاه دخترانه شهدا"
+    },
+    "lat": 38.0531943,
+    "lon": 46.3364252
+  },
+  {
+    "id": 9749391917,
+    "type": "node",
+    "name": "خوابگاه فجر",
+    "name_en": "interior department",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "name": "خوابگاه فجر",
+      "name:ar": "اقسام داخلية تبريز",
+      "name:en": "interior department",
+      "shop": "bakery"
+    },
+    "lat": 38.0593084,
+    "lon": 46.3299964
+  },
+  {
+    "id": 6754308267,
+    "type": "node",
+    "name": "خوابگاه فجر دانشگاه تبریز",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "name": "خوابگاه فجر دانشگاه تبریز",
+      "name:tr": "Fecir Öğrenci Yurdu",
+      "place": "locality"
+    },
+    "lat": 38.0592575,
+    "lon": 46.3301504
+  },
+  {
+    "id": 596307782,
+    "type": "way",
+    "name": "خیابان امام خمینی",
+    "name_en": "Emam Khomeyni street",
+    "amenity": "",
+    "building": "",
+    "highway": "primary",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "highway": "primary",
+      "lanes": "3",
+      "maxspeed": "50",
+      "name": "خیابان امام خمینی",
+      "name:en": "Emam Khomeyni street",
+      "name:ru": "улица Имама Хомейни",
+      "oneway": "yes"
+    },
+    "lat": 38.0654844,
+    "lon": 46.3256381
+  },
+  {
+    "id": 543922519,
+    "type": "way",
+    "name": "خیابان تلاش",
+    "name_en": "Talash street",
+    "amenity": "",
+    "building": "",
+    "highway": "unclassified",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "access": "private",
+      "highway": "unclassified",
+      "name": "خیابان تلاش",
+      "name:en": "Talash street",
+      "surface": "asphalt"
+    },
+    "lat": 38.052771,
+    "lon": 46.3246874
+  },
+  {
+    "id": 4752299021,
+    "type": "node",
+    "name": "داروخانه دکتر کفاشیان",
+    "name_en": "",
+    "amenity": "pharmacy",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "pharmacy",
+      "healthcare": "pharmacy",
+      "name": "داروخانه دکتر کفاشیان"
+    },
+    "lat": 38.0464367,
+    "lon": 46.3411122
+  },
+  {
+    "id": 509421874,
+    "type": "way",
+    "name": "دانشکده الهیات و علوم اسلامی-گروه آموزشی اطلاعات و دانش شناسی- ساختمان شماره ۳۳",
+    "name_en": "",
+    "amenity": "",
+    "building": "college",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "building": "college",
+      "building:levels": "3",
+      "name": "دانشکده الهیات و علوم اسلامی-گروه آموزشی اطلاعات و دانش شناسی- ساختمان شماره ۳۳"
+    },
+    "lat": 38.0616515,
+    "lon": 46.3296686
+  },
+  {
+    "id": 493538937,
+    "type": "way",
+    "name": "دانشکده داروسازی",
+    "name_en": "",
+    "amenity": "college",
+    "building": "college",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "college",
+      "building": "college",
+      "building:levels": "8",
+      "name": "دانشکده داروسازی"
+    },
+    "lat": 38.0530207,
+    "lon": 46.3240174
+  },
+  {
+    "id": 503196615,
+    "type": "way",
+    "name": "دانشکده داروسازی و هرباریوم",
+    "name_en": "",
+    "amenity": "",
+    "building": "college",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "building": "college",
+      "building:levels": "5",
+      "name": "دانشکده داروسازی و هرباریوم"
+    },
+    "lat": 38.0606173,
+    "lon": 46.3288667
+  },
+  {
+    "id": 493537524,
+    "type": "way",
+    "name": "دانشکده دندانپزشکی",
+    "name_en": "Faculty of Dentistry",
+    "amenity": "college",
+    "building": "college",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "college",
+      "building": "college",
+      "name": "دانشکده دندانپزشکی",
+      "name:en": "Faculty of Dentistry",
+      "name:tr": "Diş Hekimliği Fakültesi"
+    },
+    "lat": 38.0560268,
+    "lon": 46.3256194
+  },
+  {
+    "id": 493530009,
+    "type": "way",
+    "name": "دانشکده ریاضی",
+    "name_en": "",
+    "amenity": "college",
+    "building": "college",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "college",
+      "building": "college",
+      "building:levels": "3",
+      "height": "33",
+      "name": "دانشکده ریاضی"
+    },
+    "lat": 38.0532259,
+    "lon": 46.3289631
+  },
+  {
+    "id": 684385581,
+    "type": "way",
+    "name": "دانشکده ساخت و تولید",
+    "name_en": "",
+    "amenity": "college",
+    "building": "yes",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "college",
+      "building": "yes",
+      "height": "34",
+      "name": "دانشکده ساخت و تولید"
+    },
+    "lat": 38.0587759,
+    "lon": 46.3379963
+  },
+  {
+    "id": 401625785,
+    "type": "way",
+    "name": "دانشکده شیمی",
+    "name_en": "",
+    "amenity": "college",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "college",
+      "building:levels": "3",
+      "name": "دانشکده شیمی",
+      "name:tr": "Kimya Fakültesi"
+    },
+    "lat": 38.0557268,
+    "lon": 46.3294185
+  },
+  {
+    "id": 493525329,
+    "type": "way",
+    "name": "دانشکده علوم انسانی و جغرافیا-GIS",
+    "name_en": "",
+    "amenity": "",
+    "building": "college",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "building": "college",
+      "building:levels": "5",
+      "name": "دانشکده علوم انسانی و جغرافیا-GIS",
+      "name:tr": "Beşeri Bilimler ve Coğrafya Fakültesi"
+    },
+    "lat": 38.0636721,
+    "lon": 46.3288096
+  },
+  {
+    "id": 13408317959,
+    "type": "node",
+    "name": "دانشکده علوم توانبخشی تبریز",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "addr:city": "تبریز",
+      "addr:street": "بلوار ٢٩ بهمن(راهنمایی)-دانشگاه تبریز -جنب تالار وحدت طبقه دوم",
+      "healthcare": "rehabilitation",
+      "name": "دانشکده علوم توانبخشی تبریز",
+      "phone": "+984133372072",
+      "website": "https://rehabilitation.tbzmed.ac.ir/"
+    },
+    "lat": 38.0605247,
+    "lon": 46.3290151
+  },
+  {
+    "id": 503196616,
+    "type": "way",
+    "name": "دانشکده علوم طبیعی",
+    "name_en": "",
+    "amenity": "",
+    "building": "college",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "building": "college",
+      "building:levels": "5",
+      "name": "دانشکده علوم طبیعی"
+    },
+    "lat": 38.0608728,
+    "lon": 46.3278442
+  },
+  {
+    "id": 389834719,
+    "type": "way",
+    "name": "دانشکده عمران - ساختمان ۶",
+    "name_en": "",
+    "amenity": "college",
+    "building": "college",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "college",
+      "building": "college",
+      "building:levels": "3",
+      "name": "دانشکده عمران - ساختمان ۶"
+    },
+    "lat": 38.0617469,
+    "lon": 46.3273283
+  },
+  {
+    "id": 389834730,
+    "type": "way",
+    "name": "دانشکده فنی - ساختمان ۷",
+    "name_en": "",
+    "amenity": "college",
+    "building": "college",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "college",
+      "building": "college",
+      "building:levels": "2",
+      "name": "دانشکده فنی - ساختمان ۷"
+    },
+    "lat": 38.0613136,
+    "lon": 46.3269492
+  },
+  {
+    "id": 493525905,
+    "type": "way",
+    "name": "دانشکده فنی و مهندسی عمران و مرکز تحقیقات زلزله",
+    "name_en": "Faculty of Civil Engineering",
+    "amenity": "",
+    "building": "college",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "addr:street": "دانشگاه",
+      "building": "college",
+      "building:levels": "5",
+      "name": "دانشکده فنی و مهندسی عمران و مرکز تحقیقات زلزله",
+      "name:en": "Faculty of Civil Engineering"
+    },
+    "lat": 38.0633486,
+    "lon": 46.3275257
+  },
+  {
+    "id": 543920750,
+    "type": "way",
+    "name": "دانشکده فیزیک",
+    "name_en": "",
+    "amenity": "college",
+    "building": "college",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "college",
+      "building": "college",
+      "building:levels": "3",
+      "height": "33",
+      "name": "دانشکده فیزیک"
+    },
+    "lat": 38.0538124,
+    "lon": 46.3280155
+  },
+  {
+    "id": 389834729,
+    "type": "way",
+    "name": "دانشکده مدیریت و اقتصاد و بازرگانی",
+    "name_en": "",
+    "amenity": "",
+    "building": "college",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "building": "college",
+      "building:levels": "3",
+      "name": "دانشکده مدیریت و اقتصاد و بازرگانی"
+    },
+    "lat": 38.0613187,
+    "lon": 46.3290399
+  },
+  {
+    "id": 435044515,
+    "type": "way",
+    "name": "دانشکده مهندسی برق و کامپیوتر",
+    "name_en": "Department of Electrical and Computer Engineering",
+    "amenity": "college",
+    "building": "university",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "college",
+      "building": "university",
+      "building:levels": "2",
+      "height": "33",
+      "name": "دانشکده مهندسی برق و کامپیوتر",
+      "name:en": "Department of Electrical and Computer Engineering"
+    },
+    "lat": 38.0573806,
+    "lon": 46.3377229
+  },
+  {
+    "id": 5353996829,
+    "type": "node",
+    "name": "دانشکده مهندسی مکانیک",
+    "name_en": "",
+    "amenity": "college",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "addr:street": "علی فصیح",
+      "amenity": "college",
+      "name": "دانشکده مهندسی مکانیک",
+      "phone": "+98 41 3339 2456"
+    },
+    "lat": 38.0605867,
+    "lon": 46.3262584
+  },
+  {
+    "id": 544158241,
+    "type": "way",
+    "name": "دانشکده مهندسی مکانیک (ساختمان شماره ۱۴)",
+    "name_en": "",
+    "amenity": "college",
+    "building": "yes",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "college",
+      "building": "yes",
+      "building:levels": "3",
+      "name": "دانشکده مهندسی مکانیک (ساختمان شماره ۱۴)"
+    },
+    "lat": 38.0565414,
+    "lon": 46.3277083
+  },
+  {
+    "id": 389834732,
+    "type": "way",
+    "name": "دانشکده مکانیک",
+    "name_en": "",
+    "amenity": "",
+    "building": "college",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "building": "college",
+      "building:levels": "2",
+      "name": "دانشکده مکانیک"
+    },
+    "lat": 38.0605527,
+    "lon": 46.3264329
+  },
+  {
+    "id": 493538817,
+    "type": "way",
+    "name": "دانشکده نجوم و فیزیک کاربردی",
+    "name_en": "",
+    "amenity": "college",
+    "building": "college",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "college",
+      "building": "college",
+      "height": "33",
+      "name": "دانشکده نجوم و فیزیک کاربردی"
+    },
+    "lat": 38.0518889,
+    "lon": 46.3259745
+  },
+  {
+    "id": 493535748,
+    "type": "way",
+    "name": "دانشکده پزشکی تبریز",
+    "name_en": "",
+    "amenity": "college",
+    "building": "college",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "college",
+      "building": "college",
+      "height": "34",
+      "name": "دانشکده پزشکی تبریز",
+      "name:tr": "Tebriz Üniversitesi Tıp Fakültesi"
+    },
+    "lat": 38.0536478,
+    "lon": 46.3254794
+  },
+  {
+    "id": 503196613,
+    "type": "way",
+    "name": "دانشکده پیراپزشکی علوم‌نوین پزشکی",
+    "name_en": "",
+    "amenity": "college",
+    "building": "yes",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "college",
+      "building": "yes",
+      "building:levels": "5",
+      "name": "دانشکده پیراپزشکی علوم‌نوین پزشکی"
+    },
+    "lat": 38.0603167,
+    "lon": 46.3280637
+  },
+  {
+    "id": 389834723,
+    "type": "way",
+    "name": "دانشکده کامپیوتر (ساختمان ۱۱)",
+    "name_en": "",
+    "amenity": "college",
+    "building": "college",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "addr:city": "تبریز",
+      "addr:street": "مرتضی جابری",
+      "amenity": "college",
+      "building": "college",
+      "building:levels": "3",
+      "education": "college",
+      "name": "دانشکده کامپیوتر (ساختمان ۱۱)"
+    },
+    "lat": 38.0627038,
+    "lon": 46.3277335
+  },
+  {
+    "id": 493540239,
+    "type": "way",
+    "name": "دانشکده کشاورزی",
+    "name_en": "",
+    "amenity": "",
+    "building": "university",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "building": "university",
+      "building:levels": "2",
+      "name": "دانشکده کشاورزی"
+    },
+    "lat": 38.0628314,
+    "lon": 46.3297427
+  },
+  {
+    "id": 4986304588,
+    "type": "node",
+    "name": "دانشگاه",
+    "name_en": "Daneshgah",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "name": "دانشگاه",
+      "name:en": "Daneshgah",
+      "railway": "subway_entrance"
+    },
+    "lat": 38.0651701,
+    "lon": 46.3283078
+  },
+  {
+    "id": 13410419314,
+    "type": "node",
+    "name": "دانشگاه تبریز",
+    "name_en": "Tabriz University",
+    "amenity": "",
+    "building": "",
+    "highway": "bus_stop",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "bench": "yes",
+      "bus": "yes",
+      "departures_board": "timetable",
+      "highway": "bus_stop",
+      "name": "دانشگاه تبریز",
+      "name:ar": "ننزل من المنشئة الحافلة لجامعة تبريز",
+      "name:en": "Tabriz University",
+      "public_transport": "platform",
+      "shelter": "yes",
+      "shop": "bakery",
+      "wheelchair": "yes"
+    },
+    "lat": 38.0644563,
+    "lon": 46.3287999
+  },
+  {
+    "id": 489796620,
+    "type": "way",
+    "name": "دانشگاه علوم پزشکی تبریز",
+    "name_en": "Tabriz Medical University",
+    "amenity": "university",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "university",
+      "name": "دانشگاه علوم پزشکی تبریز",
+      "name:en": "Tabriz Medical University",
+      "wikidata": "Q7673574"
+    },
+    "lat": 38.05847,
+    "lon": 46.324915
+  },
+  {
+    "id": 538974323,
+    "type": "way",
+    "name": "دبیرستان شهید مدنی ۱ تبریز",
+    "name_en": "Shahid Madani 1 High School",
+    "amenity": "",
+    "building": "school",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "building": "school",
+      "name": "دبیرستان شهید مدنی ۱ تبریز",
+      "name:en": "Shahid Madani 1 High School"
+    },
+    "lat": 38.0517922,
+    "lon": 46.3400361
+  },
+  {
+    "id": 538974681,
+    "type": "way",
+    "name": "دبیرستان فرزانگان ۱ تبریز",
+    "name_en": "",
+    "amenity": "school",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "school",
+      "name": "دبیرستان فرزانگان ۱ تبریز"
+    },
+    "lat": 38.0516832,
+    "lon": 46.339206
+  },
+  {
+    "id": 9198772675,
+    "type": "node",
+    "name": "درب بیمارستان",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "barrier": "gate",
+      "name": "درب بیمارستان"
+    },
+    "lat": 38.0547735,
+    "lon": 46.3253123
+  },
+  {
+    "id": 3103826361,
+    "type": "node",
+    "name": "درب زعفرانیه دانشگاه تبریز",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "barrier": "gate",
+      "name": "درب زعفرانیه دانشگاه تبریز"
+    },
+    "lat": 38.047911,
+    "lon": 46.3338119
+  },
+  {
+    "id": 10151344911,
+    "type": "node",
+    "name": "درب فنی دانشگاه تبریز",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "barrier": "gate",
+      "name": "درب فنی دانشگاه تبریز"
+    },
+    "lat": 38.0613538,
+    "lon": 46.326392
+  },
+  {
+    "id": 991610990,
+    "type": "way",
+    "name": "دربند مددی",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "residential",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "highway": "residential",
+      "name": "دربند مددی"
+    },
+    "lat": 38.0485193,
+    "lon": 46.3257415
+  },
+  {
+    "id": 8348395217,
+    "type": "node",
+    "name": "درمانگاه شهید ملک پور تامین اجتماعی",
+    "name_en": "malekpour clinic",
+    "amenity": "clinic",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "clinic",
+      "name": "درمانگاه شهید ملک پور تامین اجتماعی",
+      "name:en": "malekpour clinic"
+    },
+    "lat": 38.0467242,
+    "lon": 46.3375893
+  },
+  {
+    "id": 503196599,
+    "type": "way",
+    "name": "دفتر جهاد دانشگاهی",
+    "name_en": "",
+    "amenity": "",
+    "building": "university",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "building": "university",
+      "name": "دفتر جهاد دانشگاهی"
+    },
+    "lat": 38.0624315,
+    "lon": 46.3311447
+  },
+  {
+    "id": 11816054834,
+    "type": "node",
+    "name": "دفتر حسن نوروزی مشاور فنی حقوقی ساختمان",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "addr:city": "تبریز",
+      "addr:street": "بلوار ٢٩ بهمن(راهنمایی)",
+      "name": "دفتر حسن نوروزی مشاور فنی حقوقی ساختمان",
+      "office": "yes",
+      "phone": "09141144857"
+    },
+    "lat": 38.0608968,
+    "lon": 46.3349156
+  },
+  {
+    "id": 5392442221,
+    "type": "node",
+    "name": "دفتر خانه ۱۱۸ تبریز",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "addr:street": "بلوار ٢٩ بهمن",
+      "name": "دفتر خانه ۱۱۸ تبریز",
+      "office": "lawyer",
+      "phone": "+98 41 3324 8069"
+    },
+    "lat": 38.0622051,
+    "lon": 46.3334996
+  },
+  {
+    "id": 507064089,
+    "type": "way",
+    "name": "دفتر پذیرش آگهی های تبلیغاتی صدا وسیمای مرکز تبریز",
+    "name_en": "",
+    "amenity": "",
+    "building": "yes",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "building": "yes",
+      "name": "دفتر پذیرش آگهی های تبلیغاتی صدا وسیمای مرکز تبریز",
+      "office": "government"
+    },
+    "lat": 38.0616455,
+    "lon": 46.3344251
+  },
+  {
+    "id": 12177920008,
+    "type": "node",
+    "name": "دفتر پروفسور فرخ قربانی نامور",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "addr:city": "تبریز",
+      "addr:street": "دانشگاه",
+      "name": "دفتر پروفسور فرخ قربانی نامور",
+      "office": "company",
+      "phone": "09143000245"
+    },
+    "lat": 38.0656915,
+    "lon": 46.3276934
+  },
+  {
+    "id": 5133551921,
+    "type": "node",
+    "name": "دلستان",
+    "name_en": "Delestan",
+    "amenity": "restaurant",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "restaurant",
+      "name": "دلستان",
+      "name:en": "Delestan"
+    },
+    "lat": 38.0617342,
+    "lon": 46.3340886
+  },
+  {
+    "id": 11170194118,
+    "type": "node",
+    "name": "دندانپزشکی دکتر بهاری",
+    "name_en": "",
+    "amenity": "dentist",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "dentist",
+      "healthcare": "dentist",
+      "name": "دندانپزشکی دکتر بهاری"
+    },
+    "lat": 38.0654662,
+    "lon": 46.3247622
+  },
+  {
+    "id": 6924966811,
+    "type": "node",
+    "name": "دنیای لی",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "name": "دنیای لی",
+      "shop": "toys",
+      "website": "https://www.instagram.com/donyaye.lee_fc"
+    },
+    "lat": 38.0619123,
+    "lon": 46.333812
+  },
+  {
+    "id": 175807709,
+    "type": "way",
+    "name": "دوازده متری اول",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "tertiary",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "highway": "tertiary",
+      "name": "دوازده متری اول",
+      "oneway": "yes",
+      "source": "Bing"
+    },
+    "lat": 38.0506214,
+    "lon": 46.3400844
+  },
+  {
+    "id": 10951799,
+    "type": "relation",
+    "name": "دوربین سرعت",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "enforcement": "maxspeed",
+      "maxspeed": "60",
+      "name": "دوربین سرعت",
+      "type": "enforcement"
+    },
+    "lat": 38.0512149,
+    "lon": 46.330326
+  },
+  {
+    "id": 12336816680,
+    "type": "node",
+    "name": "دکتر احمد پیرزاده متخصص درمان ریشه دندان",
+    "name_en": "",
+    "amenity": "doctors",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "doctors",
+      "healthcare": "doctor",
+      "name": "دکتر احمد پیرزاده متخصص درمان ریشه دندان"
+    },
+    "lat": 38.0655844,
+    "lon": 46.3248064
+  },
+  {
+    "id": 11255385415,
+    "type": "node",
+    "name": "دکتر حسین بناگذار جراح کولورکتال",
+    "name_en": "",
+    "amenity": "doctors",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "doctors",
+      "healthcare": "doctor",
+      "name": "دکتر حسین بناگذار جراح کولورکتال"
+    },
+    "lat": 38.0606917,
+    "lon": 46.3253566
+  },
+  {
+    "id": 13845184971,
+    "type": "node",
+    "name": "دکتر رزا متیقنی",
+    "name_en": "",
+    "amenity": "doctors",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "doctors",
+      "healthcare": "doctor",
+      "name": "دکتر رزا متیقنی",
+      "opening_hours": "15:00-18:00",
+      "phone": "04133292630"
+    },
+    "lat": 38.0506209,
+    "lon": 46.3396921
+  },
+  {
+    "id": 13928189555,
+    "type": "node",
+    "name": "دکتر سید محمد مقدسی",
+    "name_en": "",
+    "amenity": "doctors",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "doctors",
+      "healthcare": "doctor",
+      "name": "دکتر سید محمد مقدسی",
+      "opening_hours": "15:30-19:30",
+      "phone": "04133375727"
+    },
+    "lat": 38.0649101,
+    "lon": 46.3271691
+  },
+  {
+    "id": 12326779554,
+    "type": "node",
+    "name": "دکتر سیما منظوری لشگر",
+    "name_en": "",
+    "amenity": "doctors",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "doctors",
+      "healthcare": "doctor",
+      "name": "دکتر سیما منظوری لشگر",
+      "phone": "041۳۳۱۰۱۰۴۶"
+    },
+    "lat": 38.0657217,
+    "lon": 46.3303112
+  },
+  {
+    "id": 624355033,
+    "type": "way",
+    "name": "راهنمایی",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "admin_level": "11",
+      "boundary": "administrative",
+      "name": "راهنمایی",
+      "source": "snapp"
+    },
+    "lat": 38.059077,
+    "lon": 46.3404607
+  },
+  {
+    "id": 586654023,
+    "type": "way",
+    "name": "رستوران ایثارصدرا",
+    "name_en": "",
+    "amenity": "restaurant",
+    "building": "yes",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "restaurant",
+      "building": "yes",
+      "height": "20",
+      "name": "رستوران ایثارصدرا"
+    },
+    "lat": 38.0645724,
+    "lon": 46.3346204
+  },
+  {
+    "id": 5078147421,
+    "type": "node",
+    "name": "رستوران بهشت",
+    "name_en": "",
+    "amenity": "restaurant",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "addr:street": "شهید ایرج خلوتی",
+      "amenity": "restaurant",
+      "name": "رستوران بهشت"
+    },
+    "lat": 38.0606059,
+    "lon": 46.3303021
+  },
+  {
+    "id": 4429678743,
+    "type": "node",
+    "name": "رستوران جلالی سردرود",
+    "name_en": "Sardroud Jalali restaurant",
+    "amenity": "restaurant",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "addr:street": "بلوار ٢٩ بهمن",
+      "amenity": "restaurant",
+      "cuisine": "kebab",
+      "name": "رستوران جلالی سردرود",
+      "name:en": "Sardroud Jalali restaurant"
+    },
+    "lat": 38.0620944,
+    "lon": 46.3339671
+  },
+  {
+    "id": 3393082241,
+    "type": "node",
+    "name": "رستوران حاج علی رضا",
+    "name_en": "Haj Alireza restaurant",
+    "amenity": "restaurant",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "restaurant",
+      "cuisine": "regional",
+      "name": "رستوران حاج علی رضا",
+      "name:en": "Haj Alireza restaurant",
+      "name:tr": "Hacı Ali Restoran"
+    },
+    "lat": 38.060119,
+    "lon": 46.3377737
+  },
+  {
+    "id": 5516905640,
+    "type": "node",
+    "name": "رستوران دلستان",
+    "name_en": "",
+    "amenity": "restaurant",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "restaurant",
+      "name": "رستوران دلستان"
+    },
+    "lat": 38.0613994,
+    "lon": 46.334799
+  },
+  {
+    "id": 6295134285,
+    "type": "node",
+    "name": "رستوران عباسپور",
+    "name_en": "Abasspour",
+    "amenity": "restaurant",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "restaurant",
+      "name": "رستوران عباسپور",
+      "name:en": "Abasspour",
+      "phone": "+98 41 3333 9812"
+    },
+    "lat": 38.0575263,
+    "lon": 46.3387577
+  },
+  {
+    "id": 1285969276,
+    "type": "way",
+    "name": "رستوران کیمیا",
+    "name_en": "",
+    "amenity": "restaurant",
+    "building": "yes",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "addr:city": "تبریز",
+      "addr:postcode": "5166616471",
+      "addr:street": "دانشگاه تبریز",
+      "amenity": "restaurant",
+      "building": "yes",
+      "cuisine": "coffee_shop;pizza;chicken;sandwich;kebab;hot_dog;salad;cake;ice_cream",
+      "diet:halal": "yes",
+      "diet:vegan": "yes",
+      "diet:vegetarian": "yes",
+      "name": "رستوران کیمیا",
+      "opening_hours": "06:00-23:00"
+    },
+    "lat": 38.052389,
+    "lon": 46.3377565
+  },
+  {
+    "id": 389834725,
+    "type": "way",
+    "name": "روانشناسی",
+    "name_en": "",
+    "amenity": "",
+    "building": "college",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "building": "college",
+      "building:levels": "3",
+      "name": "روانشناسی",
+      "name:tr": "Psikoloji Bölümü"
+    },
+    "lat": 38.0622742,
+    "lon": 46.3294188
+  },
+  {
+    "id": 495670631,
+    "type": "way",
+    "name": "ساختمان تبریز",
+    "name_en": "Tabriz Building",
+    "amenity": "",
+    "building": "commercial",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "addr:city": "تبریز",
+      "addr:housenumber": "232.001",
+      "addr:street": "فلکه دانشگاه",
+      "building": "commercial",
+      "building:levels": "6",
+      "building:levels:underground": "1",
+      "name": "ساختمان تبریز",
+      "name:en": "Tabriz Building",
+      "name:fa": "ساختمان تبریز",
+      "roof:levels": "1"
+    },
+    "lat": 38.0647035,
+    "lon": 46.327031
+  },
+  {
+    "id": 545510199,
+    "type": "way",
+    "name": "ساختمان حراست - ساختمان ۹۹",
+    "name_en": "",
+    "amenity": "",
+    "building": "college",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "building": "college",
+      "name": "ساختمان حراست - ساختمان ۹۹"
+    },
+    "lat": 38.062982,
+    "lon": 46.3272651
+  },
+  {
+    "id": 435044886,
+    "type": "way",
+    "name": "ساختمان ریاست",
+    "name_en": "",
+    "amenity": "",
+    "building": "university",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "addr:street": "بلوار ٢٩ بهمن",
+      "building": "university",
+      "building:levels": "4",
+      "height": "26",
+      "name": "ساختمان ریاست"
+    },
+    "lat": 38.0572454,
+    "lon": 46.3390747
+  },
+  {
+    "id": 379872547,
+    "type": "way",
+    "name": "ساختمان شماره ۳",
+    "name_en": "",
+    "amenity": "",
+    "building": "yes",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "building": "yes",
+      "building:colour": "yellow",
+      "building:levels": "5",
+      "building:material": "brick",
+      "height": "20",
+      "name": "ساختمان شماره ۳",
+      "office": "government"
+    },
+    "lat": 38.0608458,
+    "lon": 46.3365694
+  },
+  {
+    "id": 503321925,
+    "type": "way",
+    "name": "ساختمان شماره ۹",
+    "name_en": "",
+    "amenity": "",
+    "building": "university",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "building": "university",
+      "building:levels": "2",
+      "name": "ساختمان شماره ۹"
+    },
+    "lat": 38.0623128,
+    "lon": 46.3271788
+  },
+  {
+    "id": 509421878,
+    "type": "way",
+    "name": "ساختمان شهدا",
+    "name_en": "",
+    "amenity": "",
+    "building": "college",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "building": "college",
+      "building:levels": "3",
+      "name": "ساختمان شهدا"
+    },
+    "lat": 38.0618649,
+    "lon": 46.3281312
+  },
+  {
+    "id": 491905566,
+    "type": "way",
+    "name": "ساختمان مرکزی امور دانشجویان",
+    "name_en": "",
+    "amenity": "",
+    "building": "yes",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "building": "yes",
+      "building:levels": "2",
+      "name": "ساختمان مرکزی امور دانشجویان",
+      "name:tr": "Öğrenci İşleri",
+      "office": "yes"
+    },
+    "lat": 38.057745,
+    "lon": 46.329492
+  },
+  {
+    "id": 5659168421,
+    "type": "node",
+    "name": "ساختمان ۹۹",
+    "name_en": "99 building",
+    "amenity": "college",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "college",
+      "name": "ساختمان ۹۹",
+      "name:en": "99 building"
+    },
+    "lat": 38.0627994,
+    "lon": 46.3271313
+  },
+  {
+    "id": 202253438,
+    "type": "way",
+    "name": "سازمان حمل و نقل ریلی شهرداری تبریز",
+    "name_en": "",
+    "amenity": "",
+    "building": "yes",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "building": "yes",
+      "building:levels": "5",
+      "height": "20 m",
+      "name": "سازمان حمل و نقل ریلی شهرداری تبریز",
+      "office": "government"
+    },
+    "lat": 38.0595715,
+    "lon": 46.3406453
+  },
+  {
+    "id": 3388172809,
+    "type": "node",
+    "name": "سازمان مدیریت و برنامه ریزی",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "addr:city": "تبریز",
+      "name": "سازمان مدیریت و برنامه ریزی",
+      "office": "government"
+    },
+    "lat": 38.056115,
+    "lon": 46.3418206
+  },
+  {
+    "id": 4999535322,
+    "type": "node",
+    "name": "سازمان نظام مهندسی",
+    "name_en": "",
+    "amenity": "",
+    "building": "yes",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "building": "yes",
+      "name": "سازمان نظام مهندسی"
+    },
+    "lat": 38.0651045,
+    "lon": 46.3329711
+  },
+  {
+    "id": 6926620053,
+    "type": "node",
+    "name": "سالن آمفی تئاتر پتروشیمی تبریز",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "club": "cinema",
+      "name": "سالن آمفی تئاتر پتروشیمی تبریز"
+    },
+    "lat": 38.0628494,
+    "lon": 46.3387577
+  },
+  {
+    "id": 11641004462,
+    "type": "node",
+    "name": "سالن زیبایی جردن",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "name": "سالن زیبایی جردن",
+      "shop": "beauty"
+    },
+    "lat": 38.0607443,
+    "lon": 46.3250979
+  },
+  {
+    "id": 435048022,
+    "type": "way",
+    "name": "سالن ورزشی خوابگاه خواهران",
+    "name_en": "",
+    "amenity": "",
+    "building": "yes",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "building": "yes",
+      "leisure": "sports_centre",
+      "name": "سالن ورزشی خوابگاه خواهران"
+    },
+    "lat": 38.0525157,
+    "lon": 46.3331894
+  },
+  {
+    "id": 493537330,
+    "type": "way",
+    "name": "سلف دانشجویی",
+    "name_en": "",
+    "amenity": "restaurant",
+    "building": "college",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "restaurant",
+      "building": "college",
+      "name": "سلف دانشجویی",
+      "name:tr": "Yemekhane"
+    },
+    "lat": 38.0536963,
+    "lon": 46.3266638
+  },
+  {
+    "id": 435047080,
+    "type": "way",
+    "name": "سلف غذاخوری",
+    "name_en": "",
+    "amenity": "restaurant",
+    "building": "college",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "restaurant",
+      "building": "college",
+      "name": "سلف غذاخوری"
+    },
+    "lat": 38.0527383,
+    "lon": 46.3318808
+  },
+  {
+    "id": 13305562971,
+    "type": "node",
+    "name": "سلف مرکزی برادران",
+    "name_en": "",
+    "amenity": "restaurant",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "addr:city": "تبریز",
+      "amenity": "restaurant",
+      "name": "سلف مرکزی برادران",
+      "opening_hours": "Sa-Th 11:30-18:00"
+    },
+    "lat": 38.0604015,
+    "lon": 46.3301825
+  },
+  {
+    "id": 493527052,
+    "type": "way",
+    "name": "سلف مرکزی برادران و رستوران بهشت",
+    "name_en": "",
+    "amenity": "restaurant",
+    "building": "yes",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "addr:city": "تبریز",
+      "amenity": "restaurant",
+      "building": "yes",
+      "building:levels": "2",
+      "name": "سلف مرکزی برادران و رستوران بهشت",
+      "opening_hours": "Sa-Th 11:30-18:00"
+    },
+    "lat": 38.0603889,
+    "lon": 46.3303542
+  },
+  {
+    "id": 5037205323,
+    "type": "node",
+    "name": "سنگک پزی نجفیان",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "name": "سنگک پزی نجفیان",
+      "shop": "bakery"
+    },
+    "lat": 38.047874,
+    "lon": 46.3397385
+  },
+  {
+    "id": 379872903,
+    "type": "way",
+    "name": "شرکت آب و فاضلاب استان آذربایجان شرقی",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "government": "public_service",
+      "landuse": "commercial",
+      "name": "شرکت آب و فاضلاب استان آذربایجان شرقی",
+      "office": "government",
+      "opening_hours": "Sa-Th 7:30-14:30",
+      "phone": "+98 41 2141",
+      "website": "https://abfaazarbaijan.ir"
+    },
+    "lat": 38.0613393,
+    "lon": 46.3324188
+  },
+  {
+    "id": 552830248,
+    "type": "way",
+    "name": "شرکت برق منطقه ای",
+    "name_en": "",
+    "amenity": "",
+    "building": "civic",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "building": "civic",
+      "building:levels": "10",
+      "government": "yes",
+      "name": "شرکت برق منطقه ای",
+      "office": "government",
+      "opening_hours": "Mo-Su 06:00-18:00"
+    },
+    "lat": 38.0621457,
+    "lon": 46.3418628
+  },
+  {
+    "id": 5518835653,
+    "type": "node",
+    "name": "شرکت توسعه آذربایجان",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "name": "شرکت توسعه آذربایجان",
+      "office": "government"
+    },
+    "lat": 38.0658253,
+    "lon": 46.3302843
+  },
+  {
+    "id": 10697099612,
+    "type": "node",
+    "name": "شرکت دالگا",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "name": "شرکت دالگا",
+      "office": "company"
+    },
+    "lat": 38.0659066,
+    "lon": 46.33031
+  },
+  {
+    "id": 12860391518,
+    "type": "node",
+    "name": "شرکت پروانه مهاجر ایرانیان",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "کبیری",
+    "description": "",
+    "tags": {
+      "name": "شرکت پروانه مهاجر ایرانیان",
+      "opening_hours": "Mo-Su 09:00-19:00",
+      "operator": "کبیری",
+      "phone": "+984133298122",
+      "shop": "travel_agency"
+    },
+    "lat": 38.0596889,
+    "lon": 46.3391121
+  },
+  {
+    "id": 3383570828,
+    "type": "node",
+    "name": "شمالی",
+    "name_en": "Northern",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "name": "شمالی",
+      "name:en": "Northern",
+      "railway": "subway_entrance"
+    },
+    "lat": 38.0611677,
+    "lon": 46.3408619
+  },
+  {
+    "id": 5037124322,
+    "type": "node",
+    "name": "شیرینی بابا شیرین",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "name": "شیرینی بابا شیرین",
+      "shop": "bakery"
+    },
+    "lat": 38.0464278,
+    "lon": 46.3412389
+  },
+  {
+    "id": 175807711,
+    "type": "way",
+    "name": "صائب تبریزی",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "tertiary",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "highway": "tertiary",
+      "name": "صائب تبریزی",
+      "oneway": "yes",
+      "source": "Bing"
+    },
+    "lat": 38.0485651,
+    "lon": 46.3386254
+  },
+  {
+    "id": 332123805,
+    "type": "way",
+    "name": "صدا و سیمای مرکز آذربایجان شرقی (تبریز)",
+    "name_en": "IRIB Tabriz - Sahand Radio & TV",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "addr:street": "بلوار ٢٩ بهمن",
+      "landuse": "commercial",
+      "name": "صدا و سیمای مرکز آذربایجان شرقی (تبریز)",
+      "name:az": "Təbriz Radio və Tilvizyon İdarəsi - Səhənd Radio və Tilvizyonu",
+      "name:en": "IRIB Tabriz - Sahand Radio & TV",
+      "office": "government"
+    },
+    "lat": 38.0601271,
+    "lon": 46.333032
+  },
+  {
+    "id": 5900843659,
+    "type": "node",
+    "name": "صدرا",
+    "name_en": "Sadra",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "name": "صدرا",
+      "name:en": "Sadra",
+      "place": "neighbourhood",
+      "source": "snapp"
+    },
+    "lat": 38.0645626,
+    "lon": 46.3350233
+  },
+  {
+    "id": 3830213346,
+    "type": "node",
+    "name": "عابر بانک ملی",
+    "name_en": "",
+    "amenity": "atm",
+    "building": "",
+    "highway": "",
+    "operator": "بانک ملی",
+    "description": "",
+    "tags": {
+      "amenity": "atm",
+      "drive_through": "no",
+      "name": "عابر بانک ملی",
+      "not:brand:wikidata": "Q806640",
+      "operator": "بانک ملی"
+    },
+    "lat": 38.0602251,
+    "lon": 46.3371342
+  },
+  {
+    "id": 11206302952,
+    "type": "node",
+    "name": "عاملیت پخش مواد نفتی رضااحمدیلر",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "name": "عاملیت پخش مواد نفتی رضااحمدیلر",
+      "office": "company",
+      "phone": "09144095653"
+    },
+    "lat": 38.0653893,
+    "lon": 46.3244659
+  },
+  {
+    "id": 503196598,
+    "type": "way",
+    "name": "غذاخوری اساتید",
+    "name_en": "",
+    "amenity": "restaurant",
+    "building": "yes",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "addr:city": "۱",
+      "amenity": "restaurant",
+      "building": "yes",
+      "name": "غذاخوری اساتید",
+      "name:tr": "Öğretim Görevlileri Yemekhanesi"
+    },
+    "lat": 38.0615583,
+    "lon": 46.330737
+  },
+  {
+    "id": 300533436,
+    "type": "way",
+    "name": "فرهنگیان شرقی",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "tertiary",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "highway": "tertiary",
+      "name": "فرهنگیان شرقی",
+      "oneway": "yes"
+    },
+    "lat": 38.0460266,
+    "lon": 46.3348362
+  },
+  {
+    "id": 5516898507,
+    "type": "node",
+    "name": "فروشگاه زیبایی ال آی",
+    "name_en": "L A Shoping Center",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "name": "فروشگاه زیبایی ال آی",
+      "name:en": "L A Shoping Center",
+      "shop": "beauty"
+    },
+    "lat": 38.065805,
+    "lon": 46.3243439
+  },
+  {
+    "id": 4307034095,
+    "type": "node",
+    "name": "فلکه جانبازان برج بلور",
+    "name_en": "Janbazan Square",
+    "amenity": "",
+    "building": "",
+    "highway": "bus_stop",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "bench": "yes",
+      "bus": "yes",
+      "highway": "bus_stop",
+      "name": "فلکه جانبازان برج بلور",
+      "name:en": "Janbazan Square",
+      "public_transport": "platform",
+      "shelter": "yes",
+      "wheelchair": "yes"
+    },
+    "lat": 38.0652927,
+    "lon": 46.3267918
+  },
+  {
+    "id": 5886863610,
+    "type": "node",
+    "name": "فلکه دانشگاه",
+    "name_en": "DaneshgahSquare",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "name": "فلکه دانشگاه",
+      "name:en": "DaneshgahSquare",
+      "place": "neighbourhood",
+      "source": "snapp"
+    },
+    "lat": 38.0649022,
+    "lon": 46.3276047
+  },
+  {
+    "id": 13432145959,
+    "type": "node",
+    "name": "فیزیوتراپی مهدوی",
+    "name_en": "",
+    "amenity": "clinic",
+    "building": "",
+    "highway": "",
+    "operator": "فیزیوتراپی مهدوی",
+    "description": "",
+    "tags": {
+      "amenity": "clinic",
+      "healthcare": "clinic",
+      "name": "فیزیوتراپی مهدوی",
+      "opening_hours": "Mo-Su 09:00-21:00",
+      "operator": "فیزیوتراپی مهدوی",
+      "phone": "+989142062499"
+    },
+    "lat": 38.0608129,
+    "lon": 46.3248132
+  },
+  {
+    "id": 4947402538,
+    "type": "node",
+    "name": "قورخانه",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "name": "قورخانه",
+      "place": "locality"
+    },
+    "lat": 38.0485848,
+    "lon": 46.3251656
+  },
+  {
+    "id": 330580317,
+    "type": "way",
+    "name": "قوری چای",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "name": "قوری چای",
+      "waterway": "river",
+      "wikidata": "Q7272952"
+    },
+    "lat": 38.0605334,
+    "lon": 46.3378457
+  },
+  {
+    "id": 6926607055,
+    "type": "node",
+    "name": "لوازم قنادی پاک",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "addr:street": "شمس تبریزی",
+      "name": "لوازم قنادی پاک",
+      "phone": "+98 914 903 2693",
+      "shop": "pastry"
+    },
+    "lat": 38.0609523,
+    "lon": 46.3411317
+  },
+  {
+    "id": 12896300486,
+    "type": "node",
+    "name": "مجتمع تجاری اسکان ۱",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "name": "مجتمع تجاری اسکان ۱",
+      "shop": "mall"
+    },
+    "lat": 38.0656621,
+    "lon": 46.3248074
+  },
+  {
+    "id": 507064087,
+    "type": "way",
+    "name": "مجتمع تجاری ولیعصر",
+    "name_en": "",
+    "amenity": "",
+    "building": "commercial",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "building": "commercial",
+      "name": "مجتمع تجاری ولیعصر"
+    },
+    "lat": 38.0596956,
+    "lon": 46.339208
+  },
+  {
+    "id": 331133221,
+    "type": "way",
+    "name": "مجتمع فرهنگی تفریحی پتروشیمی",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "leisure": "resort",
+      "name": "مجتمع فرهنگی تفریحی پتروشیمی"
+    },
+    "lat": 38.0635889,
+    "lon": 46.3383159
+  },
+  {
+    "id": 331133224,
+    "type": "way",
+    "name": "مجتمع فرهنگی ورزشی صدرا",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "addr:city": "تبریز",
+      "addr:street": "بلوار گلکار",
+      "leisure": "sports_centre",
+      "name": "مجتمع فرهنگی ورزشی صدرا",
+      "office": "company",
+      "source": "snapp"
+    },
+    "lat": 38.0644878,
+    "lon": 46.3350583
+  },
+  {
+    "id": 615288153,
+    "type": "way",
+    "name": "مجتمع ورزشی بانوان نهضت",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "leisure": "sports_centre",
+      "name": "مجتمع ورزشی بانوان نهضت"
+    },
+    "lat": 38.0640937,
+    "lon": 46.3270798
+  },
+  {
+    "id": 495670156,
+    "type": "way",
+    "name": "مجتمع پزشکی نور",
+    "name_en": "",
+    "amenity": "clinic",
+    "building": "yes",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "clinic",
+      "building": "yes",
+      "healthcare": "clinic",
+      "name": "مجتمع پزشکی نور"
+    },
+    "lat": 38.0646037,
+    "lon": 46.3271856
+  },
+  {
+    "id": 4837922122,
+    "type": "node",
+    "name": "مجموعه آزمایشگاههای سرامیک",
+    "name_en": "Ceramic lab collections",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "addr:street": "بلوار ٢٩ بهمن",
+      "name": "مجموعه آزمایشگاههای سرامیک",
+      "name:en": "Ceramic lab collections",
+      "name:fa": "مجموعه آزمایشگاههای سرامیک مهندس رضایی",
+      "phone": "+98 41 3339 3828",
+      "tourism": "attraction"
+    },
+    "lat": 38.0589236,
+    "lon": 46.3383388
+  },
+  {
+    "id": 493519654,
+    "type": "way",
+    "name": "مجموعه فرهنگی تفریحی پتروشیمی تبریز",
+    "name_en": "",
+    "amenity": "",
+    "building": "commercial",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "building": "commercial",
+      "height": "37",
+      "name": "مجموعه فرهنگی تفریحی پتروشیمی تبریز"
+    },
+    "lat": 38.0631813,
+    "lon": 46.3392
+  },
+  {
+    "id": 332111321,
+    "type": "way",
+    "name": "محوطه سازمان مرکزی مترو تبریز",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "addr:city": "تبریز",
+      "addr:street": "بلوار شهریار",
+      "leisure": "park",
+      "name": "محوطه سازمان مرکزی مترو تبریز"
+    },
+    "lat": 38.0598536,
+    "lon": 46.3407617
+  },
+  {
+    "id": 13410419317,
+    "type": "node",
+    "name": "مدرسه علمیه",
+    "name_en": "Elmiyeh School",
+    "amenity": "",
+    "building": "",
+    "highway": "bus_stop",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "bench": "yes",
+      "bus": "yes",
+      "highway": "bus_stop",
+      "name": "مدرسه علمیه",
+      "name:en": "Elmiyeh School",
+      "public_transport": "platform",
+      "shelter": "yes",
+      "wheelchair": "yes"
+    },
+    "lat": 38.059485,
+    "lon": 46.3384711
+  },
+  {
+    "id": 387096323,
+    "type": "way",
+    "name": "مدرسه علی بن ابیطالب",
+    "name_en": "",
+    "amenity": "school",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "addr:city": "تبریز",
+      "amenity": "school",
+      "name": "مدرسه علی بن ابیطالب"
+    },
+    "lat": 38.0497314,
+    "lon": 46.3393449
+  },
+  {
+    "id": 512072645,
+    "type": "way",
+    "name": "مرکز آموزش دوره های تخصصی سازمان مدیریت صنعتی تبریز",
+    "name_en": "",
+    "amenity": "",
+    "building": "yes",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "addr:city": "تبریز",
+      "addr:housenumber": "2",
+      "addr:postcode": "5165693144",
+      "addr:street": "پناهی",
+      "building": "yes",
+      "name": "مرکز آموزش دوره های تخصصی سازمان مدیریت صنعتی تبریز"
+    },
+    "lat": 38.0642021,
+    "lon": 46.325497
+  },
+  {
+    "id": 5257932523,
+    "type": "node",
+    "name": "مرکز بهداشت و درمان دانشجویان دانشگاه تبریز",
+    "name_en": "",
+    "amenity": "clinic",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "clinic",
+      "healthcare": "clinic",
+      "name": "مرکز بهداشت و درمان دانشجویان دانشگاه تبریز",
+      "name:tr": "Mediko Sosyal Tabipliği"
+    },
+    "lat": 38.0571364,
+    "lon": 46.3291875
+  },
+  {
+    "id": 504863359,
+    "type": "way",
+    "name": "مرکز تجاری بلور",
+    "name_en": "",
+    "amenity": "",
+    "building": "commercial",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "building": "commercial",
+      "building:levels": "18",
+      "name": "مرکز تجاری بلور"
+    },
+    "lat": 38.0655766,
+    "lon": 46.3273487
+  },
+  {
+    "id": 389834727,
+    "type": "way",
+    "name": "مرکز تحصیلات تکمیلی و مدیریت امور آموزشی",
+    "name_en": "",
+    "amenity": "",
+    "building": "college",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "building": "college",
+      "building:levels": "3",
+      "name": "مرکز تحصیلات تکمیلی و مدیریت امور آموزشی"
+    },
+    "lat": 38.0617855,
+    "lon": 46.3284783
+  },
+  {
+    "id": 493539816,
+    "type": "way",
+    "name": "مرکز تحقیفات مخابرات تبریز",
+    "name_en": "",
+    "amenity": "",
+    "building": "university",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "building": "university",
+      "name": "مرکز تحقیفات مخابرات تبریز"
+    },
+    "lat": 38.0531767,
+    "lon": 46.3404967
+  },
+  {
+    "id": 491906049,
+    "type": "way",
+    "name": "مرکز نوآوری و اختراعات دانشگاه تبریز",
+    "name_en": "",
+    "amenity": "",
+    "building": "college",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "addr:city": "تبریز",
+      "building": "college",
+      "building:levels": "3",
+      "name": "مرکز نوآوری و اختراعات دانشگاه تبریز"
+    },
+    "lat": 38.0558041,
+    "lon": 46.3273366
+  },
+  {
+    "id": 462059525,
+    "type": "way",
+    "name": "مسجد خاتم الانبیا",
+    "name_en": "",
+    "amenity": "place_of_worship",
+    "building": "yes",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "addr:city": "تبریز",
+      "addr:street": "میرزا کوچک خان",
+      "alt_name": "خاتم الانبیا",
+      "amenity": "place_of_worship",
+      "building": "yes",
+      "denomination": "shia",
+      "name": "مسجد خاتم الانبیا",
+      "religion": "muslim"
+    },
+    "lat": 38.0466526,
+    "lon": 46.3408815
+  },
+  {
+    "id": 684386032,
+    "type": "way",
+    "name": "مسجد دانشکده علوم پزشکی",
+    "name_en": "",
+    "amenity": "place_of_worship",
+    "building": "yes",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "place_of_worship",
+      "building": "yes",
+      "name": "مسجد دانشکده علوم پزشکی",
+      "religion": "muslim"
+    },
+    "lat": 38.0526578,
+    "lon": 46.325047
+  },
+  {
+    "id": 493524218,
+    "type": "way",
+    "name": "مسجد دانشگاه تبربز",
+    "name_en": "",
+    "amenity": "place_of_worship",
+    "building": "yes",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "addr:street": "بلوار ٢٩ بهمن",
+      "amenity": "place_of_worship",
+      "building": "yes",
+      "name": "مسجد دانشگاه تبربز",
+      "name:tr": "Tebriz Üniversitesi Camii",
+      "religion": "muslim"
+    },
+    "lat": 38.0633472,
+    "lon": 46.3300143
+  },
+  {
+    "id": 13575309443,
+    "type": "node",
+    "name": "مطب دکتر هاله صالحی پور مهر",
+    "name_en": "",
+    "amenity": "doctors",
+    "building": "",
+    "highway": "",
+    "operator": "مطب دکتر هاله صالحی پور مهر",
+    "description": "",
+    "tags": {
+      "amenity": "doctors",
+      "healthcare": "doctor",
+      "name": "مطب دکتر هاله صالحی پور مهر",
+      "opening_hours": "Mo-Su 09:00-21:00",
+      "operator": "مطب دکتر هاله صالحی پور مهر",
+      "phone": "+984133375167"
+    },
+    "lat": 38.059702,
+    "lon": 46.3255539
+  },
+  {
+    "id": 493530001,
+    "type": "way",
+    "name": "معاونت حمل و نقل دانشگاه تبریز",
+    "name_en": "",
+    "amenity": "",
+    "building": "college",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "building": "college",
+      "name": "معاونت حمل و نقل دانشگاه تبریز",
+      "office": "government"
+    },
+    "lat": 38.0544827,
+    "lon": 46.3269948
+  },
+  {
+    "id": 509421869,
+    "type": "way",
+    "name": "معاونت دانشکده پزشکی",
+    "name_en": "",
+    "amenity": "",
+    "building": "university",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "building": "university",
+      "name": "معاونت دانشکده پزشکی"
+    },
+    "lat": 38.0581062,
+    "lon": 46.3284913
+  },
+  {
+    "id": 5900833118,
+    "type": "node",
+    "name": "مهرگان",
+    "name_en": "Mehrgan",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "name": "مهرگان",
+      "name:en": "Mehrgan",
+      "place": "neighbourhood",
+      "source": "snapp"
+    },
+    "lat": 38.0643119,
+    "lon": 46.3251401
+  },
+  {
+    "id": 5114031121,
+    "type": "node",
+    "name": "مهمانسرای مخابرات",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "name": "مهمانسرای مخابرات",
+      "tourism": "hotel"
+    },
+    "lat": 38.0530366,
+    "lon": 46.3394677
+  },
+  {
+    "id": 493526714,
+    "type": "way",
+    "name": "موزه دانشگاه",
+    "name_en": "",
+    "amenity": "",
+    "building": "college",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "building": "college",
+      "building:levels": "2",
+      "name": "موزه دانشگاه",
+      "name:tr": "Üniversite Müzesi"
+    },
+    "lat": 38.0609806,
+    "lon": 46.3266409
+  },
+  {
+    "id": 516002582,
+    "type": "way",
+    "name": "میدان زعفرانیه",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "landuse": "grass",
+      "name": "میدان زعفرانیه",
+      "place": "square"
+    },
+    "lat": 38.0464312,
+    "lon": 46.3403644
+  },
+  {
+    "id": 5410460423,
+    "type": "node",
+    "name": "میدان شهید ارشدی پور",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "historic": "monument",
+      "name": "میدان شهید ارشدی پور"
+    },
+    "lat": 38.0568046,
+    "lon": 46.3343682
+  },
+  {
+    "id": 300528217,
+    "type": "way",
+    "name": "میدان مسجد",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "secondary",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "alt_name": "میدان زعفرانیه",
+      "highway": "secondary",
+      "junction": "roundabout",
+      "maxspeed": "30",
+      "name": "میدان مسجد"
+    },
+    "lat": 38.0464284,
+    "lon": 46.3403637
+  },
+  {
+    "id": 5037205322,
+    "type": "node",
+    "name": "نانوایی",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "name": "نانوایی",
+      "shop": "bakery"
+    },
+    "lat": 38.0468872,
+    "lon": 46.3406858
+  },
+  {
+    "id": 10276452,
+    "type": "relation",
+    "name": "نگهبانی",
+    "name_en": "",
+    "amenity": "",
+    "building": "yes",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "building": "yes",
+      "military": "checkpoint",
+      "name": "نگهبانی",
+      "type": "multipolygon"
+    },
+    "lat": 38.0572268,
+    "lon": 46.3262606
+  },
+  {
+    "id": 409984384,
+    "type": "way",
+    "name": "هتل بین المللی تبریز",
+    "name_en": "Tabriz International Hotel",
+    "amenity": "",
+    "building": "yes",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "building": "yes",
+      "name": "هتل بین المللی تبریز",
+      "name:en": "Tabriz International Hotel",
+      "tourism": "hotel"
+    },
+    "lat": 38.0649823,
+    "lon": 46.3260565
+  },
+  {
+    "id": 3820759409,
+    "type": "node",
+    "name": "هتل پتروشیمی تبریز",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "addr:city": "تبریز",
+      "name": "هتل پتروشیمی تبریز",
+      "name:ar": "فندق تبريز للبتروكيماويات",
+      "stars": "4",
+      "tourism": "hotel"
+    },
+    "lat": 38.0629757,
+    "lon": 46.3385284
+  },
+  {
+    "id": 479061491,
+    "type": "way",
+    "name": "هجده متری اول غربی",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "tertiary",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "highway": "tertiary",
+      "name": "هجده متری اول غربی",
+      "source": "Bing"
+    },
+    "lat": 38.0489289,
+    "lon": 46.3389292
+  },
+  {
+    "id": 4752299121,
+    "type": "node",
+    "name": "وحید",
+    "name_en": "",
+    "amenity": "restaurant",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "restaurant",
+      "name": "وحید"
+    },
+    "lat": 38.0503071,
+    "lon": 46.3371917
+  },
+  {
+    "id": 177232108,
+    "type": "way",
+    "name": "ورزشگاه دانشگاه تبریز",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "leisure": "stadium",
+      "name": "ورزشگاه دانشگاه تبریز"
+    },
+    "lat": 38.054121,
+    "lon": 46.3317194
+  },
+  {
+    "id": 1208700781,
+    "type": "way",
+    "name": "ورودی استخر مخابرات",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "service",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "highway": "service",
+      "name": "ورودی استخر مخابرات"
+    },
+    "lat": 38.0537615,
+    "lon": 46.3395134
+  },
+  {
+    "id": 367868241,
+    "type": "way",
+    "name": "ورودی بیمارستان شهید قاضی",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "unclassified",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "access": "private",
+      "highway": "unclassified",
+      "name": "ورودی بیمارستان شهید قاضی",
+      "surface": "asphalt"
+    },
+    "lat": 38.0556845,
+    "lon": 46.3264798
+  },
+  {
+    "id": 5257932522,
+    "type": "node",
+    "name": "ورودی خواهران غذاخوری استاد شهریار",
+    "name_en": "Ostad Shahriyar Restaurant",
+    "amenity": "restaurant",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "restaurant",
+      "name": "ورودی خواهران غذاخوری استاد شهریار",
+      "name:en": "Ostad Shahriyar Restaurant"
+    },
+    "lat": 38.0576013,
+    "lon": 46.3288991
+  },
+  {
+    "id": 5257926407,
+    "type": "node",
+    "name": "ورودی غذاخوری استاد شهریار",
+    "name_en": "",
+    "amenity": "restaurant",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "restaurant",
+      "name": "ورودی غذاخوری استاد شهریار"
+    },
+    "lat": 38.0583408,
+    "lon": 46.329548
+  },
+  {
+    "id": 331298730,
+    "type": "way",
+    "name": "وصال",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "tertiary",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "highway": "tertiary",
+      "maxspeed": "30",
+      "name": "وصال"
+    },
+    "lat": 38.064603,
+    "lon": 46.3384552
+  },
+  {
+    "id": 4859118721,
+    "type": "node",
+    "name": "پارک مینیاتور",
+    "name_en": "Minyator Park",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "name": "پارک مینیاتور",
+      "name:en": "Minyator Park",
+      "tourism": "attraction"
+    },
+    "lat": 38.0659151,
+    "lon": 46.3345171
+  },
+  {
+    "id": 353597894,
+    "type": "way",
+    "name": "پارک مینیاتوری",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "leisure": "park",
+      "name": "پارک مینیاتوری",
+      "name:tr": "Miniyatür Park"
+    },
+    "lat": 38.0651086,
+    "lon": 46.3341571
+  },
+  {
+    "id": 6926623554,
+    "type": "node",
+    "name": "پارکینگ پتروشیمی تبریز",
+    "name_en": "",
+    "amenity": "parking_entrance",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "parking_entrance",
+      "name": "پارکینگ پتروشیمی تبریز"
+    },
+    "lat": 38.0633437,
+    "lon": 46.3395931
+  },
+  {
+    "id": 495670154,
+    "type": "way",
+    "name": "پاساژ نسیم",
+    "name_en": "",
+    "amenity": "",
+    "building": "yes",
+    "highway": "",
+    "operator": "www.samrad.shop",
+    "description": "",
+    "tags": {
+      "addr:city": "تبریز",
+      "addr:housenumber": "فلکه دانشگاه",
+      "addr:postcode": "5165698513",
+      "addr:street": "امام خمینی",
+      "building": "yes",
+      "name": "پاساژ نسیم",
+      "name:fa": "فروشگاه سام راد",
+      "opening_hours": "24/7",
+      "operator": "www.samrad.shop",
+      "payment:cash": "yes",
+      "payment:credit_cards": "yes",
+      "phone": "+989057832620",
+      "shop": "mall"
+    },
+    "lat": 38.0648031,
+    "lon": 46.3267517
+  },
+  {
+    "id": 3889984185,
+    "type": "node",
+    "name": "پاکدل",
+    "name_en": "",
+    "amenity": "restaurant",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "addr:city": "تبریز",
+      "addr:street": "بلوار ٢٩ بهمن",
+      "amenity": "restaurant",
+      "name": "پاکدل"
+    },
+    "lat": 38.059993,
+    "lon": 46.3365055
+  },
+  {
+    "id": 12520409637,
+    "type": "node",
+    "name": "پت شاپ اسکان",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "addr:city": "tabriz",
+      "addr:housenumber": "0",
+      "addr:postcode": "5165691381",
+      "addr:street": "مهرگان",
+      "email": "sahandahmadoghlu9@gmail.com",
+      "name": "پت شاپ اسکان",
+      "opening_hours": "Mo-Su 09:00-23:00",
+      "payment:cash": "yes",
+      "payment:credit_cards": "yes",
+      "phone": "+989214367308",
+      "shop": "pet"
+    },
+    "lat": 38.0655373,
+    "lon": 46.324509
+  },
+  {
+    "id": 5818338402,
+    "type": "node",
+    "name": "پذیرایی نمنم",
+    "name_en": "",
+    "amenity": "fast_food",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "fast_food",
+      "name": "پذیرایی نمنم"
+    },
+    "lat": 38.0644022,
+    "lon": 46.3271554
+  },
+  {
+    "id": 12184418681,
+    "type": "node",
+    "name": "پروفسور فرخ قربانی نامور",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "addr:city": "تبریز",
+      "addr:street": "دانشگاه",
+      "name": "پروفسور فرخ قربانی نامور",
+      "office": "company",
+      "phone": "09143000245"
+    },
+    "lat": 38.0654936,
+    "lon": 46.3276256
+  },
+  {
+    "id": 279112453,
+    "type": "way",
+    "name": "پروین اعتصامی شمالیِ",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "tertiary",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "highway": "tertiary",
+      "name": "پروین اعتصامی شمالیِ",
+      "oneway": "yes"
+    },
+    "lat": 38.0470339,
+    "lon": 46.3404819
+  },
+  {
+    "id": 331130014,
+    "type": "way",
+    "name": "پل شهیدان آذرآبادی حق",
+    "name_en": "Shahidan Azarabadi Haq Bridge",
+    "amenity": "",
+    "building": "",
+    "highway": "trunk",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "bridge": "yes",
+      "highway": "trunk",
+      "lanes": "3",
+      "layer": "1",
+      "name": "پل شهیدان آذرآبادی حق",
+      "name:en": "Shahidan Azarabadi Haq Bridge",
+      "oneway": "yes",
+      "surface": "asphalt"
+    },
+    "lat": 38.0629725,
+    "lon": 46.3352993
+  },
+  {
+    "id": 6265511648,
+    "type": "node",
+    "name": "پلاسکو آذین",
+    "name_en": "",
+    "amenity": "marketplace",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "marketplace",
+      "name": "پلاسکو آذین"
+    },
+    "lat": 38.04749,
+    "lon": 46.3416599
+  },
+  {
+    "id": 465831827,
+    "type": "way",
+    "name": "پلانتاریوم - افلاک نمای دانشگاه تبریز",
+    "name_en": "",
+    "amenity": "planetarium",
+    "building": "yes",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "planetarium",
+      "building": "yes",
+      "name": "پلانتاریوم - افلاک نمای دانشگاه تبریز",
+      "website": "http://riapa.tabrizu.ac.ir/fa/contents/plantariuma/%D8%B3%D8%A7%D9%85%D8%A7%D9%86%D9%87.%D8%A7%D9%81%D9%84%D8%A7%DA%A9.%D9%86%D9%85%D8%A7.html"
+    },
+    "lat": 38.0517705,
+    "lon": 46.3270094
+  },
+  {
+    "id": 742483214,
+    "type": "way",
+    "name": "پلیس راهنمایی و رانندگی کلانشهر تبریز، ایستگاه مرکزی",
+    "name_en": "",
+    "amenity": "police",
+    "building": "yes",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "police",
+      "building": "yes",
+      "name": "پلیس راهنمایی و رانندگی کلانشهر تبریز، ایستگاه مرکزی"
+    },
+    "lat": 38.0617558,
+    "lon": 46.3386616
+  },
+  {
+    "id": 6265511649,
+    "type": "node",
+    "name": "پیتزا آناهیتا",
+    "name_en": "",
+    "amenity": "fast_food",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "fast_food",
+      "cuisine": "pizza",
+      "name": "پیتزا آناهیتا"
+    },
+    "lat": 38.0476406,
+    "lon": 46.3408714
+  },
+  {
+    "id": 5292129090,
+    "type": "node",
+    "name": "پیش دبستان و دبستان علوی",
+    "name_en": "",
+    "amenity": "school",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "school",
+      "name": "پیش دبستان و دبستان علوی"
+    },
+    "lat": 38.0605327,
+    "lon": 46.3257638
+  },
+  {
+    "id": 12201724470,
+    "type": "node",
+    "name": "پیش دبستان و دبستان غیر دولتی دخترانه منان",
+    "name_en": "",
+    "amenity": "school",
+    "building": "",
+    "highway": "",
+    "operator": "کفاشان",
+    "description": "",
+    "tags": {
+      "addr:city": "تبریز",
+      "addr:street": "میرزا کوچک خان",
+      "amenity": "school",
+      "name": "پیش دبستان و دبستان غیر دولتی دخترانه منان",
+      "operator": "کفاشان"
+    },
+    "lat": 38.0466698,
+    "lon": 46.3398308
+  },
+  {
+    "id": 509421865,
+    "type": "way",
+    "name": "چمن مصنوعی",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "leisure": "pitch",
+      "name": "چمن مصنوعی",
+      "sport": "soccer"
+    },
+    "lat": 38.0546846,
+    "lon": 46.3303757
+  },
+  {
+    "id": 4838911721,
+    "type": "node",
+    "name": "ژیمنازیوم",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "addr:street": "دانشگاه",
+      "name": "ژیمنازیوم",
+      "shop": "sports"
+    },
+    "lat": 38.0571376,
+    "lon": 46.3315108
+  },
+  {
+    "id": 491905741,
+    "type": "way",
+    "name": "ژیمنازیوم دانشگاه تبریز",
+    "name_en": "",
+    "amenity": "",
+    "building": "yes",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "building": "yes",
+      "building:levels": "2",
+      "leisure": "fitness_centre",
+      "name": "ژیمنازیوم دانشگاه تبریز",
+      "name:tr": "Tebriz Ü. Jimnazyum"
+    },
+    "lat": 38.0575115,
+    "lon": 46.3308826
+  },
+  {
+    "id": 5080769524,
+    "type": "node",
+    "name": "کارگاه ماشین ابزار",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "name": "کارگاه ماشین ابزار",
+      "tourism": "artwork"
+    },
+    "lat": 38.0588062,
+    "lon": 46.3378426
+  },
+  {
+    "id": 434995662,
+    "type": "way",
+    "name": "کارگاه ماشین، جوشکاری الله",
+    "name_en": "",
+    "amenity": "",
+    "building": "university",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "addr:street": "بلوار ٢٩ بهمن",
+      "building": "university",
+      "building:levels": "1",
+      "contact:phone": "+98 41 3339 3814",
+      "name": "کارگاه ماشین، جوشکاری الله",
+      "source": "map.ir"
+    },
+    "lat": 38.0584781,
+    "lon": 46.3388523
+  },
+  {
+    "id": 10782127798,
+    "type": "node",
+    "name": "کافه رستوران بلوار",
+    "name_en": "",
+    "amenity": "cafe",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "cafe",
+      "name": "کافه رستوران بلوار"
+    },
+    "lat": 38.0624137,
+    "lon": 46.3329613
+  },
+  {
+    "id": 5037059326,
+    "type": "node",
+    "name": "کافه شهر",
+    "name_en": "",
+    "amenity": "fast_food",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "fast_food",
+      "branch": "بیرون بر",
+      "name": "کافه شهر",
+      "takeaway": "only"
+    },
+    "lat": 38.0654506,
+    "lon": 46.3271862
+  },
+  {
+    "id": 6926613117,
+    "type": "node",
+    "name": "کافی شاپ  پتروشیمی تبریز",
+    "name_en": "",
+    "amenity": "cafe",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "cafe",
+      "name": "کافی شاپ  پتروشیمی تبریز"
+    },
+    "lat": 38.0629045,
+    "lon": 46.3392546
+  },
+  {
+    "id": 11594297115,
+    "type": "node",
+    "name": "کبابی تاملی",
+    "name_en": "",
+    "amenity": "fast_food",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "fast_food",
+      "cuisine": "kebab",
+      "name": "کبابی تاملی",
+      "opening_hours": "Mo-Su 12:00-24:00",
+      "phone": "04133333663"
+    },
+    "lat": 38.0601289,
+    "lon": 46.3361917
+  },
+  {
+    "id": 4326609192,
+    "type": "node",
+    "name": "کبابی شاهین",
+    "name_en": "",
+    "amenity": "restaurant",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "addr:street": "بلوار بسیج - جاده تهران",
+      "amenity": "restaurant",
+      "name": "کبابی شاهین"
+    },
+    "lat": 38.0600338,
+    "lon": 46.3363586
+  },
+  {
+    "id": 4514936806,
+    "type": "node",
+    "name": "کتاب سرای علامه",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "name": "کتاب سرای علامه",
+      "shop": "books"
+    },
+    "lat": 38.0645152,
+    "lon": 46.3273079
+  },
+  {
+    "id": 500937167,
+    "type": "way",
+    "name": "کتابخانه مرکزی دانشگاه تبریز",
+    "name_en": "",
+    "amenity": "library",
+    "building": "college",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "library",
+      "building": "college",
+      "name": "کتابخانه مرکزی دانشگاه تبریز"
+    },
+    "lat": 38.0478533,
+    "lon": 46.3324412
+  },
+  {
+    "id": 493532890,
+    "type": "way",
+    "name": "کتابخانه مرکزی دانشگاه علوم پزشکی تبریز",
+    "name_en": "",
+    "amenity": "library",
+    "building": "college",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "library",
+      "building": "college",
+      "height": "32",
+      "name": "کتابخانه مرکزی دانشگاه علوم پزشکی تبریز"
+    },
+    "lat": 38.0526501,
+    "lon": 46.3281057
+  },
+  {
+    "id": 505989034,
+    "type": "way",
+    "name": "کتابخانه ولیعصر",
+    "name_en": "",
+    "amenity": "library",
+    "building": "yes",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "amenity": "library",
+      "building": "yes",
+      "name": "کتابخانه ولیعصر"
+    },
+    "lat": 38.0600552,
+    "lon": 46.3383597
+  },
+  {
+    "id": 10841419722,
+    "type": "node",
+    "name": "کلیدسازی صمد",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "craft": "key_cutter",
+      "name": "کلیدسازی صمد"
+    },
+    "lat": 38.0460306,
+    "lon": 46.3414022
+  },
+  {
+    "id": 11915682679,
+    "type": "node",
+    "name": "کیف امیر",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "name": "کیف امیر",
+      "shop": "bag"
+    },
+    "lat": 38.0658591,
+    "lon": 46.3276248
+  },
+  {
+    "id": 13313158410,
+    "type": "node",
+    "name": "گالری کندو",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "addr:city": "تبریز",
+      "addr:housenumber": "پلاک 16",
+      "addr:postcode": "5156918938",
+      "addr:street": "مرکز تجاری بلور - طبقه اول",
+      "email": "gallerycando.ir@gmail.com",
+      "loc_name": "گالری کندو",
+      "mobile": "098 914 735 6961",
+      "name": "گالری کندو",
+      "opening_hours": "10:00-22:00",
+      "payment:cards": "yes",
+      "payment:cash": "yes",
+      "phone": "098 914 735 6961",
+      "shop": "craft",
+      "website": "https://gallerycando.ir/"
+    },
+    "lat": 38.0657647,
+    "lon": 46.327529
+  },
+  {
+    "id": 5258437293,
+    "type": "node",
+    "name": "گالری کیف آپامه",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "name": "گالری کیف آپامه",
+      "shop": "bag"
+    },
+    "lat": 38.0620463,
+    "lon": 46.3339739
+  },
+  {
+    "id": 4810918223,
+    "type": "node",
+    "name": "گروه سرامیک های مهندسی پیشرفته",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "name": "گروه سرامیک های مهندسی پیشرفته",
+      "office": "lawyer",
+      "phone": "+98 41 3339 3813"
+    },
+    "lat": 38.0588804,
+    "lon": 46.3383633
+  },
+  {
+    "id": 5350594721,
+    "type": "node",
+    "name": "گروه مهندسی مواد",
+    "name_en": "",
+    "amenity": "college",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "addr:street": "علی فصیح",
+      "amenity": "college",
+      "name": "گروه مهندسی مواد",
+      "phone": "+98 41 3335 4200"
+    },
+    "lat": 38.0605309,
+    "lon": 46.3266329
+  },
+  {
+    "id": 9457919992,
+    "type": "node",
+    "name": "گلسرای طاها",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "addr:city": "tabriz",
+      "addr:street": "East Azerbaijan Province, Tabriz, Zafaraniye, هشت متری چهارم،",
+      "name": "گلسرای طاها",
+      "name:fa": "گلسرای طاها",
+      "opening_hours": "sh-th 10:00-22:00",
+      "phone": "+98 914 316 2561",
+      "shop": "florist",
+      "website": "https://tahaflowers.com/"
+    },
+    "lat": 38.0469964,
+    "lon": 46.3407166
+  },
+  {
+    "id": 422928508,
+    "type": "way",
+    "name": "گلکار",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "trunk_link",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "highway": "trunk_link",
+      "name": "گلکار",
+      "oneway": "yes",
+      "surface": "asphalt"
+    },
+    "lat": 38.0626867,
+    "lon": 46.3367683
+  },
+  {
+    "id": 13536190448,
+    "type": "node",
+    "name": "گورخانه",
+    "name_en": "",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "name": "گورخانه",
+      "place": "neighbourhood"
+    },
+    "lat": 38.0464182,
+    "lon": 46.327672
+  },
+  {
+    "id": 3373974829,
+    "type": "node",
+    "name": "یادمان شهدای گمنام دانشگاه تبریز",
+    "name_en": "Shohadaye Gomnam Monument",
+    "amenity": "",
+    "building": "",
+    "highway": "",
+    "operator": "",
+    "description": "",
+    "tags": {
+      "historic": "monument",
+      "name": "یادمان شهدای گمنام دانشگاه تبریز",
+      "name:en": "Shohadaye Gomnam Monument"
+    },
+    "lat": 38.0529679,
+    "lon": 46.3266279
+  }
+]
