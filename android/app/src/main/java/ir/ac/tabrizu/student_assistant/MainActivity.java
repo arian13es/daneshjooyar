@@ -27,18 +27,14 @@ import java.io.OutputStream;
 public class MainActivity extends BridgeActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        registerPlugin(NativeNotificationHelperPlugin.class);
         SplashScreen.installSplashScreen(this);
+        registerPlugin(NativeNotificationHelperPlugin.class);
         super.onCreate(savedInstanceState);
-        if (bridge != null && bridge.getWebView() != null) {
-            bridge.getWebView().setBackgroundColor(android.graphics.Color.TRANSPARENT);
-        }
     }
 
-}
 
-@CapacitorPlugin(name = "NativeNotificationHelper")
-class NativeNotificationHelperPlugin extends Plugin {
+    @CapacitorPlugin(name = "NativeNotificationHelper")
+    public static class NativeNotificationHelperPlugin extends Plugin {
 
     @PluginMethod
     public void isIgnoringBatteryOptimizations(PluginCall call) {
@@ -335,7 +331,7 @@ class NativeNotificationHelperPlugin extends Plugin {
         try {
             int hour = call.getInt("hour", 0);
             int minute = call.getInt("minute", 0);
-            String message = call.getString("message", "????? ?????");
+            String message = call.getString("message", "پایان زمان تمرکز");
 
             Context ctx = getContext();
             Intent intent = new Intent(android.provider.AlarmClock.ACTION_SET_ALARM);
@@ -355,5 +351,7 @@ class NativeNotificationHelperPlugin extends Plugin {
             call.reject("Failed to set alarm: " + e.getMessage());
         }
     }
+
+}
 
 }

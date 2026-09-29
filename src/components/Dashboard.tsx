@@ -8,7 +8,7 @@
  */
 
 import React, { useState } from "react";
-import { AnimatePresence } from "motion/react";
+import { motion, AnimatePresence, type Variants } from "motion/react";
 import { ClassItem, ExamItem, ProjectItem, StudentProfile, BudgetState } from "../types";
 import { BookOpen, Calendar, AlertCircle, CheckCircle2, Clock, MapPin, Award, User, Edit3, ChevronLeft, Heart, Moon, Sun, RefreshCw, Plus, Image as ImageIcon, PhoneCall, X, Bell, Compass, Navigation, Footprints, GraduationCap, Monitor, Building2, Globe, UtensilsCrossed, Home, CreditCard } from "lucide-react";
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
@@ -130,7 +130,7 @@ export default function Dashboard({
   };
 
   const isEvenWeek = React.useMemo(() => {
-    // Anchor: Saturday 2026-09-19 (۲۸ شهریور ۱۴۰۵) is an EVEN week.
+    // Anchor: Saturday 2026-09-26 (۴ مهر ۱۴۰۵) is an EVEN week (شروع نیم‌سال تحصیلی).
     // Shared with notification scheduler via dateUtils.isEvenWeekAt.
     return isEvenWeekAt(Date.now(), weekParityOffset);
   }, [weekParityOffset, todayKey]);
@@ -263,24 +263,37 @@ export default function Dashboard({
     );
   };
 
-  // week parity moved above
+  const sectionVariants: Variants = {
+    hidden: { opacity: 0, y: 14 },
+    visible: (custom: number) => ({
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.4,
+        delay: custom * 0.05,
+        ease: [0.16, 1, 0.3, 1] as const
+      }
+    })
+  };
 
   return (
     <div className="px-2.5 sm:px-4 space-y-4 sm:space-y-6 pb-[calc(6rem+env(safe-area-inset-bottom,0px))] text-right" dir="rtl">
       {/* Smart Student Identity Card with Full-Bleed Atmospheric Faculty Theming */}
-      <SmartStudentCard
-        profile={profile}
-        isDarkMode={isDarkMode}
-        onToggleTheme={onToggleTheme}
-        onOpenNotifications={() => setShowNotificationSettings(true)}
-        onEditProfile={onEditProfile}
-        onPickAvatar={handlePickAvatar}
-        renderAvatar={renderAvatar}
-        todayPersian={todayPersianFull}
-      />
+      <motion.div custom={0} initial="hidden" animate="visible" variants={sectionVariants}>
+        <SmartStudentCard
+          profile={profile}
+          isDarkMode={isDarkMode}
+          onToggleTheme={onToggleTheme}
+          onOpenNotifications={() => setShowNotificationSettings(true)}
+          onEditProfile={onEditProfile}
+          onPickAvatar={handlePickAvatar}
+          renderAvatar={renderAvatar}
+          todayPersian={todayPersianFull}
+        />
+      </motion.div>
 
       {/* Grid Stats - Adaptive 2 cols on phones, 4 cols on tablets */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4">
+      <motion.div custom={1} initial="hidden" animate="visible" variants={sectionVariants} className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4">
         {[
           { label: "کلاس‌های امروز", val: stats.classesTodayCount, icon: Clock, color: "text-blue-600 dark:text-blue-400", bg: "bg-blue-100/50 dark:bg-blue-900/30", tab: "schedule" as const },
           { label: "امتحانات میان‌دوره", val: stats.midtermCount, icon: Edit3, color: "text-amber-600 dark:text-amber-400", bg: "bg-amber-100/50 dark:bg-amber-900/30", tab: "exams" as const },
@@ -297,50 +310,60 @@ export default function Dashboard({
             <p className="text-[10px] sm:text-[11px] font-black text-slate-500 dark:text-slate-400 truncate">{item.label}</p>
           </div>
         ))}
-      </div>
+      </motion.div>
 
       {/* Wallet Widget — Premium Credit Card Design */}
-      <div 
+      <motion.div 
+        custom={2}
+        initial="hidden"
+        animate="visible"
+        variants={sectionVariants}
         onClick={onOpenBudget}
-        className="relative bg-gradient-to-br from-emerald-500 to-teal-700 rounded-[1.5rem] p-5 sm:p-6 flex items-center justify-between cursor-pointer active:scale-[0.98] transition-all shadow-lg shadow-emerald-500/20 overflow-hidden text-white"
+        className="relative bg-gradient-to-br from-emerald-500 to-teal-700 rounded-[1.5rem] p-4 sm:p-5 flex items-center justify-between cursor-pointer active:scale-[0.98] transition-all shadow-lg shadow-emerald-500/20 overflow-hidden text-white"
       >
         {/* Subtle decorative circles for a credit card feel */}
         <div className="absolute top-0 right-0 w-40 h-40 bg-white/20 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-32 h-32 bg-black/20 rounded-full blur-2xl -ml-10 -mb-10 pointer-events-none" />
         
-        <div className="flex items-center gap-3.5 relative z-10">
-          <div className="h-12 w-12 rounded-[1rem] bg-white/20 backdrop-blur-md shadow-inner shadow-white/30 border border-white/20 inline-flex items-center justify-center shrink-0">
-            <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <div className="flex items-center gap-2.5 sm:gap-3.5 relative z-10 min-w-0">
+          <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-[0.875rem] sm:rounded-[1rem] bg-white/20 backdrop-blur-md shadow-inner shadow-white/30 border border-white/20 inline-flex items-center justify-center shrink-0">
+            <svg className="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
             </svg>
           </div>
-          <div>
-            <h3 className="font-black text-sm sm:text-base leading-tight">کیف پول من</h3>
-            <p className="text-[11px] sm:text-xs font-bold text-emerald-100 mt-1 leading-tight">مدیریت بودجه و هزینه‌ها</p>
+          <div className="min-w-0">
+            <h3 className="font-black text-xs sm:text-base leading-tight whitespace-nowrap">کیف پول من</h3>
+            <p className="text-[10px] sm:text-xs font-bold text-emerald-100 mt-0.5 leading-tight whitespace-nowrap">مدیریت بودجه و هزینه‌ها</p>
           </div>
         </div>
-        <div className="text-left flex flex-col items-end justify-center relative z-10" dir="ltr">
+        <div className="text-left flex flex-col items-end justify-center relative z-10 shrink-0" dir="ltr">
           {budgetState?.monthlyLimit ? (
             <>
-              <p className="text-xl sm:text-2xl font-black font-sans tracking-tight leading-tight flex items-baseline gap-1.5 drop-shadow-sm" dir="ltr">
-                <span className="text-xs font-bold text-emerald-200">تومان</span>
+              <p className="text-base sm:text-2xl font-black font-sans tracking-tight leading-tight flex items-baseline gap-1 sm:gap-1.5 drop-shadow-sm whitespace-nowrap" dir="ltr">
+                <span className="text-[10px] sm:text-xs font-bold text-emerald-200">تومان</span>
                 {(budgetState.monthlyLimit - budgetState.expenses.reduce((s, e) => s + e.amount, 0) - (budgetState.savings || 0)).toLocaleString()}
               </p>
-              <p className="text-[10px] text-emerald-100 font-bold mt-1 leading-tight flex items-center gap-1" dir="rtl">
+              <p className="text-[10px] text-emerald-100 font-bold mt-0.5 sm:mt-1 leading-tight flex items-center gap-1" dir="rtl">
                 باقیمانده <ChevronLeft className="w-3 h-3 opacity-70" />
               </p>
             </>
           ) : (
-            <div className="flex items-center gap-1.5 text-white bg-black/20 hover:bg-black/30 backdrop-blur-md px-3.5 py-2.5 rounded-xl border border-white/10 transition-colors">
-              <Plus className="w-4 h-4" />
-              <span className="text-xs font-black">تعیین بودجه</span>
+            <div className="flex items-center gap-1.5 text-white bg-black/20 hover:bg-black/30 backdrop-blur-md px-3 sm:px-3.5 py-2 sm:py-2.5 rounded-xl border border-white/10 transition-colors">
+              <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              <span className="text-xs font-black whitespace-nowrap">تعیین بودجه</span>
             </div>
           )}
         </div>
-      </div>
+      </motion.div>
 
       {/* Campus Map & Navigator Quick Card — Gradient banner (Light & Dark) */}
-      <div className="relative overflow-hidden rounded-[1.75rem] sm:rounded-[2rem] border border-sky-200/70 dark:border-sky-900/50 shadow-sm bg-gradient-to-l from-sky-600 via-sky-500 to-cyan-500 dark:from-sky-700 dark:via-sky-600 dark:to-cyan-700 transition-colors">
+      <motion.div 
+        custom={3}
+        initial="hidden"
+        animate="visible"
+        variants={sectionVariants}
+        className="relative overflow-hidden rounded-[1.75rem] sm:rounded-[2rem] border border-sky-200/70 dark:border-sky-900/50 shadow-sm bg-gradient-to-l from-sky-600 via-sky-500 to-cyan-500 dark:from-sky-700 dark:via-sky-600 dark:to-cyan-700 transition-colors"
+      >
         {/* Decorative map-grid texture */}
         <div className="absolute inset-0 opacity-[0.15] pointer-events-none" style={{ backgroundImage: "linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)", backgroundSize: "22px 22px" }} />
         {/* Glowing pin accent */}
@@ -403,10 +426,16 @@ export default function Dashboard({
             )}
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Daily Class Card */}
-      <div className="bg-white dark:bg-slate-800 rounded-[2.5rem] p-6 border border-slate-100 dark:border-slate-700 shadow-sm transition-colors">
+      <motion.div 
+        custom={4}
+        initial="hidden"
+        animate="visible"
+        variants={sectionVariants}
+        className="bg-white dark:bg-slate-800 rounded-[2.5rem] p-6 border border-slate-100 dark:border-slate-700 shadow-sm transition-colors"
+      >
         <div className="flex items-center justify-between mb-6">
           <h3 className="font-black text-slate-900 dark:text-white text-lg flex items-center gap-3">
             <div className="w-1.5 h-6 bg-gradient-to-b from-blue-500 to-indigo-600 rounded-full"></div>
@@ -489,10 +518,16 @@ export default function Dashboard({
             ))}
           </div>
         )}
-      </div>
+      </motion.div>
 
       {/* Useful Links */}
-      <div className="bg-indigo-600 dark:bg-slate-800 rounded-[2rem] sm:rounded-[2.5rem] p-4 sm:p-6 text-white shadow-xl dark:shadow-none border border-transparent dark:border-slate-700 relative overflow-hidden">
+      <motion.div 
+        custom={5}
+        initial="hidden"
+        animate="visible"
+        variants={sectionVariants}
+        className="bg-indigo-600 dark:bg-slate-800 rounded-[2rem] sm:rounded-[2.5rem] p-4 sm:p-6 text-white shadow-xl dark:shadow-none border border-transparent dark:border-slate-700 relative overflow-hidden"
+      >
         <h3 className="font-black text-base sm:text-lg relative z-10 flex items-center gap-2.5 sm:gap-3 mb-4 sm:mb-6">
           <Award className="h-6 w-6 sm:h-7 sm:w-7 text-amber-400" />
           سامانه‌های دانشجویی
@@ -532,10 +567,16 @@ export default function Dashboard({
             )
           ))}
         </div>
-      </div>
+      </motion.div>
 
       {/* Footer Credits */}
-      <div className="flex flex-col items-center justify-center mt-3 py-4 border-t border-slate-100 dark:border-slate-800/50">
+      <motion.div 
+        custom={6}
+        initial="hidden"
+        animate="visible"
+        variants={sectionVariants}
+        className="flex flex-col items-center justify-center mt-3 py-4 border-t border-slate-100 dark:border-slate-800/50"
+      >
         <p className="text-[10px] font-black text-slate-500 dark:text-slate-400 inline-flex items-center justify-center gap-1.5 mb-2">
           <span>برنامه‌نویسی شده با</span>
           <Heart className="h-3 w-3 fill-rose-500 text-rose-500 animate-pulse inline-block" />
@@ -567,7 +608,7 @@ export default function Dashboard({
           </svg>
           <span>Community Channel</span>
         </a>
-      </div>
+      </motion.div>
 
       {unCroppedImage && (
         <ImageCropModal 

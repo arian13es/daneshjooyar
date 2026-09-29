@@ -14,23 +14,32 @@ export function useAppReady(): { isAppReady: boolean; hasProfile: boolean; setHa
       SplashScreen.hide().catch(() => {});
     }
 
-    const fadeTimer = setTimeout(() => {
-      const splashOverlay = document.querySelector("#native-splash .splash-overlay");
-      if (splashOverlay) {
-        splashOverlay.classList.add("is-fading");
-      }
-      setIsAppReady(true);
-    }, 2200);
+    let fadeTimer: ReturnType<typeof setTimeout>;
+    let removeTimer: ReturnType<typeof setTimeout>;
 
-    const removeTimer = setTimeout(() => {
-      const nativeSplash = document.getElementById("native-splash");
-      if (nativeSplash) {
-        nativeSplash.remove();
-      }
-      setHasProfile(!!safeStorageGetString("tabriz_profile_v2", ""));
-    }, 2850);
+    // Ensure DOM is fully painted by the browser compositor before starting transition
+    const rafId = requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        fadeTimer = setTimeout(() => {
+          const splashOverlay = document.querySelector("#native-splash .splash-overlay");
+          if (splashOverlay) {
+            splashOverlay.classList.add("is-fading");
+          }
+          setIsAppReady(true);
+        }, 400);
+
+        removeTimer = setTimeout(() => {
+          const nativeSplash = document.getElementById("native-splash");
+          if (nativeSplash) {
+            nativeSplash.remove();
+          }
+          setHasProfile(!!safeStorageGetString("tabriz_profile_v2", ""));
+        }, 800);
+      });
+    });
 
     return () => {
+      cancelAnimationFrame(rafId);
       clearTimeout(fadeTimer);
       clearTimeout(removeTimer);
     };

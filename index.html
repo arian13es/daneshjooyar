@@ -58,9 +58,9 @@
         position: fixed; inset: 0; z-index: 200;
         display: flex; flex-direction: column;
         align-items: center; justify-content: center;
-        gap: 1.5rem; user-select: none;
+        gap: 1.25rem; user-select: none;
         background-color: #f8fafc;
-        transition: opacity 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+        transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         will-change: opacity;
       }
       html.dark .splash-overlay { background-color: #0f172a; }
@@ -69,44 +69,34 @@
       /* 3. Splash content wrapper — smooth dissolve on exit */
       .splash-content {
         display: flex; flex-direction: column;
-        align-items: center; justify-content: center; gap: 1.25rem;
+        align-items: center; justify-content: center; gap: 1rem;
         will-change: transform, opacity;
-        transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.5s ease-out;
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease-out;
       }
-      .splash-overlay.is-fading .splash-content { transform: scale(0.97); opacity: 0; }
+      .splash-overlay.is-fading .splash-content { transform: scale(1.04); opacity: 0; }
 
-      /* 4. Logo card — spring entrance + living breathing */
+      /* 4. Logo card — clean, sharp, native-aligned */
       .splash-logo {
-        height: 7rem; width: 7rem;
-        background-color: #ffffff;
-        border-radius: 2.5rem; padding: 1.25rem;
-        box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
-        border: 1px solid #f1f5f9;
+        height: 6rem; width: 6rem;
         display: flex; align-items: center; justify-content: center;
-        animation:
-          splash-spring-in 0.95s cubic-bezier(0.22, 1.2, 0.36, 1) both,
-          splash-breathe-loop 2.2s ease-in-out 0.95s infinite;
-        will-change: transform, box-shadow;
-        transform-origin: center center;
+        animation: splash-logo-in 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+        will-change: transform, opacity;
       }
-      html.dark .splash-logo { background-color: #1e293b; border-color: #334155; }
 
-      /* 5. Logo image — fade-in + pulse */
+      /* 5. Logo image */
       .splash-logo-img {
         height: 100%; width: 100%;
         object-fit: contain; pointer-events: none;
-        animation:
-          splash-img-in 0.8s ease-out both,
-          splash-img-pulse 2.2s ease-in-out 0.95s infinite;
-        will-change: transform;
+        filter: drop-shadow(0 4px 16px rgba(0,0,0,0.08));
+      }
+      html.dark .splash-logo-img {
+        filter: drop-shadow(0 4px 20px rgba(0,0,0,0.5));
       }
 
       /* 6. Title block */
       .splash-title {
         text-align: center;
-        animation:
-          splash-title-in 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both,
-          splash-title-breathe 2.2s ease-in-out 0.95s infinite;
+        animation: splash-title-in 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.08s both;
         will-change: transform, opacity;
       }
       .splash-title h2 {
@@ -116,69 +106,35 @@
       }
       html.dark .splash-title h2 { color: #ffffff; }
       .splash-title p {
-        margin: 0.25rem 0 0 0; font-size: 0.75rem;
-        font-weight: 700; color: #94a3b8;
+        margin: 0.25rem 0 0 0; font-size: 0.8rem;
+        font-weight: 700; color: #64748b;
         font-family: 'Vazirmatn', sans-serif;
       }
+      html.dark .splash-title p { color: #94a3b8; }
 
       /* 7. Accent bar */
       .splash-bar {
-        width: 4rem; height: 0.25rem;
-        background-color: #6366f1; border-radius: 9999px;
-        animation:
-          splash-bar-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.25s both,
-          splash-bar-pulse 1.8s ease-in-out 0.95s infinite;
+        width: 3.5rem; height: 0.25rem;
+        background: linear-gradient(90deg, #6366f1, #3b82f6);
+        border-radius: 9999px;
+        animation: splash-bar-in 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both;
         will-change: transform, opacity;
-        transform-origin: center center;
       }
 
       /* ── KEYFRAMES ── */
-
-      /* Elastic spring entrance: small → overshoot → contract → settle */
-      @keyframes splash-spring-in {
-        0%   { opacity: 0; transform: scale(0.35) translateY(32px); }
-        35%  { opacity: 1; transform: scale(1.18) translateY(-8px); }
-        55%  { transform: scale(0.90) translateY(4px); }
-        75%  { transform: scale(1.06) translateY(-2px); }
-        90%  { transform: scale(0.98) translateY(1px); }
-        100% { opacity: 1; transform: scale(1) translateY(0); }
+      @keyframes splash-logo-in {
+        from { opacity: 0; transform: scale(0.92); }
+        to   { opacity: 1; transform: scale(1); }
       }
 
-      /* Continuous breathing: gentle scale + float + shadow glow */
-      @keyframes splash-breathe-loop {
-        0%, 100% {
-          transform: scale(1) translateY(0);
-          box-shadow: 0 20px 30px -10px rgba(99,102,241,0.18), 0 8px 10px -6px rgba(0,0,0,0.08);
-        }
-        50% {
-          transform: scale(1.08) translateY(-6px);
-          box-shadow: 0 30px 45px -5px rgba(99,102,241,0.35), 0 12px 16px -4px rgba(0,0,0,0.15);
-        }
-      }
-
-      @keyframes splash-img-in {
-        0%   { opacity: 0; transform: scale(0.7); }
-        100% { opacity: 1; transform: scale(1); }
-      }
-      @keyframes splash-img-pulse {
-        0%, 100% { transform: scale(1); }
-        50%      { transform: scale(1.05); }
-      }
       @keyframes splash-title-in {
-        from { opacity: 0; transform: translateY(14px); }
+        from { opacity: 0; transform: translateY(8px); }
         to   { opacity: 1; transform: translateY(0); }
       }
-      @keyframes splash-title-breathe {
-        0%, 100% { transform: translateY(0); opacity: 0.92; }
-        50%      { transform: translateY(-2px); opacity: 1; }
-      }
+
       @keyframes splash-bar-in {
-        from { opacity: 0; transform: scaleX(0); }
+        from { opacity: 0; transform: scaleX(0.5); }
         to   { opacity: 1; transform: scaleX(1); }
-      }
-      @keyframes splash-bar-pulse {
-        0%, 100% { transform: scaleX(0.75); opacity: 0.65; }
-        50%      { transform: scaleX(1.25); opacity: 1; }
       }
     </style>
     <script>
@@ -206,13 +162,11 @@
         <div class="splash-content">
           <div class="splash-logo">
             <img
-              src="./app_logo.jpg"
-              alt="دانشجویار"
+              src="/logo_tabriz.png"
+              alt="دانشگاه تبریز"
               class="splash-logo-img"
-              style="border-radius: 1rem;"
               loading="eager"
               decoding="sync"
-              fetchpriority="high"
             />
           </div>
           <div class="splash-title">

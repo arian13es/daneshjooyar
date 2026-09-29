@@ -10,12 +10,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { ClassItem, ExamItem, ProjectItem, StudentProfile, TabType, BudgetState } from "./types";
 import { INITIAL_CLASSES, INITIAL_EXAMS, INITIAL_PROJECTS } from "./data/initialData";
-import { motion, AnimatePresence } from "motion/react";
+import { motion } from "motion/react";
 import OnboardingModal from "./components/OnboardingModal";
 import BottomTabBar from "./components/layout/BottomTabBar";
 import TabContent from "./components/layout/TabContent";
 import GlobalModals from "./components/layout/GlobalModals";
-import { safeStorageGet, safeStorageSet } from "./utils/storageUtils.ts";
+import { safeStorageGet, safeStorageSet } from "./utils/storageUtils";
 import { usePersistentState } from "./hooks/usePersistentState";
 import { useAppTheme } from "./hooks/useAppTheme";
 import { useAppReady } from "./hooks/useAppReady";
@@ -141,14 +141,17 @@ export default function App() {
     <motion.div
       initial={{ opacity: 0 }}
       animate={isAppReady ? { opacity: 1 } : {}}
-      transition={{ duration: 0.4, ease: "easeOut" }}
-      className="w-full h-[100dvh] bg-slate-50 dark:bg-slate-900 flex flex-col font-sans overflow-hidden"
+      transition={{ duration: 0.35, ease: "easeOut" }}
+      className="w-full h-full bg-slate-50 dark:bg-slate-900 flex flex-col font-sans overflow-hidden"
       dir="rtl"
     >
       {!hasProfile ? (
         <OnboardingModal onSave={handleSaveProfile} />
       ) : (
-        <div
+        <motion.div
+          initial={{ opacity: 0, scale: 0.98, y: 16 }}
+          animate={isAppReady ? { opacity: 1, scale: 1, y: 0 } : {}}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] as const }}
           className={`flex-1 flex flex-col min-h-0 ${
             activeTab === "map"
               ? "p-0 max-w-none"
@@ -166,60 +169,63 @@ export default function App() {
                 currentScrollElRef.current = el;
               }}
             >
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeTab}
-                  initial={{ opacity: 0, scale: 0.99, y: 10 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.99, y: -10 }}
-                  transition={{ duration: 0.25, ease: "easeInOut" }}
-                  className="flex-1 flex flex-col min-h-0 w-full h-full"
+              <motion.div
+                key={activeTab}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.18, ease: "easeOut" }}
+                className="flex-1 flex flex-col min-h-0 w-full h-full"
+              >
+                <React.Suspense
+                  fallback={
+                    <div className="flex-1 flex items-center justify-center p-8">
+                      <div className="w-5 h-5 border-2 border-indigo-500/30 border-t-indigo-500 rounded-full animate-spin"></div>
+                    </div>
+                  }
                 >
-                  <React.Suspense
-                    fallback={
-                      <div className="flex-1 flex items-center justify-center p-8">
-                        <div className="w-5 h-5 border-2 border-indigo-500/30 border-t-indigo-500 rounded-full animate-spin"></div>
-                      </div>
-                    }
-                  >
-                    <TabContent
-                      activeTab={activeTab}
-                      classes={classes}
-                      exams={exams}
-                      projects={projects}
-                      profile={profile}
-                      calendarNotes={calendarNotes}
-                      isDarkMode={isDarkMode}
-                      budgetState={budgetState}
-                      assistantSubTab={assistantSubTab}
-                      mapFocusBuildingId={mapFocusBuildingId}
-                      pendingAddExamCourse={pendingAddExamCourse}
-                      pendingAddProjectCourse={pendingAddProjectCourse}
-                      setActiveTab={setActiveTab}
-                      setShowProfileEditor={setShowProfileEditor}
-                      setShowBudgetModal={setShowBudgetModal}
-                      setIsDarkMode={setIsDarkMode}
-                      setProfile={setProfile}
-                      setClasses={setClasses}
-                      setExams={setExams}
-                      setProjects={setProjects}
-                      setCalendarNotes={setCalendarNotes}
-                      setSelectedClassProfile={setSelectedClassProfile}
-                      setSelectedExamProfile={setSelectedExamProfile}
-                      setSelectedProjectProfile={setSelectedProjectProfile}
-                      setPendingAddExamCourse={setPendingAddExamCourse}
-                      setPendingAddProjectCourse={setPendingAddProjectCourse}
-                      setMapFocusBuildingId={setMapFocusBuildingId}
-                      onAddStudyMinutes={handleAddStudyMinutes}
-                    />
-                  </React.Suspense>
-                </motion.div>
-              </AnimatePresence>
+                  <TabContent
+                    activeTab={activeTab}
+                    classes={classes}
+                    exams={exams}
+                    projects={projects}
+                    profile={profile}
+                    calendarNotes={calendarNotes}
+                    isDarkMode={isDarkMode}
+                    budgetState={budgetState}
+                    assistantSubTab={assistantSubTab}
+                    mapFocusBuildingId={mapFocusBuildingId}
+                    pendingAddExamCourse={pendingAddExamCourse}
+                    pendingAddProjectCourse={pendingAddProjectCourse}
+                    setActiveTab={setActiveTab}
+                    setShowProfileEditor={setShowProfileEditor}
+                    setShowBudgetModal={setShowBudgetModal}
+                    setIsDarkMode={setIsDarkMode}
+                    setProfile={setProfile}
+                    setClasses={setClasses}
+                    setExams={setExams}
+                    setProjects={setProjects}
+                    setCalendarNotes={setCalendarNotes}
+                    setSelectedClassProfile={setSelectedClassProfile}
+                    setSelectedExamProfile={setSelectedExamProfile}
+                    setSelectedProjectProfile={setSelectedProjectProfile}
+                    setPendingAddExamCourse={setPendingAddExamCourse}
+                    setPendingAddProjectCourse={setPendingAddProjectCourse}
+                    setMapFocusBuildingId={setMapFocusBuildingId}
+                    onAddStudyMinutes={handleAddStudyMinutes}
+                  />
+                </React.Suspense>
+              </motion.div>
             </div>
           </main>
 
-          <BottomTabBar activeTab={activeTab} onTabClick={handleTabClick} />
-        </div>
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={isAppReady ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.45, delay: 0.08, ease: [0.16, 1, 0.3, 1] as const }}
+          >
+            <BottomTabBar activeTab={activeTab} onTabClick={handleTabClick} />
+          </motion.div>
+        </motion.div>
       )}
 
       <GlobalModals

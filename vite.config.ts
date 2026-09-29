@@ -9,6 +9,23 @@ export default defineConfig(() => {
     build: {
       target: ['chrome70', 'es2018'],
       cssTarget: 'chrome70',
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (id.includes('node_modules')) {
+              if (id.includes('leaflet')) return 'vendor-leaflet';
+              if (id.includes('motion')) return 'vendor-motion';
+              if (id.includes('lucide-react') || id.includes('@heroicons')) return 'vendor-icons';
+              if (id.includes('@capacitor')) return 'vendor-capacitor';
+              if (id.includes('jalaali-js') || id.includes('react-date-object')) return 'vendor-date';
+              if (id.includes('react') || id.includes('react-dom') || id.includes('scheduler')) return 'vendor-react';
+            }
+            if (id.includes('campusGisData')) {
+              return 'campus-gis-data';
+            }
+          },
+        },
+      },
     },
     resolve: {
       alias: {
@@ -34,7 +51,7 @@ export default defineConfig(() => {
       // Do not modify this file; watching is disabled to prevent flickering during agent edits.
       hmr: process.env.DISABLE_HMR !== 'true',
       watch: process.env.DISABLE_HMR === 'true' ? null : {
-        ignored: ['**/android/**', '**/dist/**', '**/releases/**', '**/*.apk'],
+        ignored: ['**/android/**', '**/dist/**', '**/releases/**', '**/*.apk', '**/*.tmp*', '**/*.tmpdir/**', '**/.*.tmpdir/**'],
       },
     },
     test: {
