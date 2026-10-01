@@ -37,7 +37,7 @@ const TAB_ITEMS: {
 export default function BottomTabBar({ activeTab, onTabClick }: BottomTabBarProps) {
   return (
     <div className="fixed bottom-0 md:bottom-4 left-0 right-0 z-[80] flex justify-center pointer-events-none px-0 md:px-4">
-      <nav className="pointer-events-auto w-full md:max-w-lg min-h-[5rem] sm:min-h-[5.5rem] pb-[env(safe-area-inset-bottom)] md:pb-0 bg-white dark:bg-slate-900 shadow-[0_-4px_20px_-5px_rgba(0,0,0,0.05)] md:shadow-2xl border-t md:border border-slate-100 dark:border-slate-800 md:rounded-[2rem] flex items-center justify-around px-1.5 sm:px-6">
+      <nav className="pointer-events-auto w-full md:max-w-lg min-h-[5rem] sm:min-h-[5.5rem] pb-[env(safe-area-inset-bottom,0px)] md:pb-0 bg-white dark:bg-slate-900 shadow-[0_-4px_20px_-5px_rgba(0,0,0,0.05)] md:shadow-2xl border-t md:border border-slate-100 dark:border-slate-800 md:rounded-[2rem] flex items-center justify-around px-1.5 sm:px-6">
         {TAB_ITEMS.map((item) => {
           const isActive = activeTab === item.id;
           return (

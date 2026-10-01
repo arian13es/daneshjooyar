@@ -376,7 +376,7 @@ export default function BudgetModal({ budgetState, onUpdateBudget, onClose }: Bu
       animate={{ opacity: 1 }} 
       exit={{ opacity: 0 }}
       transition={{ duration: 0.16, ease: "easeOut" }}
-      className="fixed inset-0 z-[150] flex items-center justify-center bg-slate-900/80 p-0 md:p-6 font-sans pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] backdrop-blur-sm"
+      className="fixed inset-0 z-[150] flex items-center justify-center bg-slate-900/80 p-0 md:p-6 font-sans pt-[env(safe-area-inset-top,0px)] pb-[env(safe-area-inset-bottom,0px)] backdrop-blur-sm"
       dir="rtl"
     >
       <motion.div 
