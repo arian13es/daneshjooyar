@@ -5,4 +5,9 @@
     <color name="colorAccent">#FF4081</color>
     <color name="splashBackground">#F8FAFC</color>
     <color name="windowBackground">#F8FAFC</color>
+    <color name="alarmBackground">#04070F</color>
+    <color name="alarmAccent">#6366F1</color>
+    <color name="alarmStop">#F43F5E</color>
+    <color name="alarmText">#FFFFFF</color>
+    <color name="alarmMuted">#94A3B8</color>
 </resources>

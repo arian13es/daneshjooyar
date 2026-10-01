@@ -195,6 +195,16 @@ export default function ExamFocusMode({
     }
   }, [isMinimized, exam]);
 
+  /**
+   * The native full-screen alarm has done its job once a session ends, so it is
+   * cancelled at every terminal transition to keep a stale alarm from firing.
+   */
+  const clearNativeAlarm = useCallback(() => {
+    if (!Capacitor.isNativePlatform()) return;
+    NativeHelper.cancelFocusAlarm?.().catch(() => {});
+    LocalNotifications.cancel({ notifications: [{ id: 888 }] }).catch(() => {});
+  }, []);
+
   // Wall-Clock Synchronization Function
   const syncWithWallClock = useCallback(() => {
     const session = safeStorageGet<FocusSessionState | null>(FOCUS_STORAGE_KEY, null);
@@ -214,6 +224,7 @@ export default function ExamFocusMode({
     if (remaining <= 0) {
       triggerFocusAlert();
       setIsActive(false);
+      clearNativeAlarm();
 
       if (!session.isBreak) {
         const totalStudied = session.baseStudiedSeconds + session.totalDurationSeconds;
@@ -259,6 +270,7 @@ export default function ExamFocusMode({
         // Expired while app was closed or device was sleeping
         triggerFocusAlert();
         setIsActive(false);
+        clearNativeAlarm();
         if (!session.isBreak) {
           setStudiedSeconds(session.baseStudiedSeconds + session.totalDurationSeconds);
           setIsBreak(true);
@@ -339,6 +351,7 @@ export default function ExamFocusMode({
       safeStorageRemove(FOCUS_STORAGE_KEY);
       if (Capacitor.isNativePlatform()) {
         LocalNotifications.cancel({ notifications: [{ id: 888 }] }).catch(() => {});
+        NativeHelper.cancelFocusAlarm?.().catch(() => {});
       }
       setIsActive(false);
       return;
@@ -381,6 +394,20 @@ export default function ExamFocusMode({
         console.warn("Focus channel creation failed:", e);
       }
       try {
+        // The primary alert: a native full-screen alarm that wakes the screen
+        // and sounds on the ALARM stream, so it still fires when the phone is
+        // asleep, silenced, or the app has been killed.
+        await NativeHelper.scheduleFocusAlarm?.({
+          triggerAtMillis: targetEndTime,
+          title: isBreak ? "پایان زمان استراحت" : "پایان زمان تمرکز",
+          body: isBreak
+            ? "زمان استراحت به پایان رسید. آماده شروع مجدد هستید؟"
+            : `دوره «${exam?.courseName || "مطالعه"}» به پایان رسید. خسته نباشید!`,
+        });
+      } catch (e) {
+        console.warn("Native focus alarm failed:", e);
+      }
+      try {
         await NativeHelper.setSystemAlarm?.({
           hour: endDate.getHours(),
           minute: endDate.getMinutes(),
@@ -416,6 +443,7 @@ export default function ExamFocusMode({
     safeStorageRemove(FOCUS_STORAGE_KEY);
     if (Capacitor.isNativePlatform()) {
       LocalNotifications.cancel({ notifications: [{ id: 888 }] }).catch(() => {});
+      NativeHelper.cancelFocusAlarm?.().catch(() => {});
     }
   };
 

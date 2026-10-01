@@ -4,4 +4,11 @@
     <string name="title_activity_main">دانشجویار</string>
     <string name="package_name">ir.ac.tabrizu.student_assistant</string>
     <string name="custom_url_scheme">ir.ac.tabrizu.student_assistant</string>
+    <string name="alarm_stop">توقف زنگ</string>
+    <string name="alarm_hint">برای بستن زنگ، دکمه را لمس کنید</string>
+    <string name="alarm_icon_description">زنگ پایان تمرکز</string>
+    <string name="alarm_channel_name">زنگ پایان تمرکز</string>
+    <string name="alarm_channel_description">هشدار تمام‌صفحه هنگام پایان جلسه مطالعه</string>
+    <string name="alarm_default_title">پایان زمان تمرکز</string>
+    <string name="alarm_default_body">زمان مطالعه به پایان رسید. خسته نباشید!</string>
 </resources>

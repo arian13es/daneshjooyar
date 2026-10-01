@@ -49,6 +49,47 @@ public class MainActivity extends BridgeActivity {
     )
     public static class NativeNotificationHelperPlugin extends Plugin {
 
+    /**
+     * Registers a full-screen Clock-style alarm for the end of a focus session.
+     * This path does not depend on the WebView staying alive, so the alert still
+     * fires when the screen is off or the app was killed.
+     */
+    @PluginMethod
+    public void scheduleFocusAlarm(PluginCall call) {
+        JSObject ret = new JSObject();
+        try {
+            Long triggerAt = call.getLong("triggerAtMillis");
+            if (triggerAt == null || triggerAt <= System.currentTimeMillis()) {
+                ret.put("scheduled", false);
+                ret.put("exact", false);
+                call.resolve(ret);
+                return;
+            }
+            String title = call.getString("title", "پایان زمان تمرکز");
+            String body = call.getString("body", "زمان مطالعه به پایان رسید. خسته نباشید!");
+
+            boolean exact = FocusAlarmReceiver.schedule(getContext(), triggerAt, title, body);
+            ret.put("scheduled", true);
+            ret.put("exact", exact);
+            call.resolve(ret);
+        } catch (Exception e) {
+            ret.put("scheduled", false);
+            ret.put("exact", false);
+            call.resolve(ret);
+        }
+    }
+
+    @PluginMethod
+    public void cancelFocusAlarm(PluginCall call) {
+        try {
+            FocusAlarmReceiver.cancel(getContext());
+            FocusAlarmService.stop(getContext());
+            call.resolve();
+        } catch (Exception e) {
+            call.reject("Failed to cancel focus alarm: " + e.getMessage());
+        }
+    }
+
     @PluginMethod
     public void vibrate(PluginCall call) {
         try {

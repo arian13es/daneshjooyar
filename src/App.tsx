@@ -140,17 +140,22 @@ export default function App() {
   return (
     <motion.div
       initial={false}
-      animate={{ opacity: 1 }}
+      animate={{ opacity: isAppReady ? 1 : 0 }}
+      transition={{ duration: 0.42, ease: [0.4, 0, 0.2, 1] as const }}
+      style={{
+        // Owns a stacking context so the splash overlay painted above it can
+        // cross-dissolve into the app instead of cutting to a blank frame.
+        isolation: "isolate",
+        zIndex: 0,
+        willChange: "opacity",
+      }}
       className="w-full h-full bg-slate-50 dark:bg-slate-900 flex flex-col font-sans overflow-hidden"
       dir="rtl"
     >
       {!hasProfile ? (
         <OnboardingModal onSave={handleSaveProfile} />
       ) : (
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={isAppReady ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] as const }}
+        <div
           className={`flex-1 flex flex-col min-h-0 ${
             activeTab === "map"
               ? "p-0 max-w-none"
@@ -217,14 +222,8 @@ export default function App() {
             </div>
           </main>
 
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={isAppReady ? { opacity: 1 } : {}}
-            transition={{ duration: 0.25, ease: "easeOut" }}
-          >
-            <BottomTabBar activeTab={activeTab} onTabClick={handleTabClick} />
-          </motion.div>
-        </motion.div>
+          <BottomTabBar activeTab={activeTab} onTabClick={handleTabClick} />
+        </div>
       )}
 
       <GlobalModals

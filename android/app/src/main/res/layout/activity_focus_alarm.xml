@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Full-screen focus-timer alarm.
+
+  Deliberately plain: an opaque dark background, a glow behind a ringing icon,
+  the live clock, and one large high-contrast stop button. Built from framework
+  views only so it inflates in a few milliseconds while the phone is alarming.
+-->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/alarm_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/alarmBackground"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:paddingLeft="28dp"
+        android:paddingRight="28dp"
+        android:paddingTop="56dp"
+        android:paddingBottom="48dp">
+
+        <!-- Ringing indicator -->
+        <FrameLayout
+            android:layout_width="132dp"
+            android:layout_height="132dp">
+
+            <View
+                android:layout_width="132dp"
+                android:layout_height="132dp"
+                android:background="@drawable/alarm_glow" />
+
+            <ImageView
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_gravity="center"
+                android:src="@android:drawable/ic_popup_reminder"
+                android:contentDescription="@string/alarm_icon_description"
+                android:tint="@color/alarmText" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/alarm_clock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="26dp"
+            android:textColor="@color/alarmText"
+            android:textSize="52sp"
+            android:textStyle="bold"
+            android:text="۰۰:۰۰" />
+
+        <TextView
+            android:id="@+id/alarm_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:textColor="@color/alarmText"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:text="پایان زمان تمرکز" />
+
+        <TextView
+            android:id="@+id/alarm_body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:lineSpacingExtra="4dp"
+            android:textColor="@color/alarmMuted"
+            android:textSize="15sp"
+            android:text="زمان مطالعه به پایان رسید. خسته نباشید!" />
+
+        <Button
+            android:id="@+id/alarm_dismiss"
+            android:layout_width="match_parent"
+            android:layout_height="62dp"
+            android:layout_marginTop="42dp"
+            android:background="@drawable/alarm_stop_button"
+            android:text="@string/alarm_stop"
+            android:textColor="@color/alarmText"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:stateListAnimator="@null" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:textColor="@color/alarmMuted"
+            android:textSize="12sp"
+            android:text="@string/alarm_hint" />
+
+    </LinearLayout>
+</ScrollView>

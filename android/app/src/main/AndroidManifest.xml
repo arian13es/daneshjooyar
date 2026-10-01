@@ -41,7 +41,36 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/student_widget_info" />
         </receiver>
-    </application>
+
+        <!--
+          Focus-timer alarm: a full-screen Clock-style alert. The receiver is not
+          exported because the only sender is our own AlarmManager PendingIntent.
+          showWhenLocked/turnScreenOn make it appear over the lock screen, and
+          excludeFromRecents keeps it out of the task switcher.
+        -->
+        <receiver
+            android:name=".FocusAlarmReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="ir.ac.tabrizu.student_assistant.FOCUS_ALARM" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name=".FocusAlarmActivity"
+            android:exported="false"
+            android:launchMode="singleInstance"
+            android:excludeFromRecents="true"
+            android:taskAffinity=""
+            android:showWhenLocked="true"
+            android:turnScreenOn="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.FocusAlarm" />
+
+        <service
+            android:name=".FocusAlarmService"
+            android:exported="false"
+            android:foregroundServiceType="shortService" />    </application>
 
     <!-- Permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -57,5 +86,10 @@
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!-- Android 14+ requires this to launch a full-screen alarm from the background -->
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+    <!-- Android 14+ requires a declared type for the alarm foreground service -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SHORT_SERVICE" />
     <uses-feature android:name="android.hardware.location.gps" android:required="false" />
 </manifest>

@@ -21,4 +21,20 @@
         <item name="windowSplashScreenAnimatedIcon">@drawable/splash_logo_perfect</item>
         <item name="postSplashScreenTheme">@style/AppTheme.NoActionBar</item>
     </style>
+
+    <!--
+      Full-screen focus-timer alarm. Portrait-only, no title bar, opaque window
+      background so there is never a white flash before the layout draws. The
+      RTL layout direction matches the rest of the app.
+    -->
+    <style name="AppTheme.FocusAlarm" parent="Theme.AppCompat.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/alarmBackground</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowShowWallpaper">false</item>
+        <item name="android:statusBarColor">@color/alarmBackground</item>
+        <item name="android:navigationBarColor">@color/alarmBackground</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
 </resources>

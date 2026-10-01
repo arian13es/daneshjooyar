@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Large, high-contrast stop button. Ripple feedback is kept because this is
+     the one control the user has to hit while half asleep. -->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="#33FFFFFF">
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="22dp" />
+            <solid android:color="@color/alarmStop" />
+        </shape>
+    </item>
+</ripple>

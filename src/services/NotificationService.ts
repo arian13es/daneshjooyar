@@ -38,6 +38,12 @@ export interface NativeNotificationHelperPlugin {
   openSystemMusicPlayer(): Promise<void>;
   vibrate(options?: { pattern?: number[] }): Promise<void>;
   setSystemAlarm(options: { hour: number; minute: number; message: string }): Promise<void>;
+  scheduleFocusAlarm(options: {
+    triggerAtMillis: number;
+    title: string;
+    body: string;
+  }): Promise<{ scheduled: boolean; exact: boolean }>;
+  cancelFocusAlarm(): Promise<void>;
   saveImageToDownloads(options: {
     base64: string;
     fileName: string;

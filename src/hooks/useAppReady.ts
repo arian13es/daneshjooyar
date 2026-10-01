@@ -3,7 +3,22 @@ import { SplashScreen } from "@capacitor/splash-screen";
 import { Capacitor } from "@capacitor/core";
 import { safeStorageGetString } from "../utils/storageUtils";
 
-export function useAppReady(): { isAppReady: boolean; hasProfile: boolean; setHasProfile: (v: boolean) => void } {
+/** Must stay in sync with the .splash-overlay opacity transition in index.html. */
+const SPLASH_FADE_MS = 450;
+/**
+ * The logo intro in index.html runs for ~340ms. The splash is held on screen at
+ * least this long so the animation is never cut off half-way, which made the
+ * entrance look like it "stuttered" into the app.
+ */
+const SPLASH_MIN_VISIBLE_MS = 420;
+/** Safety net: never keep the user on the splash for longer than this. */
+const SPLASH_MAX_WAIT_MS = 2500;
+
+export function useAppReady(): {
+  isAppReady: boolean;
+  hasProfile: boolean;
+  setHasProfile: (v: boolean) => void;
+} {
   const [isAppReady, setIsAppReady] = useState(false);
   const [hasProfile, setHasProfile] = useState<boolean>(() => {
     return !!safeStorageGetString("tabriz_profile_v2", "");
@@ -14,48 +29,76 @@ export function useAppReady(): { isAppReady: boolean; hasProfile: boolean; setHa
       SplashScreen.hide().catch(() => {});
     }
 
+    const mountedAt = Date.now();
     let pollTimer: ReturnType<typeof setInterval> | undefined;
-    let fadeTimer: ReturnType<typeof setTimeout> | undefined;
+    let minVisibleTimer: ReturnType<typeof setTimeout> | undefined;
+    let maxWaitTimer: ReturnType<typeof setTimeout> | undefined;
     let removeTimer: ReturnType<typeof setTimeout> | undefined;
     let rafId: number | undefined;
     let started = false;
 
+    const isAppMounted = () =>
+      Boolean((window as unknown as { __APP_MOUNTED__?: boolean }).__APP_MOUNTED__);
+
+    /**
+     * Cross-dissolve: the splash stays on top while the app fades in underneath
+     * it, then the splash dissolves away. Because the splash is painted above
+     * the app in the same stacking context, there is never a blank frame.
+     */
     const beginEntrance = () => {
       if (started) return;
       started = true;
       if (pollTimer) clearInterval(pollTimer);
-      // Wait for the browser compositor to settle, then fade the splash out.
+      if (minVisibleTimer) clearTimeout(minVisibleTimer);
+      if (maxWaitTimer) clearTimeout(maxWaitTimer);
+
+      // Two frames: one to commit the app's mounted state, one to guarantee the
+      // compositor has the app's first layer ready before we start dissolving.
       rafId = requestAnimationFrame(() => {
-        const splashOverlay = document.querySelector("#native-splash .splash-overlay");
-        if (splashOverlay) {
-          splashOverlay.classList.add("is-fading");
-        }
-        setIsAppReady(true);
-        // The overlay is removed only after its fade transition has finished.
-        removeTimer = setTimeout(() => {
-          const nativeSplash = document.getElementById("native-splash");
-          if (nativeSplash) {
-            nativeSplash.remove();
+        requestAnimationFrame(() => {
+          const splashOverlay = document.querySelector("#native-splash .splash-overlay");
+          if (splashOverlay) {
+            splashOverlay.classList.add("is-fading");
           }
-          setHasProfile(!!safeStorageGetString("tabriz_profile_v2", ""));
-        }, 650);
+          // Triggers the app's own opacity fade-in underneath the splash.
+          setIsAppReady(true);
+
+          removeTimer = setTimeout(() => {
+            document.getElementById("native-splash")?.remove();
+            setHasProfile(!!safeStorageGetString("tabriz_profile_v2", ""));
+          }, SPLASH_FADE_MS + 60);
+        });
       });
     };
 
-    // React sets window.__APP_MOUNTED__ right after createRoot().render(), so we
-    // start the entrance as soon as the app is really on screen instead of
-    // relying on a fixed delay. Polling is cheap and avoids a blank first paint
-    // on slow devices; the fallback timer guarantees we never get stuck.
-    pollTimer = setInterval(() => {
-      if ((window as unknown as { __APP_MOUNTED__?: boolean }).__APP_MOUNTED__) {
-        beginEntrance();
+    const requestEntranceWhenAllowed = () => {
+      const elapsed = Date.now() - mountedAt;
+      const remaining = SPLASH_MIN_VISIBLE_MS - elapsed;
+      if (remaining > 0) {
+        if (!minVisibleTimer) {
+          minVisibleTimer = setTimeout(() => {
+            minVisibleTimer = undefined;
+            if (isAppMounted()) beginEntrance();
+          }, remaining);
+        }
+        return;
       }
+      beginEntrance();
+    };
+
+    // React sets window.__APP_MOUNTED__ right after createRoot().render(), so the
+    // entrance starts when the app is genuinely on screen rather than after a
+    // fixed delay. Polling is cheap; the cap below guarantees we never stick.
+    pollTimer = setInterval(() => {
+      if (isAppMounted()) requestEntranceWhenAllowed();
     }, 16);
-    fadeTimer = setTimeout(beginEntrance, 2500);
+
+    maxWaitTimer = setTimeout(beginEntrance, SPLASH_MAX_WAIT_MS);
 
     return () => {
       if (pollTimer) clearInterval(pollTimer);
-      if (fadeTimer) clearTimeout(fadeTimer);
+      if (minVisibleTimer) clearTimeout(minVisibleTimer);
+      if (maxWaitTimer) clearTimeout(maxWaitTimer);
       if (removeTimer) clearTimeout(removeTimer);
       if (rafId !== undefined) cancelAnimationFrame(rafId);
     };
