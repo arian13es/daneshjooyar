@@ -76,43 +76,47 @@
         align-items: center; justify-content: center;
         gap: 1.25rem; user-select: none;
         background-color: #f8fafc;
-        transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1);
         will-change: opacity;
       }
       html.dark .splash-overlay { background-color: #0f172a; }
       .splash-overlay.is-fading { opacity: 0; pointer-events: none; }
 
-      /* 3. Splash content wrapper — smooth dissolve on exit */
+      /* 3. Splash content wrapper — velvety smooth dissolve on exit */
       .splash-content {
         display: flex; flex-direction: column;
-        align-items: center; justify-content: center; gap: 1rem;
+        align-items: center; justify-content: center; gap: 1.25rem;
         will-change: transform, opacity;
-        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease-out;
+        transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.55s ease-out;
       }
-      .splash-overlay.is-fading .splash-content { transform: scale(1.04); opacity: 0; }
+      .splash-overlay.is-fading .splash-content { transform: scale(1.03); opacity: 0; }
 
-      /* 4. Logo card — clean, sharp, native-aligned */
+      /* 4. Logo card — luxury rounded squircle with depth */
       .splash-logo {
-        height: 6rem; width: 6rem;
+        height: 6.5rem; width: 6.5rem;
         display: flex; align-items: center; justify-content: center;
-        animation: splash-logo-in 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+        border-radius: 1.75rem;
+        overflow: hidden;
+        box-shadow: 0 16px 36px -6px rgba(0, 0, 0, 0.14), 0 4px 12px rgba(0, 0, 0, 0.06);
+        border: 2.5px solid rgba(255, 255, 255, 0.85);
+        animation: splash-logo-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
         will-change: transform, opacity;
+      }
+      html.dark .splash-logo {
+        box-shadow: 0 20px 44px -6px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.12);
+        border-color: rgba(255, 255, 255, 0.15);
       }
 
       /* 5. Logo image */
       .splash-logo-img {
         height: 100%; width: 100%;
-        object-fit: contain; pointer-events: none;
-        filter: drop-shadow(0 4px 16px rgba(0,0,0,0.08));
-      }
-      html.dark .splash-logo-img {
-        filter: drop-shadow(0 4px 20px rgba(0,0,0,0.5));
+        object-fit: cover; pointer-events: none;
       }
 
       /* 6. Title block */
       .splash-title {
         text-align: center;
-        animation: splash-title-in 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.08s both;
+        animation: splash-title-in 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.12s both;
         will-change: transform, opacity;
       }
       .splash-title h2 {
@@ -133,13 +137,13 @@
         width: 3.5rem; height: 0.25rem;
         background: linear-gradient(90deg, #6366f1, #3b82f6);
         border-radius: 9999px;
-        animation: splash-bar-in 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both;
+        animation: splash-bar-in 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
         will-change: transform, opacity;
       }
 
       /* ── KEYFRAMES ── */
       @keyframes splash-logo-in {
-        from { opacity: 0; transform: scale(0.92); }
+        from { opacity: 0; transform: scale(0.9); }
         to   { opacity: 1; transform: scale(1); }
       }
 
@@ -178,8 +182,8 @@
         <div class="splash-content">
           <div class="splash-logo">
             <img
-              src="/logo_tabriz.png"
-              alt="دانشگاه تبریز"
+              src="/app_logo.jpg"
+              alt="دانشجویار"
               class="splash-logo-img"
               loading="eager"
               decoding="sync"
@@ -187,7 +191,7 @@
           </div>
           <div class="splash-title">
             <h2>دانشجویار</h2>
-            <p>دانشگاه تبریز</p>
+            <p>دستیار هوشمند دانشگاه تبریز</p>
           </div>
           <div class="splash-bar"></div>
         </div>

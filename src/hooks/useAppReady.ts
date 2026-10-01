@@ -26,7 +26,7 @@ export function useAppReady(): { isAppReady: boolean; hasProfile: boolean; setHa
             splashOverlay.classList.add("is-fading");
           }
           setIsAppReady(true);
-        }, 400);
+        }, 1250);
 
         removeTimer = setTimeout(() => {
           const nativeSplash = document.getElementById("native-splash");
@@ -34,7 +34,7 @@ export function useAppReady(): { isAppReady: boolean; hasProfile: boolean; setHa
             nativeSplash.remove();
           }
           setHasProfile(!!safeStorageGetString("tabriz_profile_v2", ""));
-        }, 800);
+        }, 1900);
       });
     });
 
