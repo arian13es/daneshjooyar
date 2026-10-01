@@ -15,13 +15,17 @@ import android.os.PowerManager;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Base64;
+import android.Manifest;
 import androidx.core.splashscreen.SplashScreen;
 import com.getcapacitor.BridgeActivity;
 import com.getcapacitor.JSObject;
+import com.getcapacitor.PermissionState;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
+import com.getcapacitor.annotation.Permission;
+import com.getcapacitor.annotation.PermissionCallback;
 import java.io.OutputStream;
 
 public class MainActivity extends BridgeActivity {
@@ -33,7 +37,15 @@ public class MainActivity extends BridgeActivity {
     }
 
 
-    @CapacitorPlugin(name = "NativeNotificationHelper")
+    @CapacitorPlugin(
+        name = "NativeNotificationHelper",
+        permissions = {
+            @Permission(
+                alias = "storage",
+                strings = { Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE }
+            )
+        }
+    )
     public static class NativeNotificationHelperPlugin extends Plugin {
 
     @PluginMethod
@@ -263,11 +275,20 @@ public class MainActivity extends BridgeActivity {
         }
     }
 
+    @PermissionCallback
+    private void saveImagePermissionCallback(PluginCall call) {
+        if (getPermissionState("storage") == PermissionState.GRANTED) {
+            saveImageToDownloads(call);
+        } else {
+            call.reject("مجوز دسترسی به حافظه برای ذخیره تصویر اعطا نشد.");
+        }
+    }
+
     /**
      * Decodes a base64 PNG and saves it into the public Downloads folder so the
      * user gets a real file (not just an "open" preview). Uses MediaStore on
      * Android 10+ (scoped storage, no permission needed) and a direct write on
-     * older devices.
+     * older devices (with runtime permission validation).
      */
     @PluginMethod
     public void saveImageToDownloads(PluginCall call) {
@@ -277,6 +298,15 @@ public class MainActivity extends BridgeActivity {
             call.reject("No image data provided");
             return;
         }
+
+        // On Android 9 and lower (API <= 28), WRITE_EXTERNAL_STORAGE is a dangerous runtime permission
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+            if (getPermissionState("storage") != PermissionState.GRANTED) {
+                requestPermissionForAlias("storage", call, "saveImagePermissionCallback");
+                return;
+            }
+        }
+
         try {
             byte[] bytes = Base64.decode(base64Data, Base64.DEFAULT);
             Context ctx = getContext();
@@ -306,17 +336,36 @@ public class MainActivity extends BridgeActivity {
                 ret.put("path", Environment.DIRECTORY_DOWNLOADS + "/" + fileName);
                 call.resolve(ret);
             } else {
+                if (!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+                    call.reject("حافظه خارجی در دسترس نیست یا در حالت فقط خواندنی است.");
+                    return;
+                }
+
                 java.io.File downloads = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-                if (!downloads.exists()) downloads.mkdirs();
+                if (!downloads.exists() && !downloads.mkdirs()) {
+                    call.reject("امکان ایجاد پوشه دانلودها در حافظه وجود ندارد.");
+                    return;
+                }
+
                 java.io.File outFile = new java.io.File(downloads, fileName);
                 try (java.io.FileOutputStream fos = new java.io.FileOutputStream(outFile)) {
                     fos.write(bytes);
                     fos.flush();
                 }
-                // Make it visible to the gallery / file managers
-                Intent scan = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                scan.setData(Uri.fromFile(outFile));
-                ctx.sendBroadcast(scan);
+
+                // Index with MediaScannerConnection & broadcast for broad Android 7-9 gallery compatibility
+                try {
+                    android.media.MediaScannerConnection.scanFile(
+                        ctx,
+                        new String[] { outFile.getAbsolutePath() },
+                        new String[] { "image/png" },
+                        null
+                    );
+                    Intent scan = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                    scan.setData(Uri.fromFile(outFile));
+                    ctx.sendBroadcast(scan);
+                } catch (Exception ignored) {}
+
                 JSObject ret = new JSObject();
                 ret.put("uri", Uri.fromFile(outFile).toString());
                 ret.put("path", outFile.getAbsolutePath());
