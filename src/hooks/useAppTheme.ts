@@ -20,7 +20,6 @@ export function useAppTheme(): [boolean, Dispatch<SetStateAction<boolean>>] {
       if (metaTheme) metaTheme.setAttribute("content", "#0f172a");
       if (Capacitor.isNativePlatform()) {
         StatusBar.setStyle({ style: Style.Dark }).catch(() => {});
-        StatusBar.setBackgroundColor({ color: "#0f172a" }).catch(() => {});
       }
     } else {
       document.documentElement.classList.remove("dark");
@@ -28,7 +27,6 @@ export function useAppTheme(): [boolean, Dispatch<SetStateAction<boolean>>] {
       if (metaTheme) metaTheme.setAttribute("content", "#f8fafc");
       if (Capacitor.isNativePlatform()) {
         StatusBar.setStyle({ style: Style.Light }).catch(() => {});
-        StatusBar.setBackgroundColor({ color: "#f8fafc" }).catch(() => {});
       }
     }
   }, [isDarkMode]);

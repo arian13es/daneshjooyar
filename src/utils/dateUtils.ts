@@ -151,11 +151,11 @@ export const parseJsDay = (wDay?: string): number => {
 };
 
 /**
- * Week-parity anchor: Saturday 2026-09-19 (۲۸ شهریور ۱۴۰۵) is an EVEN week.
+ * Week-parity anchor: Saturday 2026-09-26 (۴ مهر ۱۴۰۵) is an EVEN week (شروع رسمی نیم‌سال تحصیلی).
  * The optional user offset (tabriz_week_parity) flips parity when the
  * university schedule drifts from this anchor.
  */
-export const WEEK_PARITY_ANCHOR_MS = new Date(2026, 8, 19, 0, 0, 0, 0).getTime();
+export const WEEK_PARITY_ANCHOR_MS = new Date(2026, 8, 26, 0, 0, 0, 0).getTime();
 
 export const getWeekParityOffset = (): number => {
   const raw = safeStorageGetString("tabriz_week_parity", "0");

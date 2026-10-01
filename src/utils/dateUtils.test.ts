@@ -70,7 +70,7 @@ describe("parseJsDay", () => {
 });
 
 describe("isEvenWeekAt", () => {
-  it("anchor date (2026-09-19) is an even week", () => {
+  it("anchor date (2026-09-26) is an even week", () => {
     expect(isEvenWeekAt(WEEK_PARITY_ANCHOR_MS, 0)).toBe(true);
   });
 

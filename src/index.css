@@ -21,10 +21,8 @@ html, body {
   padding: 0;
   width: 100%;
   height: 100%;
-  height: 100dvh;
-  min-height: 100dvh;
+  min-height: 100%;
   overflow: hidden;
-  position: fixed;
   font-family: var(--font-sans);
   background-color: #f8fafc; /* slate-50 */
   color: #0f172a;
@@ -48,7 +46,6 @@ button, input, optgroup, select, textarea {
 #root {
   width: 100%;
   height: 100%;
-  height: 100dvh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
