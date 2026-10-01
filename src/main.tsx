@@ -7,6 +7,7 @@
  * ============================================================================
  */
 
+import './utils/polyfills';
 import {StrictMode} from 'react';
 import {createRoot} from 'react-dom/client';
 import App from './App.tsx';
@@ -28,3 +29,5 @@ createRoot(document.getElementById('root')!).render(
     </ErrorBoundary>
   </StrictMode>,
 );
+(window as any).__APP_MOUNTED__ = true;
+

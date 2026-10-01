@@ -14,6 +14,22 @@
     <meta name="theme-color" content="#f8fafc" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)" />
     <title>سامانه دانشجویار تبریز | دانشگاه تبریز</title>
+    <script>
+      (function() {
+        window.addEventListener('error', function(e) {
+          console.error('[StartupGuard]', e.message, e.filename, e.lineno);
+          var splash = document.getElementById('native-splash');
+          var text = splash ? splash.querySelector('.native-splash-text') : null;
+          if (text && !window.__APP_MOUNTED__) {
+            setTimeout(function() {
+              if (!window.__APP_MOUNTED__) {
+                text.textContent = 'در حال راه‌اندازی و بررسی اتصال...';
+              }
+            }, 3500);
+          }
+        });
+      })();
+    </script>
     <link rel="preload" href="/fonts/vazirmatn.woff2" as="font" type="font/woff2" crossorigin="anonymous">
     <style>
       @font-face {

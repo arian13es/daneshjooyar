@@ -287,11 +287,19 @@ export default function ScheduleExportModal({ classes, profile, onClose }: Sched
     if (typeof document !== "undefined" && document.fonts) {
       try {
         await document.fonts.ready;
-        await Promise.allSettled([
-          document.fonts.load('bold 48px "Vazirmatn Variable"'),
-          document.fonts.load('normal 24px "Vazirmatn Variable"'),
-          document.fonts.load('bold 24px "Vazirmatn Variable"')
-        ]);
+        if (typeof Promise.allSettled === "function") {
+          await Promise.allSettled([
+            document.fonts.load('bold 48px "Vazirmatn Variable"'),
+            document.fonts.load('normal 24px "Vazirmatn Variable"'),
+            document.fonts.load('bold 24px "Vazirmatn Variable"')
+          ]);
+        } else {
+          await Promise.all([
+            document.fonts.load('bold 48px "Vazirmatn Variable"').catch(() => null),
+            document.fonts.load('normal 24px "Vazirmatn Variable"').catch(() => null),
+            document.fonts.load('bold 24px "Vazirmatn Variable"').catch(() => null)
+          ]);
+        }
       } catch (e) {
         console.warn("Font pre-loading fallback", e);
       }
