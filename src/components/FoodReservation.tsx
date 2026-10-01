@@ -219,7 +219,7 @@ export default function FoodReservation() {
         <div className="absolute bottom-0 left-0 w-32 h-32 bg-purple-500/20 rounded-full blur-3xl -ml-10 -mb-10 pointer-events-none"></div>
         
         <div className="flex items-center gap-3 mb-2 sm:mb-4 relative z-10">
-          <div className="bg-white/20 p-2 sm:p-2.5 rounded-xl sm:rounded-2xl backdrop-blur-md border border-white/10 shadow-sm">
+          <div className="bg-white/20 p-2 sm:p-2.5 rounded-xl sm:rounded-2xl border border-white/10 shadow-sm">
             <Utensils className="h-5 w-5 sm:h-6 sm:w-6 text-amber-300" />
           </div>
           <div>
@@ -323,7 +323,7 @@ export default function FoodReservation() {
           >
             <div 
               onClick={() => setBottomSheetOptions(prev => ({ ...prev, isOpen: false }))}
-              className="absolute inset-0 bg-slate-900/50 backdrop-blur-sm"
+              className="absolute inset-0 bg-slate-900/50"
             />
             <motion.div 
               initial={{ y: "100%" }} 
@@ -374,7 +374,7 @@ export default function FoodReservation() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
-            className="fixed bottom-24 left-4 right-4 z-[300] max-w-sm mx-auto bg-slate-900/90 dark:bg-white/90 text-white dark:text-slate-900 px-4 py-3 rounded-2xl shadow-xl backdrop-blur-md text-xs font-bold text-center border border-white/10"
+            className="fixed bottom-24 left-4 right-4 z-[300] max-w-sm mx-auto bg-slate-900/90 dark:bg-white/90 text-white dark:text-slate-900 px-4 py-3 rounded-2xl shadow-xl text-xs font-bold text-center border border-white/10"
           >
             {toastMessage}
           </motion.div>

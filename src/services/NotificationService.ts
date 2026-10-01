@@ -8,9 +8,12 @@ import {
   toEnglishDigits,
   datesForWeekdayInHorizon,
 } from '../utils/dateUtils';
-import { safeStorageGetString } from '../utils/storageUtils';
+import { safeStorageGetString, safeStorageSet, safeStorageRemove } from '../utils/storageUtils';
 
 export const NOTIFICATION_CHANNEL_ID = 'student_reminders_v2';
+
+/** Set to "1" when Android refuses exact alarms, so the UI can warn the user. */
+export const EXACT_ALARM_BLOCKED_KEY = 'tabriz_exact_alarm_blocked';
 
 // ID ranges (avoid Food=1000, Focus=888/999, Test=777777)
 const CLASS_ID_MIN = 100000;
@@ -33,6 +36,7 @@ export interface NativeNotificationHelperPlugin {
   openExactAlarmSettings(): Promise<void>;
   openAutoStartSettings(): Promise<void>;
   openSystemMusicPlayer(): Promise<void>;
+  vibrate(options?: { pattern?: number[] }): Promise<void>;
   setSystemAlarm(options: { hour: number; minute: number; message: string }): Promise<void>;
   saveImageToDownloads(options: {
     base64: string;
@@ -300,6 +304,19 @@ async function scheduleAll(
     await NotificationService.init();
     await cancelSchedulerNotifications();
 
+    // Android 12+ can silently drop every exact alarm when the user revoked
+    // "Alarms & reminders". Surface that instead of failing invisibly.
+    const exactAlarmsAllowed = await NotificationService.canScheduleExactAlarms();
+    if (!exactAlarmsAllowed) {
+      safeStorageSet(EXACT_ALARM_BLOCKED_KEY, '1');
+      console.warn(
+        '[Notifications] Exact alarms are not permitted; reminders were scheduled but may be delayed. ' +
+          'The user must enable "Alarms & reminders" in system settings.'
+      );
+    } else {
+      safeStorageRemove(EXACT_ALARM_BLOCKED_KEY);
+    }
+
     const now = new Date();
     const leadMinutes = getClassLeadMinutes();
     let parityOffset = 0;
@@ -380,6 +397,11 @@ export const NotificationService = {
     } catch {
       return true;
     }
+  },
+
+  /** True when the last scheduling pass found that exact alarms are not permitted. */
+  isExactAlarmBlocked(): boolean {
+    return safeStorageGetString(EXACT_ALARM_BLOCKED_KEY, '') === '1';
   },
 
   scheduleAll,

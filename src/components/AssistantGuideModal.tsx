@@ -150,7 +150,7 @@ export default function AssistantGuideModal({ onClose, onSelectPrompt }: Assista
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.2 }}
-      className="fixed inset-0 z-[210] bg-slate-900/70 backdrop-blur-sm flex items-end sm:items-center justify-center p-3 sm:p-4 pb-6 sm:pb-4 font-sans text-right"
+      className="fixed inset-0 z-[210] bg-slate-900/70 flex items-end sm:items-center justify-center p-3 sm:p-4 pb-6 sm:pb-4 font-sans text-right"
       dir="rtl"
     >
       <motion.div

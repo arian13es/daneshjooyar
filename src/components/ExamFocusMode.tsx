@@ -10,6 +10,121 @@ import { NativeHelper } from "../services/NotificationService";
 import { safeStorageGet, safeStorageSet, safeStorageRemove } from "../utils/storageUtils";
 
 export const FOCUS_STORAGE_KEY = "tabriz_exam_focus_session_v2";
+export const FOCUS_ALERT_CHANNEL_ID = "focus_timer_alerts_v1";
+export const FOCUS_ALERT_SOUND = "alarm";
+
+/**
+ * A single, reused AudioContext. Android WebView blocks audio that is created
+ * programmatically while the screen is off, so the context is created and
+ * resumed on the user's first tap and kept alive for the whole session.
+ */
+let sharedAudioCtx: AudioContext | null = null;
+
+function getAudioContext(): AudioContext | null {
+  if (sharedAudioCtx) return sharedAudioCtx;
+  try {
+    const Ctor =
+      window.AudioContext ||
+      (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+    if (!Ctor) return null;
+    sharedAudioCtx = new Ctor();
+  } catch {
+    sharedAudioCtx = null;
+  }
+  return sharedAudioCtx;
+}
+
+/**
+ * Must be called from a real user gesture. Unlocking here is what makes the
+ * end-of-timer chime audible later, even after the screen was turned off.
+ */
+export function unlockFocusAudio(): void {
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    if (ctx.state === "suspended") {
+      ctx.resume().catch(() => {});
+    }
+    // A near-silent blip inside the gesture marks the context as user-activated.
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    gain.gain.value = 0.0001;
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.02);
+  } catch {
+    /* ignore */
+  }
+}
+
+/** Plays the completion chime through the pre-unlocked context. */
+function playChimeTone(): void {
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    if (ctx.state === "suspended") {
+      ctx.resume().catch(() => {});
+    }
+    const now = ctx.currentTime + 0.02;
+    const freqs = [523.25, 659.25, 783.99, 1046.5];
+    freqs.forEach((freq, idx) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "sine";
+      osc.frequency.value = freq;
+      const noteStart = now + idx * 0.14;
+      gain.gain.setValueAtTime(0, noteStart);
+      gain.gain.linearRampToValueAtTime(0.32, noteStart + 0.05);
+      gain.gain.exponentialRampToValueAtTime(0.001, noteStart + 0.9);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(noteStart);
+      osc.stop(noteStart + 1.0);
+    });
+    // The 3rd chord repeats so the alert is clearly noticeable.
+    const repeatStart = now + freqs.length * 0.14 + 0.35;
+    freqs.forEach((freq, idx) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "sine";
+      osc.frequency.value = freq;
+      const noteStart = repeatStart + idx * 0.14;
+      gain.gain.setValueAtTime(0, noteStart);
+      gain.gain.linearRampToValueAtTime(0.28, noteStart + 0.05);
+      gain.gain.exponentialRampToValueAtTime(0.001, noteStart + 0.9);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(noteStart);
+      osc.stop(noteStart + 1.0);
+    });
+  } catch {
+    /* ignore */
+  }
+}
+
+const VIBRATION_PATTERN = [0, 400, 200, 400, 200, 700];
+
+/** Fires the end-of-timer alert through every channel available on the device. */
+export function triggerFocusAlert(): void {
+  playChimeTone();
+
+  // Web vibration (works in the browser; ignored by most Android WebViews).
+  try {
+    if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+      navigator.vibrate(VIBRATION_PATTERN);
+    }
+  } catch {
+    /* ignore */
+  }
+
+  // Native vibration – the reliable path inside the Android WebView.
+  try {
+    void NativeHelper.vibrate?.({ pattern: VIBRATION_PATTERN }).catch(() => {});
+  } catch {
+    /* ignore */
+  }
+}
 
 export interface FocusSessionState {
   examId: string;
@@ -20,44 +135,6 @@ export interface FocusSessionState {
   sessionStartedAt: number;
   baseStudiedSeconds: number;
   isActive: boolean;
-}
-
-function playChimeAndVibrate() {
-  try {
-    if (typeof window !== "undefined" && "vibrate" in navigator) {
-      navigator.vibrate([200, 100, 200, 100, 400]);
-    }
-  } catch (e) {
-    /* ignore vibration unsupported */
-  }
-
-  try {
-    const AudioContextClass =
-      window.AudioContext ||
-      (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-    if (AudioContextClass) {
-      const ctx = new AudioContextClass();
-      const now = ctx.currentTime;
-      // Gentle harmonic chime chords: C5 (523.25Hz), E5 (659.25Hz), G5 (783.99Hz), C6 (1046.50Hz)
-      const freqs = [523.25, 659.25, 783.99, 1046.5];
-      freqs.forEach((freq, idx) => {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = "sine";
-        osc.frequency.value = freq;
-        const noteStart = now + idx * 0.12;
-        gain.gain.setValueAtTime(0, noteStart);
-        gain.gain.linearRampToValueAtTime(0.18, noteStart + 0.04);
-        gain.gain.exponentialRampToValueAtTime(0.001, noteStart + 0.75);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start(noteStart);
-        osc.stop(noteStart + 0.8);
-      });
-    }
-  } catch (e) {
-    /* ignore audio context errors */
-  }
 }
 
 interface ExamFocusModeProps {
@@ -135,7 +212,7 @@ export default function ExamFocusMode({
     }
 
     if (remaining <= 0) {
-      playChimeAndVibrate();
+      triggerFocusAlert();
       setIsActive(false);
 
       if (!session.isBreak) {
@@ -151,9 +228,17 @@ export default function ExamFocusMode({
     }
   }, [exam?.id, selectedMinutes]);
 
-  // Initial Session Restoration
+  // Initial Session Restoration — runs once per exam, not on every render.
+  // selectedMinutes is read through a ref so it never re-triggers this effect.
+  const selectedMinutesRef = useRef(selectedMinutes);
+  selectedMinutesRef.current = selectedMinutes;
+  const restoredExamIdRef = useRef<string | null>(null);
+
   useEffect(() => {
     if (!exam) return;
+    if (restoredExamIdRef.current === exam.id) return;
+    restoredExamIdRef.current = exam.id;
+
     const session = safeStorageGet<FocusSessionState | null>(FOCUS_STORAGE_KEY, null);
     if (session && session.examId === exam.id && session.isActive) {
       const now = Date.now();
@@ -172,7 +257,7 @@ export default function ExamFocusMode({
         }
       } else {
         // Expired while app was closed or device was sleeping
-        playChimeAndVibrate();
+        triggerFocusAlert();
         setIsActive(false);
         if (!session.isBreak) {
           setStudiedSeconds(session.baseStudiedSeconds + session.totalDurationSeconds);
@@ -180,12 +265,19 @@ export default function ExamFocusMode({
           setTimeLeft(5 * 60);
         } else {
           setIsBreak(false);
-          setTimeLeft(25 * 60);
+          setTimeLeft((Math.round(session.totalDurationSeconds / 60) || 25) * 60);
         }
         safeStorageRemove(FOCUS_STORAGE_KEY);
       }
+    } else {
+      // No session belongs to this exam: clear any timer left over from a
+      // previously focused exam so the countdown cannot appear frozen.
+      setIsActive(false);
+      setIsBreak(false);
+      setStudiedSeconds(0);
+      setTimeLeft(selectedMinutesRef.current * 60);
     }
-  }, [exam]);
+  }, [exam?.id]);
 
   // Active Wall-Clock Tick (Runs every 1000ms, does not tear down interval)
   useEffect(() => {
@@ -271,6 +363,23 @@ export default function ExamFocusMode({
 
     if (Capacitor.isNativePlatform()) {
       const endDate = new Date(targetEndTime);
+      // Dedicated max-importance channel with sound + vibration. This is the
+      // only alert path that still works while the screen is off.
+      try {
+        await LocalNotifications.createChannel({
+          id: FOCUS_ALERT_CHANNEL_ID,
+          name: "Focus timer alerts",
+          description: "Alerts when a study or break session ends",
+          importance: 5,
+          visibility: 1,
+          sound: FOCUS_ALERT_SOUND,
+          vibration: true,
+          lights: true,
+          lightColor: "#4f46e5",
+        });
+      } catch (e) {
+        console.warn("Focus channel creation failed:", e);
+      }
       try {
         await NativeHelper.setSystemAlarm?.({
           hour: endDate.getHours(),
@@ -285,8 +394,10 @@ export default function ExamFocusMode({
               body: isBreak
                 ? "زمان استراحت به پایان رسید. آماده شروع مجدد هستید؟"
                 : "زمان مطالعه به پایان رسید. خسته نباشید!",
-              schedule: { at: endDate },
-              sound: "default",
+              schedule: { at: endDate, allowWhileIdle: true },
+              channelId: FOCUS_ALERT_CHANNEL_ID,
+              sound: FOCUS_ALERT_SOUND,
+              smallIcon: "ic_launcher",
             },
           ],
         });
@@ -387,18 +498,25 @@ export default function ExamFocusMode({
       <AnimatePresence>
         {!isMinimized && (
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            transition={{ duration: 0.25, ease: "easeOut" }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.18, ease: "easeOut" }}
+            onPointerDown={unlockFocusAudio}
             className="fixed inset-0 w-full h-full z-[999999] bg-[#020617] flex flex-col items-center justify-center overflow-hidden"
             style={{ backgroundColor: "#020617" }}
           >
-            {/* Deep Space Background Effects */}
-            <div className="absolute inset-0 overflow-hidden pointer-events-none">
-              <div className="absolute top-[-20%] left-[-10%] w-[70%] h-[70%] bg-indigo-900/30 rounded-full blur-[120px] mix-blend-screen" />
-              <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] bg-blue-900/20 rounded-full blur-[100px] mix-blend-screen" />
-            </div>
+            {/* Static ambient glow — a plain radial gradient instead of
+                blur(120px) + mix-blend-screen, which is very expensive to
+                rasterize on Android WebView. */}
+            <div
+              className="absolute inset-0 overflow-hidden pointer-events-none"
+              style={{
+                background:
+                  "radial-gradient(60% 45% at 12% 8%, rgba(49,46,129,0.55) 0%, rgba(2,6,23,0) 70%)," +
+                  "radial-gradient(55% 40% at 92% 95%, rgba(30,58,138,0.45) 0%, rgba(2,6,23,0) 70%)",
+              }}
+            />
 
             {/* Top Navigation */}
             <div className="absolute top-0 inset-x-0 p-6 flex items-center justify-between z-10">

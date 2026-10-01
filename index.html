@@ -19,7 +19,7 @@
         window.addEventListener('error', function(e) {
           console.error('[StartupGuard]', e.message, e.filename, e.lineno);
           var splash = document.getElementById('native-splash');
-          var text = splash ? splash.querySelector('.native-splash-text') : null;
+          var text = splash ? splash.querySelector('.splash-title p') : null;
           if (text && !window.__APP_MOUNTED__) {
             setTimeout(function() {
               if (!window.__APP_MOUNTED__) {

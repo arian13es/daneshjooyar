@@ -844,7 +844,7 @@ export default function ScheduleExportModal({ classes, profile, onClose }: Sched
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.18, ease: "easeOut" }}
-      className="fixed inset-0 z-[220] flex items-center justify-center p-3 sm:p-5 bg-slate-950/75 backdrop-blur-xs font-sans"
+      className="fixed inset-0 z-[220] flex items-center justify-center p-3 sm:p-5 bg-slate-950/75 font-sans"
       onClick={onClose}
       dir="rtl"
     >

@@ -243,10 +243,10 @@ export default function ExamProfileModal({ exam, onClose, onUpdateExam, onStartF
       dir="rtl"
     >
       <motion.div
-        initial={{ opacity: 0, scale: 0.96, y: 16 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.96, y: 16 }}
-        transition={{ type: "spring", damping: 28, stiffness: 320 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.15, ease: "easeOut" }}
         className="w-full h-full sm:h-auto sm:max-h-[90vh] sm:max-w-2xl bg-white dark:bg-slate-900 sm:rounded-[2rem] shadow-2xl flex flex-col overflow-hidden relative border border-slate-200/90 dark:border-slate-800"
       >
         {/* ================================================================= */}
@@ -430,12 +430,13 @@ export default function ExamProfileModal({ exam, onClose, onUpdateExam, onStartF
                   </span>
                 </div>
 
-                {/* Animated Progress Bar */}
+                {/* Animated Progress Bar — scaleX keeps this on the compositor */}
                 <div className="w-full h-2.5 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden p-0.5">
                   <motion.div
-                    initial={{ width: 0 }}
-                    animate={{ width: `${progressPercent}%` }}
+                    initial={{ scaleX: 0 }}
+                    animate={{ scaleX: progressPercent / 100 }}
                     transition={{ duration: 0.4, ease: "easeOut" }}
+                    style={{ transformOrigin: "right center", width: "100%" }}
                     className="h-full bg-gradient-to-r from-emerald-500 to-indigo-500 rounded-full"
                   />
                 </div>
@@ -483,7 +484,6 @@ export default function ExamProfileModal({ exam, onClose, onUpdateExam, onStartF
                   checklist.map((item) => (
                     <motion.div
                       key={item.id}
-                      layout
                       initial={{ opacity: 0, y: 4 }}
                       animate={{ opacity: 1, y: 0 }}
                       className={`p-3 rounded-xl border transition-all flex items-center justify-between gap-3 ${
@@ -581,7 +581,6 @@ export default function ExamProfileModal({ exam, onClose, onUpdateExam, onStartF
                   (exam.notesList || []).map((note) => (
                     <motion.div
                       key={note.id}
-                      layout
                       initial={{ opacity: 0, y: 4 }}
                       animate={{ opacity: 1, y: 0 }}
                       className="bg-white dark:bg-slate-800 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-2xs space-y-2.5"
@@ -748,7 +747,7 @@ export default function ExamProfileModal({ exam, onClose, onUpdateExam, onStartF
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="absolute inset-0 bg-slate-950/70 backdrop-blur-xs z-50 flex items-center justify-center p-4"
+              className="absolute inset-0 bg-slate-950/70 z-50 flex items-center justify-center p-4"
             >
               <motion.div
                 initial={{ scale: 0.94, opacity: 0 }}

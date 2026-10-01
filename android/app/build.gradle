@@ -1,5 +1,16 @@
 apply plugin: 'com.android.application'
 
+// Release signing credentials live in android/keystore.properties, which is
+// git-ignored. When that file is missing (fresh clone, CI without secrets) the
+// release build falls back to the debug key so `assembleRelease` still works.
+def keystorePropsFile = rootProject.file("keystore.properties")
+def keystoreProps = new Properties()
+if (keystorePropsFile.exists()) {
+    keystorePropsFile.withInputStream { keystoreProps.load(it) }
+}
+def hasReleaseSigning = keystoreProps.getProperty("storeFile") != null &&
+        rootProject.file(keystoreProps.getProperty("storeFile")).exists()
+
 android {
     namespace = "ir.ac.tabrizu.student_assistant"
     compileSdk = rootProject.ext.compileSdkVersion
@@ -16,11 +27,21 @@ android {
             ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+    signingConfigs {
+        if (hasReleaseSigning) {
+            release {
+                storeFile rootProject.file(keystoreProps.getProperty("storeFile"))
+                storePassword keystoreProps.getProperty("storePassword")
+                keyAlias keystoreProps.getProperty("keyAlias")
+                keyPassword keystoreProps.getProperty("keyPassword")
+            }
+        }
+    }
     buildTypes {
         release {
             minifyEnabled true
             shrinkResources true
-            signingConfig signingConfigs.debug
+            signingConfig hasReleaseSigning ? signingConfigs.release : signingConfigs.debug
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }

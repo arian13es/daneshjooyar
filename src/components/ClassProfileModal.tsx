@@ -207,10 +207,10 @@ export default function ClassProfileModal({
       dir="rtl"
     >
       <motion.div
-        initial={{ opacity: 0, scale: 0.96, y: 16 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.96, y: 16 }}
-        transition={{ type: "spring", damping: 28, stiffness: 320 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.15, ease: "easeOut" }}
         className="w-full h-full sm:h-auto sm:max-h-[90vh] sm:max-w-2xl bg-white dark:bg-slate-900 sm:rounded-[2rem] shadow-2xl flex flex-col overflow-hidden relative border border-slate-200/90 dark:border-slate-800"
       >
         {/* ================================================================= */}
@@ -432,7 +432,6 @@ export default function ClassProfileModal({
                   (classItem.notes || []).map(note => (
                     <motion.div 
                       key={note.id} 
-                      layout
                       initial={{ opacity: 0, y: 6 }}
                       animate={{ opacity: 1, y: 0 }}
                       className="bg-white dark:bg-slate-800 p-3.5 rounded-xl border border-slate-200/80 dark:border-slate-700 shadow-xs space-y-2.5"
@@ -620,7 +619,6 @@ export default function ClassProfileModal({
                   absences.map((abs, idx) => (
                     <motion.div 
                       key={abs.id} 
-                      layout
                       initial={{ opacity: 0, y: 4 }}
                       animate={{ opacity: 1, y: 0 }}
                       className="bg-white dark:bg-slate-800 px-4 py-3 rounded-xl border border-slate-200/80 dark:border-slate-700 shadow-2xs flex justify-between items-center"
@@ -767,7 +765,7 @@ export default function ClassProfileModal({
               initial={{ opacity: 0 }} 
               animate={{ opacity: 1 }} 
               exit={{ opacity: 0 }} 
-              className="absolute inset-0 bg-slate-950/70 backdrop-blur-xs z-50 flex items-center justify-center p-4"
+              className="absolute inset-0 bg-slate-950/70 z-50 flex items-center justify-center p-4"
             >
               <motion.div 
                 initial={{ scale: 0.94, opacity: 0 }} 

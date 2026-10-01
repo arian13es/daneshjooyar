@@ -216,6 +216,26 @@ export default function NotificationSettingsModal({ onClose }: NotificationSetti
               )}
             </div>
 
+            {/* Android 12+ silently drops every exact alarm when this is off,
+                which is why reminders and the Pomodoro alert never fire while
+                the screen is off. Make that consequence explicit. */}
+            {canExactAlarm === false && (
+              <div className="mx-3 mb-2.5 p-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/50 flex items-start gap-2">
+                <AlertCircle className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+                <div className="min-w-0">
+                  <p className="text-[10.5px] font-black text-amber-800 dark:text-amber-300 leading-relaxed">
+                    بدون این مجوز، یادآورها و زنگ پایان تمرکز با تأخیر می‌رسند یا وقتی صفحه خاموش است اصلاً نمی‌رسند.
+                  </p>
+                  <button
+                    onClick={handleOpenExactAlarm}
+                    className="mt-1.5 text-[10px] font-black text-white bg-amber-600 hover:bg-amber-700 px-2.5 py-1 rounded-lg"
+                  >
+                    فعال‌سازی آلارم‌ها و یادآورها
+                  </button>
+                </div>
+              </div>
+            )}
+
           </div>
         </div>
 

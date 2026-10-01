@@ -66,30 +66,17 @@ button, input, optgroup, select, textarea {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Hide custom scrollbars to prevent ugly white bar */
-*, *::-webkit-scrollbar {
+/* Hide scrollbars only where explicitly requested. Applying this to `*` made
+   every element in the tree opt into custom-scrollbar handling, which is a
+   measurable cost on Android WebView. */
+.scrollbar-hide {
   scrollbar-width: none !important;
   -ms-overflow-style: none !important;
 }
-*::-webkit-scrollbar {
+.scrollbar-hide::-webkit-scrollbar {
   display: none !important;
   width: 0 !important;
   height: 0 !important;
-}
-*::-webkit-scrollbar-track {
-  background: transparent !important;
-}
-*::-webkit-scrollbar-thumb {
-  background: transparent !important;
-}
-
-/* Utility to completely hide scrollbars but keep functionality */
-.scrollbar-hide::-webkit-scrollbar {
-  display: none !important;
-}
-.scrollbar-hide {
-  -ms-overflow-style: none !important;
-  scrollbar-width: none !important;
 }
 
 /* Typography: Guarantee both Vazirmatn Variable and Vazirmatn load the font correctly */

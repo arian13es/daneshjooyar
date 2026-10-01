@@ -19,6 +19,12 @@ android/.idea/
 android/app/build/
 android/capacitor-cordova-android-plugins/build/
 
+# Release signing — NEVER commit the keystore or its passwords
+android/keystore.properties
+android/*.keystore
+android/*.jks
+!android/keystore.properties.example
+
 # Vite dependency cache
 .vite/
 

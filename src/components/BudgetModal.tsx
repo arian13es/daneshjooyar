@@ -70,28 +70,15 @@ function formatShamsiDate(isoDateString?: string): string {
   }
 }
 
-import { Capacitor } from "@capacitor/core";
-import { StatusBar, Style } from "@capacitor/status-bar";
-
 export default function BudgetModal({ budgetState, onUpdateBudget, onClose }: BudgetModalProps) {
   const [newTitle, setNewTitle] = useState("");
   const [newAmountDisplay, setNewAmountDisplay] = useState("");
   const [newCategory, setNewCategory] = useState<BudgetExpense["category"]>("food");
 
-  // Make Status Bar match the Emerald header
-  useEffect(() => {
-    if (Capacitor.isNativePlatform()) {
-      StatusBar.setBackgroundColor({ color: '#10b981' }).catch(() => {});
-      StatusBar.setStyle({ style: Style.Dark }).catch(() => {});
-    }
-    return () => {
-      if (Capacitor.isNativePlatform()) {
-        const isDark = document.documentElement.classList.contains('dark');
-        StatusBar.setBackgroundColor({ color: isDark ? '#0f172a' : '#f8fafc' }).catch(() => {});
-        StatusBar.setStyle({ style: isDark ? Style.Dark : Style.Light }).catch(() => {});
-      }
-    };
-  }, []);
+  // NOTE: the previous StatusBar.setBackgroundColor() calls here were no-ops on
+  // this app: targetSdkVersion is 36 and @capacitor/status-bar refuses to set
+  // the bar colour on Android 15+. Removing them also avoids a needless
+  // icon-contrast flip when the wallet opens and closes.
   
   const [limitInputDisplay, setLimitInputDisplay] = useState(
     budgetState.monthlyLimit ? budgetState.monthlyLimit.toLocaleString() : ""
@@ -376,32 +363,27 @@ export default function BudgetModal({ budgetState, onUpdateBudget, onClose }: Bu
       animate={{ opacity: 1 }} 
       exit={{ opacity: 0 }}
       transition={{ duration: 0.16, ease: "easeOut" }}
-      className="fixed inset-0 z-[150] flex items-center justify-center bg-slate-900/80 p-0 md:p-6 font-sans pt-[env(safe-area-inset-top,0px)] pb-[env(safe-area-inset-bottom,0px)] backdrop-blur-sm"
+      className="fixed inset-0 z-[150] flex items-center justify-center bg-slate-900/80 p-0 md:p-6 font-sans pt-[env(safe-area-inset-top,0px)] pb-[env(safe-area-inset-bottom,0px)]"
       dir="rtl"
     >
       <motion.div 
-        initial={{ y: 20, opacity: 0, scale: 0.95 }}
-        animate={{ y: 0, opacity: 1, scale: 1 }}
-        exit={{ y: 20, opacity: 0, scale: 0.95 }}
-        transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.15, ease: "easeOut" }}
         className="flex-1 flex flex-col w-full h-full md:h-auto md:max-h-[90vh] md:max-w-2xl lg:max-w-3xl md:rounded-[3rem] bg-slate-50 dark:bg-slate-900 shadow-2xl relative overflow-hidden border border-white/20 dark:border-slate-700/50"
       >
         
         {/* Ultra-Premium Glassy Header */}
         <div className="bg-emerald-600 dark:bg-emerald-700 p-6 sm:p-8 pt-8 sm:pt-10 text-white relative shrink-0 shadow-sm overflow-hidden">
-          {/* Background effects */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-teal-400/30 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none" />
-          <div className="absolute bottom-0 left-0 w-48 h-48 bg-green-300/20 rounded-full blur-2xl -ml-16 -mb-16 pointer-events-none" />
-          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay"></div>
-
           {errorToast && (
-            <div className="absolute top-2 left-4 right-4 z-[200] max-w-sm mx-auto bg-rose-500 text-white px-4 py-2.5 rounded-2xl shadow-2xl text-xs font-black text-center border border-rose-400/50 backdrop-blur-md">
+            <div className="absolute top-2 left-4 right-4 z-[200] max-w-sm mx-auto bg-rose-500 text-white px-4 py-2.5 rounded-2xl shadow-2xl text-xs font-black text-center border border-rose-400/50">
               {errorToast}
             </div>
           )}
           <div className="flex items-center justify-between relative z-10">
             <div className="flex items-center gap-4 sm:gap-5">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-md shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-white/30 shrink-0">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-white/20 rounded-2xl flex items-center justify-center shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-white/30 shrink-0">
                 <Wallet className="w-6 h-6 sm:w-7 sm:h-7 text-white" strokeWidth={2.5} />
               </div>
               <div>
@@ -413,13 +395,13 @@ export default function BudgetModal({ budgetState, onUpdateBudget, onClose }: Bu
               <button 
                 onClick={() => setShowConfirmReset(true)} 
                 title="مدیریت دوره و پاکسازی"
-                className="p-3 bg-white/10 hover:bg-white/20 rounded-full transition-all backdrop-blur-md border border-white/10 shadow-sm active:scale-95"
+                className="p-3 bg-white/10 hover:bg-white/20 rounded-full transition-colors border border-white/10 shadow-sm active:scale-95"
               >
                 <RefreshCcw className="w-5 h-5 text-white" />
               </button>
               <button 
                 onClick={onClose} 
-                className="p-3 bg-white/10 hover:bg-white/20 rounded-full transition-all backdrop-blur-md border border-white/10 shadow-sm active:scale-95"
+                className="p-3 bg-white/10 hover:bg-white/20 rounded-full transition-colors border border-white/10 shadow-sm active:scale-95"
               >
                 <X className="w-5 h-5 text-white" />
               </button>
@@ -432,10 +414,6 @@ export default function BudgetModal({ budgetState, onUpdateBudget, onClose }: Bu
           
           {/* Main Budget Card — Premium Design */}
           <div className="relative bg-white dark:bg-slate-800 rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-7 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] overflow-hidden border border-slate-100/50 dark:border-slate-700/50">
-            {/* Soft background glow */}
-            <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-500/5 dark:bg-emerald-400/5 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none" />
-            <div className="absolute bottom-0 left-0 w-40 h-40 bg-teal-500/5 dark:bg-teal-400/5 rounded-full blur-2xl -ml-16 -mb-16 pointer-events-none" />
-
             <div className="relative z-10">
               {isEditingLimit ? (
                 <div className="flex flex-col gap-3">
@@ -504,7 +482,7 @@ export default function BudgetModal({ budgetState, onUpdateBudget, onClose }: Bu
             
             <div className="flex items-start justify-between relative z-10 mb-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm shrink-0">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 rounded-2xl flex items-center justify-center shrink-0">
                   <PiggyBank className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                 </div>
                 <div className="min-w-0">
@@ -557,7 +535,7 @@ export default function BudgetModal({ budgetState, onUpdateBudget, onClose }: Bu
                   value={goalNameInput}
                   onChange={e => setGoalNameInput(e.target.value)}
                   placeholder="اسم هدف (مثلاً لپ‌تاپ)"
-                  className="w-full bg-white/20 placeholder-white/60 rounded-xl px-3.5 py-2.5 font-sans font-bold text-xs text-white outline-none border border-white/20 focus:border-white/50 backdrop-blur-sm"
+                  className="w-full bg-white/20 placeholder-white/60 rounded-xl px-3.5 py-2.5 font-sans font-bold text-xs text-white outline-none border border-white/20 focus:border-white/50"
                 />
                 <input 
                   required
@@ -566,7 +544,7 @@ export default function BudgetModal({ budgetState, onUpdateBudget, onClose }: Bu
                   value={goalInputDisplay}
                   onChange={e => handleAmountChange(e.target.value, setGoalInputDisplay)}
                   placeholder="مبلغ هدف (تومان)"
-                  className="w-full bg-white/20 placeholder-white/60 rounded-xl px-3.5 py-2.5 font-sans font-bold text-xs text-white outline-none border border-white/20 focus:border-white/50 backdrop-blur-sm text-right"
+                  className="w-full bg-white/20 placeholder-white/60 rounded-xl px-3.5 py-2.5 font-sans font-bold text-xs text-white outline-none border border-white/20 focus:border-white/50 text-right"
                   dir="ltr"
                 />
                 <div className="flex gap-2 mt-1">
@@ -583,7 +561,7 @@ export default function BudgetModal({ budgetState, onUpdateBudget, onClose }: Bu
                   value={savingsInputDisplay}
                   onChange={e => handleAmountChange(e.target.value, setSavingsInputDisplay)}
                   placeholder="مبلغ واریز به پس‌انداز"
-                  className="flex-1 min-w-0 bg-white/20 placeholder-white/60 rounded-xl px-3.5 py-2.5 font-sans font-bold text-xs text-white outline-none border border-white/20 focus:border-white/50 backdrop-blur-sm text-right"
+                  className="flex-1 min-w-0 bg-white/20 placeholder-white/60 rounded-xl px-3.5 py-2.5 font-sans font-bold text-xs text-white outline-none border border-white/20 focus:border-white/50 text-right"
                   dir="ltr"
                 />
                 <button type="submit" className="px-4 shrink-0 bg-white text-orange-500 rounded-xl font-black text-xs hover:bg-amber-50 transition-colors shadow-sm">واریز</button>
@@ -598,7 +576,7 @@ export default function BudgetModal({ budgetState, onUpdateBudget, onClose }: Bu
                   value={withdrawInputDisplay}
                   onChange={e => handleAmountChange(e.target.value, setWithdrawInputDisplay)}
                   placeholder="مبلغ برداشت از پس‌انداز"
-                  className="flex-1 min-w-0 bg-white/20 placeholder-white/60 rounded-xl px-3.5 py-2.5 font-sans font-bold text-xs text-white outline-none border border-white/20 focus:border-white/50 backdrop-blur-sm text-right"
+                  className="flex-1 min-w-0 bg-white/20 placeholder-white/60 rounded-xl px-3.5 py-2.5 font-sans font-bold text-xs text-white outline-none border border-white/20 focus:border-white/50 text-right"
                   dir="ltr"
                 />
                 <button type="submit" className="px-4 shrink-0 bg-white text-orange-500 rounded-xl font-black text-xs hover:bg-amber-50 transition-colors shadow-sm">برداشت</button>
@@ -608,14 +586,14 @@ export default function BudgetModal({ budgetState, onUpdateBudget, onClose }: Bu
               <div className="grid grid-cols-2 gap-2 relative z-10">
                 <button 
                   onClick={() => { setIsAddingSavings(true); setIsWithdrawingSavings(false); }}
-                  className="py-3 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-xl flex items-center justify-center gap-1.5 transition-colors border border-white/20 text-xs font-black"
+                  className="py-3 bg-white/20 hover:bg-white/30 rounded-xl flex items-center justify-center gap-1.5 transition-colors border border-white/20 text-xs font-black"
                 >
                   <Plus className="w-3.5 h-3.5" /> واریز به صندوق
                 </button>
                 <button 
                   onClick={() => { setIsWithdrawingSavings(true); setIsAddingSavings(false); }}
                   disabled={currentSavings <= 0}
-                  className="py-3 bg-white/10 hover:bg-white/20 disabled:opacity-40 disabled:hover:bg-white/10 backdrop-blur-sm rounded-xl flex items-center justify-center gap-1.5 transition-colors border border-white/20 text-xs font-black"
+                  className="py-3 bg-white/10 hover:bg-white/20 disabled:opacity-40 disabled:hover:bg-white/10 rounded-xl flex items-center justify-center gap-1.5 transition-colors border border-white/20 text-xs font-black"
                 >
                   <Minus className="w-3.5 h-3.5" /> برداشت از صندوق
                 </button>
@@ -824,7 +802,7 @@ export default function BudgetModal({ budgetState, onUpdateBudget, onClose }: Bu
             animate={{ opacity: 1 }} 
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2, ease: "easeInOut" }}
-            className="absolute inset-0 z-[200] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4"
+            className="absolute inset-0 z-[200] bg-slate-900/60 flex items-center justify-center p-4"
           >
             <motion.div 
               initial={{ scale: 0.92, opacity: 0 }} 

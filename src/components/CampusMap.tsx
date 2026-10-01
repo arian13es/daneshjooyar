@@ -908,7 +908,7 @@ export default function CampusMap({
 
       {/* Floating Map Toast */}
       {mapToast && (
-        <div className="absolute top-16 sm:top-18 pt-[env(safe-area-inset-top,0px)] left-4 right-4 z-[650] max-w-sm mx-auto bg-slate-900/95 dark:bg-white/95 text-white dark:text-slate-900 px-4 py-3 rounded-2xl shadow-2xl backdrop-blur-md text-xs font-black text-center border border-white/20">
+        <div className="absolute top-16 sm:top-18 pt-[env(safe-area-inset-top,0px)] left-4 right-4 z-[650] max-w-sm mx-auto bg-slate-900/95 dark:bg-white/95 text-white dark:text-slate-900 px-4 py-3 rounded-2xl shadow-2xl text-xs font-black text-center border border-white/20">
           {mapToast}
         </div>
       )}
@@ -917,7 +917,7 @@ export default function CampusMap({
       {!isLiveNavigating && !routeResult && (
         <div className="absolute top-1.5 sm:top-2.5 pt-[env(safe-area-inset-top,0px)] left-3 right-3 z-[500] flex flex-col gap-2 pointer-events-none">
           {/* Main Search Pill */}
-          <div className="pointer-events-auto flex items-center gap-2 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border border-slate-200/90 dark:border-slate-800 rounded-2xl px-3 py-2 shadow-lg shadow-slate-900/5 transition-all">
+          <div className="pointer-events-auto flex items-center gap-2 bg-white/95 dark:bg-slate-900/95 border border-slate-200/90 dark:border-slate-800 rounded-2xl px-3 py-2 shadow-lg shadow-slate-900/5 transition-all">
             {onBack && (
               <button
                 type="button"
@@ -951,7 +951,7 @@ export default function CampusMap({
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.id)}
-                className={`whitespace-nowrap px-2.5 py-1 rounded-xl text-[10px] font-black transition-all flex items-center gap-1 shadow-xs backdrop-blur-md ${
+                className={`whitespace-nowrap px-2.5 py-1 rounded-xl text-[10px] font-black transition-all flex items-center gap-1 shadow-xs  ${
                   selectedCategory === cat.id
                     ? "bg-sky-600 text-white shadow-sky-600/30 scale-105"
                     : "bg-white/90 dark:bg-slate-900/90 text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800"
@@ -965,7 +965,7 @@ export default function CampusMap({
 
           {/* Search Results Dropdown */}
           {isSearchOpen && searchResults.length > 0 && (
-            <div className="pointer-events-auto bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-2xl max-h-56 overflow-y-auto">
+            <div className="pointer-events-auto bg-white/95 dark:bg-slate-900/95 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-2xl max-h-56 overflow-y-auto">
               {searchResults.map((item) => (
                 <div
                   key={item.id}
@@ -1003,7 +1003,7 @@ export default function CampusMap({
       {/* 2. GOOGLE MAPS STYLE DIRECTION HEADER */}
       {!isLiveNavigating && routeResult && (
         <div className="absolute top-1.5 sm:top-2.5 pt-[env(safe-area-inset-top,0px)] left-3 right-3 z-[500] max-w-lg mx-auto flex flex-col gap-2 pointer-events-auto animate-in slide-in-from-top duration-250">
-          <div className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border border-slate-200/90 dark:border-slate-800 rounded-3xl p-3 shadow-2xl flex flex-col gap-2.5">
+          <div className="bg-white/95 dark:bg-slate-900/95 border border-slate-200/90 dark:border-slate-800 rounded-3xl p-3 shadow-2xl flex flex-col gap-2.5">
             {/* Top row: Back button + Origin/Destination inputs + Swap button */}
             <div className="flex items-center gap-2">
               <button
@@ -1106,7 +1106,7 @@ export default function CampusMap({
           {/* Zoom In (+) Button */}
           <button
             onClick={() => mapInstanceRef.current?.zoomIn()}
-            className="w-11 h-11 rounded-2xl backdrop-blur-xl bg-white/95 dark:bg-slate-900/95 border border-slate-200/90 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400 shadow-lg flex items-center justify-center active:scale-95 transition-all cursor-pointer"
+            className="w-11 h-11 rounded-2xl bg-white/95 dark:bg-slate-900/95 border border-slate-200/90 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400 shadow-lg flex items-center justify-center active:scale-95 transition-all cursor-pointer"
             title="بزرگ‌نمایی"
             aria-label="بزرگ‌نمایی"
           >
@@ -1116,7 +1116,7 @@ export default function CampusMap({
           {/* Zoom Out (-) Button */}
           <button
             onClick={() => mapInstanceRef.current?.zoomOut()}
-            className="w-11 h-11 rounded-2xl backdrop-blur-xl bg-white/95 dark:bg-slate-900/95 border border-slate-200/90 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400 shadow-lg flex items-center justify-center active:scale-95 transition-all cursor-pointer"
+            className="w-11 h-11 rounded-2xl bg-white/95 dark:bg-slate-900/95 border border-slate-200/90 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400 shadow-lg flex items-center justify-center active:scale-95 transition-all cursor-pointer"
             title="کوچک‌نمایی"
             aria-label="کوچک‌نمایی"
           >
@@ -1126,7 +1126,7 @@ export default function CampusMap({
           {/* GPS Button */}
           <button
             onClick={handleLocateUser}
-            className={`w-11 h-11 rounded-2xl backdrop-blur-xl border shadow-lg flex items-center justify-center active:scale-95 transition-all cursor-pointer ${
+            className={`w-11 h-11 rounded-2xl  border shadow-lg flex items-center justify-center active:scale-95 transition-all cursor-pointer ${
               isLiveTracking
                 ? "bg-blue-600 text-white border-blue-500 shadow-blue-600/35 animate-pulse"
                 : "bg-white/95 dark:bg-slate-900/95 border-slate-200/90 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400"
@@ -1139,7 +1139,7 @@ export default function CampusMap({
           {/* Route Navigation Button */}
           <button
             onClick={() => setIsRoutePlannerOpen(true)}
-            className="w-11 h-11 rounded-2xl backdrop-blur-xl bg-gradient-to-br from-amber-500 to-orange-600 text-white shadow-lg shadow-amber-500/30 border border-amber-300/30 flex items-center justify-center active:scale-95 transition-all cursor-pointer"
+            className="w-11 h-11 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 text-white shadow-lg shadow-amber-500/30 border border-amber-300/30 flex items-center justify-center active:scale-95 transition-all cursor-pointer"
             title="مسیریابی پردیس دانشگاه"
           >
             <RouteIcon className="w-5 h-5" />
@@ -1150,7 +1150,7 @@ export default function CampusMap({
             onClick={() => {
               mapInstanceRef.current?.flyTo([CAMPUS_METADATA.center[0], CAMPUS_METADATA.center[1]], CAMPUS_METADATA.zoom, { duration: 0.5 });
             }}
-            className="w-11 h-11 rounded-2xl backdrop-blur-xl bg-white/95 dark:bg-slate-900/95 border border-slate-200/90 dark:border-slate-800 text-sky-600 dark:text-sky-400 hover:text-sky-700 shadow-lg flex items-center justify-center active:scale-95 transition-all cursor-pointer"
+            className="w-11 h-11 rounded-2xl bg-white/95 dark:bg-slate-900/95 border border-slate-200/90 dark:border-slate-800 text-sky-600 dark:text-sky-400 hover:text-sky-700 shadow-lg flex items-center justify-center active:scale-95 transition-all cursor-pointer"
             title="نمای کلی پردیس دانشگاه"
           >
             <Building2 className="w-5 h-5" />
@@ -1317,7 +1317,7 @@ export default function CampusMap({
       {/* 5. LIVE NAVIGATION HUD */}
       {isLiveNavigating && routeResult && (
         <>
-          <div className="absolute top-3 left-3 right-3 z-[500] max-w-lg mx-auto bg-slate-900/95 backdrop-blur-2xl text-white rounded-2xl p-3.5 shadow-2xl border border-slate-700/80 flex items-center justify-between animate-in slide-in-from-top duration-250">
+          <div className="absolute top-3 left-3 right-3 z-[500] max-w-lg mx-auto bg-slate-900/95 text-white rounded-2xl p-3.5 shadow-2xl border border-slate-700/80 flex items-center justify-between animate-in slide-in-from-top duration-250">
             <div className="flex items-center gap-3 min-w-0 flex-1">
               <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-400/30 flex items-center justify-center shrink-0">
                 {getTurnIcon(routeResult.steps[currentNavStepIndex]?.turnType)}
@@ -1351,7 +1351,7 @@ export default function CampusMap({
             </div>
           </div>
 
-          <div className="absolute bottom-24 sm:bottom-28 left-3 right-3 z-[500] max-w-md mx-auto bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border border-slate-200 dark:border-slate-800 rounded-2xl p-3 shadow-2xl flex flex-col gap-2.5 animate-in slide-in-from-bottom duration-250">
+          <div className="absolute bottom-24 sm:bottom-28 left-3 right-3 z-[500] max-w-md mx-auto bg-white/95 dark:bg-slate-900/95 border border-slate-200 dark:border-slate-800 rounded-2xl p-3 shadow-2xl flex flex-col gap-2.5 animate-in slide-in-from-bottom duration-250">
             <div className="flex items-center justify-between">
               <div>
                 <span className="text-xl font-black text-slate-900 dark:text-white">
@@ -1403,7 +1403,7 @@ export default function CampusMap({
 
       {/* 6. GOOGLE MAPS STYLE BOTTOM ROUTE CARD */}
       {!isLiveNavigating && routeResult && (
-        <div className="absolute bottom-[calc(5.5rem+env(safe-area-inset-bottom,0px))] landscape:bottom-3 landscape:left-3 landscape:right-auto landscape:w-84 left-3 right-3 z-[500] max-w-md mx-auto bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border border-slate-200/90 dark:border-slate-800 rounded-3xl p-4 shadow-2xl flex flex-col gap-3 animate-in slide-in-from-bottom duration-250">
+        <div className="absolute bottom-[calc(5.5rem+env(safe-area-inset-bottom,0px))] landscape:bottom-3 landscape:left-3 landscape:right-auto landscape:w-84 left-3 right-3 z-[500] max-w-md mx-auto bg-white/95 dark:bg-slate-900/95 border border-slate-200/90 dark:border-slate-800 rounded-3xl p-4 shadow-2xl flex flex-col gap-3 animate-in slide-in-from-bottom duration-250">
           <div className="flex items-center justify-between">
             <div>
               <div className="flex items-baseline gap-2">
@@ -1632,7 +1632,7 @@ export default function CampusMap({
 
       {/* 7. MINIMAL BUILDING BOTTOM SHEET */}
       {!isLiveNavigating && selectedBuilding && (
-        <div className="absolute bottom-[calc(5.5rem+env(safe-area-inset-bottom,0px))] landscape:bottom-3 landscape:top-16 landscape:left-3 landscape:right-auto landscape:w-80 landscape:max-h-[calc(100vh-5rem)] left-3 right-3 z-[450] max-w-md mx-auto bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border border-slate-200/90 dark:border-slate-800 rounded-3xl p-4 shadow-2xl flex flex-col gap-2.5 max-h-[45vh] overflow-y-auto">
+        <div className="absolute bottom-[calc(5.5rem+env(safe-area-inset-bottom,0px))] landscape:bottom-3 landscape:top-16 landscape:left-3 landscape:right-auto landscape:w-80 landscape:max-h-[calc(100vh-5rem)] left-3 right-3 z-[450] max-w-md mx-auto bg-white/95 dark:bg-slate-900/95 border border-slate-200/90 dark:border-slate-800 rounded-3xl p-4 shadow-2xl flex flex-col gap-2.5 max-h-[45vh] overflow-y-auto">
           <div className="flex items-start justify-between">
             <div className="flex-1 min-w-0">
               <span className="text-[9px] font-black text-sky-600 dark:text-sky-400 bg-sky-50 dark:bg-sky-950/50 px-2 py-0.5 rounded-md border border-sky-200 dark:border-sky-800">
@@ -1692,7 +1692,7 @@ export default function CampusMap({
 
       {/* 8. MINIMAL GATE BOTTOM SHEET */}
       {!isLiveNavigating && selectedGate && (
-        <div className="absolute bottom-[calc(5.5rem+env(safe-area-inset-bottom,0px))] landscape:bottom-3 landscape:top-16 landscape:left-3 landscape:right-auto landscape:w-80 landscape:max-h-[calc(100vh-5rem)] left-3 right-3 z-[450] max-w-md mx-auto bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border border-slate-200/90 dark:border-slate-800 rounded-3xl p-4 shadow-2xl flex flex-col gap-2.5">
+        <div className="absolute bottom-[calc(5.5rem+env(safe-area-inset-bottom,0px))] landscape:bottom-3 landscape:top-16 landscape:left-3 landscape:right-auto landscape:w-80 landscape:max-h-[calc(100vh-5rem)] left-3 right-3 z-[450] max-w-md mx-auto bg-white/95 dark:bg-slate-900/95 border border-slate-200/90 dark:border-slate-800 rounded-3xl p-4 shadow-2xl flex flex-col gap-2.5">
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-2">
               <span className="text-xl">{selectedGate.type === "metro" ? "🚇" : selectedGate.type === "bus" ? "🚌" : "🚪"}</span>

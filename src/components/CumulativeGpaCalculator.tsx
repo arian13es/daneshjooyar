@@ -20,6 +20,26 @@ export interface CalculatorCourse {
 
 const DEFAULT_COURSES: CalculatorCourse[] = [];
 
+/**
+ * Converts a user-typed score into something `parseFloat` understands.
+ *
+ * Persian keyboards emit the Arabic decimal separator U+066B (٫) rather than
+ * "." — without normalising it, `parseFloat("۱۲٫۵")` returns 12, so a grade of
+ * 12.5 was silently recorded as 12. Thousands separators are stripped first so
+ * that "۱٬۲۳۴٫۵" becomes 1234.5 and not 1.234.5.
+ */
+export const normalizeNum = (val: string): string => {
+  return String(val || "")
+    // Persian (۰-۹) and Arabic-Indic (٠-٩) digits → ASCII
+    .replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d).toString())
+    .replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d).toString())
+    // U+066C (٬ Arabic thousands) and U+060C (، Arabic comma) are not decimals
+    .replace(/[\u066C\u060C]/g, "")
+    // U+066B (٫ Arabic decimal separator) is the decimal point
+    .replace(/[\u066B]/g, ".")
+    .replace(/[,/]/g, ".");
+};
+
 export default function CumulativeGpaCalculator() {
   const [courses, setCourses] = useState<CalculatorCourse[]>(() => {
     const savedV2 = safeStorageGet<CalculatorCourse[] | null>("gpa_calc_courses_v2", null);
@@ -74,12 +94,7 @@ export default function CumulativeGpaCalculator() {
     };
   }, []);
 
-  const normalizeNum = (val: string) => {
-    return String(val || "")
-      .replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d).toString())
-      .replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d).toString())
-      .replace(/[,/]/g, ".");
-  };
+
 
   const toPersianDigits = (val: number | string): string => {
     return String(val ?? "").replace(/\d/g, d => "۰۱۲۳۴۵۶۷۸۹"[parseInt(d, 10)]);
@@ -189,13 +204,11 @@ export default function CumulativeGpaCalculator() {
       {/* 1. Hero GPA Status Card (Unified Palette & High-Contrast Typography) */}
       <div className="bg-gradient-to-br from-indigo-600 via-indigo-700 to-slate-900 rounded-[2rem] p-5 sm:p-6 text-white shadow-xl relative overflow-hidden border border-indigo-500/30">
         {/* Ambient atmospheric lighting */}
-        <div className="absolute -top-10 -left-10 w-36 h-36 bg-indigo-400/25 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-10 -right-10 w-36 h-36 bg-purple-500/20 rounded-full blur-3xl pointer-events-none" />
 
         {/* Top Actions Row */}
         <div className="flex items-center justify-between relative z-10 mb-2">
           <div className="flex items-center gap-2.5">
-            <div className="h-9 w-9 rounded-xl bg-white/15 backdrop-blur-md flex items-center justify-center text-amber-300">
+            <div className="h-9 w-9 rounded-xl bg-white/15 flex items-center justify-center text-amber-300">
               <Calculator className="h-5 w-5" />
             </div>
             <div>
@@ -208,7 +221,7 @@ export default function CumulativeGpaCalculator() {
             <button
               onClick={handleClearScores}
               title="پاک‌سازی نمرات"
-              className="px-2.5 py-1.5 bg-white/10 hover:bg-white/20 active:scale-95 rounded-xl text-[11px] font-bold text-indigo-100 hover:text-white transition-all flex items-center gap-1 backdrop-blur-sm"
+              className="px-2.5 py-1.5 bg-white/10 hover:bg-white/20 active:scale-95 rounded-xl text-[11px] font-bold text-indigo-100 hover:text-white transition-all flex items-center gap-1"
             >
               <RotateCcw className="h-3.5 w-3.5" />
               <span>پاک‌سازی نمرات</span>
@@ -216,7 +229,7 @@ export default function CumulativeGpaCalculator() {
             <button
               onClick={handleResetDefault}
               title="بازنشانی به دروس اولیه"
-              className="p-1.5 bg-white/10 hover:bg-white/20 active:scale-95 rounded-xl text-indigo-200 hover:text-white transition-all backdrop-blur-sm"
+              className="p-1.5 bg-white/10 hover:bg-white/20 active:scale-95 rounded-xl text-indigo-200 hover:text-white transition-all"
             >
               <Trash2 className="h-3.5 w-3.5" />
             </button>
@@ -232,7 +245,7 @@ export default function CumulativeGpaCalculator() {
 
           {/* Academic Standing Status Pill */}
           <div className="mt-3 flex justify-center">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-black backdrop-blur-md border border-white/15 bg-white/10">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-black border border-white/15 bg-white/10">
               <span className={`h-2 w-2 rounded-full ${termStats.badgeDotColor}`} />
               <span className={termStats.badgeTextColor}>{termStats.statusText}</span>
             </div>
@@ -241,7 +254,7 @@ export default function CumulativeGpaCalculator() {
 
         {/* Bottom Metrics Bar */}
         <div className="grid grid-cols-2 gap-2.5 mt-3 pt-3 border-t border-white/10 relative z-10">
-          <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-2.5 text-center">
+          <div className="bg-white/10 rounded-2xl p-2.5 text-center">
             <p className="text-[10px] text-indigo-200 font-bold mb-0.5">واحدهای ثبت‌شده</p>
             <p className="text-sm sm:text-base font-black text-white tabular-nums">
               {toPersianDigits(termStats.totalCredits % 1 === 0 ? termStats.totalCredits : termStats.totalCredits.toFixed(1))}
@@ -250,7 +263,7 @@ export default function CumulativeGpaCalculator() {
               </span>
             </p>
           </div>
-          <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-2.5 text-center">
+          <div className="bg-white/10 rounded-2xl p-2.5 text-center">
             <p className="text-[10px] text-indigo-200 font-bold mb-0.5">مجموع نمره × واحد</p>
             <p className="text-sm sm:text-base font-black text-amber-300 tabular-nums">
               {toPersianDigits(termStats.currentPoints.toFixed(1))}

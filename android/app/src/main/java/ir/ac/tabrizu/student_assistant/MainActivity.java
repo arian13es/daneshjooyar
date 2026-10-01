@@ -50,6 +50,44 @@ public class MainActivity extends BridgeActivity {
     public static class NativeNotificationHelperPlugin extends Plugin {
 
     @PluginMethod
+    public void vibrate(PluginCall call) {
+        try {
+            Context ctx = getContext();
+            android.os.Vibrator vibrator;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                android.os.VibratorManager vm =
+                    (android.os.VibratorManager) ctx.getSystemService(Context.VIBRATOR_MANAGER_SERVICE);
+                vibrator = vm != null ? vm.getDefaultVibrator() : null;
+            } else {
+                vibrator = (android.os.Vibrator) ctx.getSystemService(Context.VIBRATOR_SERVICE);
+            }
+            if (vibrator == null || !vibrator.hasVibrator()) {
+                call.reject("No vibrator available");
+                return;
+            }
+            // Pattern from JS: [wait, on, off, on, off, ...] in milliseconds
+            com.getcapacitor.JSArray patternArray = call.getArray("pattern");
+            long[] pattern;
+            if (patternArray != null && patternArray.length() > 0) {
+                pattern = new long[patternArray.length()];
+                for (int i = 0; i < patternArray.length(); i++) {
+                    pattern[i] = patternArray.optLong(i, 0);
+                }
+            } else {
+                pattern = new long[] { 0, 400, 200, 400, 200, 600 };
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                vibrator.vibrate(android.os.VibrationEffect.createWaveform(pattern, -1));
+            } else {
+                vibrator.vibrate(pattern, -1);
+            }
+            call.resolve();
+        } catch (Exception e) {
+            call.reject("Failed to vibrate: " + e.getMessage());
+        }
+    }
+
+    @PluginMethod
     public void isIgnoringBatteryOptimizations(PluginCall call) {
         JSObject ret = new JSObject();
         try {

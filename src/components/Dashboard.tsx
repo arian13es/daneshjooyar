@@ -263,17 +263,16 @@ export default function Dashboard({
     );
   };
 
+  // Sections used to stagger in with y+opacity (0.4s each, 0.05s apart) across
+  // all seven cards. That ran on the main thread while those same cards contain
+  // blurred decorative circles, so every frame re-rasterized them. A single
+  // short opacity fade keeps the entrance without the per-frame cost.
   const sectionVariants: Variants = {
-    hidden: { opacity: 0, y: 14 },
-    visible: (custom: number) => ({
+    hidden: { opacity: 0 },
+    visible: {
       opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.4,
-        delay: custom * 0.05,
-        ease: [0.16, 1, 0.3, 1] as const
-      }
-    })
+      transition: { duration: 0.22, ease: "easeOut" }
+    }
   };
 
   return (
@@ -322,11 +321,9 @@ export default function Dashboard({
         className="relative bg-gradient-to-br from-emerald-500 to-teal-700 rounded-[1.5rem] p-4 sm:p-5 flex items-center justify-between cursor-pointer active:scale-[0.98] transition-all shadow-lg shadow-emerald-500/20 overflow-hidden text-white"
       >
         {/* Subtle decorative circles for a credit card feel */}
-        <div className="absolute top-0 right-0 w-40 h-40 bg-white/20 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-32 h-32 bg-black/20 rounded-full blur-2xl -ml-10 -mb-10 pointer-events-none" />
         
         <div className="flex items-center gap-2.5 sm:gap-3.5 relative z-10 min-w-0">
-          <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-[0.875rem] sm:rounded-[1rem] bg-white/20 backdrop-blur-md shadow-inner shadow-white/30 border border-white/20 inline-flex items-center justify-center shrink-0">
+          <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-[0.875rem] sm:rounded-[1rem] bg-white/20 shadow-inner shadow-white/30 border border-white/20 inline-flex items-center justify-center shrink-0">
             <svg className="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
             </svg>
@@ -348,7 +345,7 @@ export default function Dashboard({
               </p>
             </>
           ) : (
-            <div className="flex items-center gap-1.5 text-white bg-black/20 hover:bg-black/30 backdrop-blur-md px-3 sm:px-3.5 py-2 sm:py-2.5 rounded-xl border border-white/10 transition-colors">
+            <div className="flex items-center gap-1.5 text-white bg-black/20 hover:bg-black/30 px-3 sm:px-3.5 py-2 sm:py-2.5 rounded-xl border border-white/10 transition-colors">
               <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               <span className="text-xs font-black whitespace-nowrap">تعیین بودجه</span>
             </div>
@@ -367,7 +364,6 @@ export default function Dashboard({
         {/* Decorative map-grid texture */}
         <div className="absolute inset-0 opacity-[0.15] pointer-events-none" style={{ backgroundImage: "linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)", backgroundSize: "22px 22px" }} />
         {/* Glowing pin accent */}
-        <div className="absolute -bottom-8 -left-6 w-28 h-28 bg-white/20 rounded-full blur-2xl pointer-events-none" />
 
         <div className="relative z-10 p-4 sm:p-5">
           {/* Header: Icon + Title */}

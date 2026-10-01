@@ -116,7 +116,7 @@ export default function GlobalModals(props: GlobalModalsProps) {
         )}
       </AnimatePresence>
 
-      <AnimatePresence mode="wait">
+      <AnimatePresence>
         {selectedClassProfile && (
           <ClassProfileModal
             key={`class-profile-${selectedClassProfile.id}`}

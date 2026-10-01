@@ -12,7 +12,11 @@ import {StrictMode} from 'react';
 import {createRoot} from 'react-dom/client';
 import App from './App.tsx';
 import ErrorBoundary from './components/ErrorBoundary.tsx';
-import '@fontsource-variable/vazirmatn';
+// NOTE: the Vazirmatn font is loaded from /fonts/vazirmatn.woff2, which is
+// preloaded in index.html and declared with @font-face there and in index.css.
+// @fontsource-variable/vazirmatn was removed because it shipped three extra
+// subset files (latin + latin-ext) and declared the same family again, so the
+// winning @font-face was ambiguous.
 import './index.css';
 
 window.onerror = function(message, source, lineno, colno, error) {

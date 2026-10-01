@@ -185,7 +185,7 @@ export const CustomDatePicker = ({ value, onChange, label }: CustomDatePickerPro
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2, ease: "easeInOut" }}
             onClick={() => setIsOpen(false)}
-            className="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[300] flex items-end sm:items-center justify-center p-4 pb-[calc(1rem+env(safe-area-inset-bottom,0px))] sm:pb-4"
+            className="fixed inset-0 bg-slate-900/80 z-[300] flex items-end sm:items-center justify-center p-4 pb-[calc(1rem+env(safe-area-inset-bottom,0px))] sm:pb-4"
           >
             <motion.div
               initial={{ y: 80, opacity: 0, scale: 0.96 }}
@@ -344,7 +344,7 @@ export const CustomTimePicker = ({ value, onChange, label, triggerClassName, the
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2, ease: "easeInOut" }}
             onClick={() => setIsOpen(false)}
-            className="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[300] flex items-end sm:items-center justify-center p-4 pb-[calc(1rem+env(safe-area-inset-bottom,0px))] sm:pb-4"
+            className="fixed inset-0 bg-slate-900/80 z-[300] flex items-end sm:items-center justify-center p-4 pb-[calc(1rem+env(safe-area-inset-bottom,0px))] sm:pb-4"
           >
             <motion.div
               initial={{ y: 80, opacity: 0, scale: 0.96 }}

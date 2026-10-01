@@ -32,11 +32,23 @@ export function useNativeIntegration(deps: NativeIntegrationDeps): void {
   const depsRef = useRef(deps);
   depsRef.current = deps;
 
-  const {
-    classes,
-    exams,
-    projects
-  } = deps;
+  const { classes, exams, projects } = deps;
+
+  /** Becomes true once the deferred (idle) sync has run at least once. */
+  const initialSyncDoneRef = useRef(false);
+
+  // Re-sync whenever the schedule/exam/project data actually changes, but only
+  // after the first idle sync has happened. Debounced so typing in an edit form
+  // does not rebuild the whole notification set on every keystroke.
+  useEffect(() => {
+    if (!Capacitor.isNativePlatform()) return;
+    if (!initialSyncDoneRef.current) return;
+    const timer = setTimeout(() => {
+      NotificationService.syncNotifications(classes, exams, projects).catch(() => {});
+      syncAndroidWidget(classes, exams).catch(() => {});
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, [classes, exams, projects]);
 
   // Android back button
   useEffect(() => {
@@ -100,24 +112,84 @@ export function useNativeIntegration(deps: NativeIntegrationDeps): void {
     };
   }, []);
 
-  // Request notification permission after UI loads
+  // Defer non-essential native work until the browser is idle or the user has
+  // interacted. Previously this ran at fixed 2.5s/3.0s timers, which put a
+  // system permission dialog and a full notification rebuild exactly on the
+  // user's first taps (a large part of the reported startup slowness).
   useEffect(() => {
     if (!Capacitor.isNativePlatform()) return;
-    const timer = setTimeout(() => {
-      NotificationService.requestPermission().catch(() => {});
-    }, 2500);
-    return () => clearTimeout(timer);
-  }, []);
 
-  // Sync notifications + widget
-  useEffect(() => {
-    if (!Capacitor.isNativePlatform()) return;
-    const timer = setTimeout(() => {
-      NotificationService.syncNotifications(classes, exams, projects).catch(() => {});
-      syncAndroidWidget(classes, exams).catch(() => {});
-    }, 3000);
-    return () => clearTimeout(timer);
-  }, [classes, exams, projects]);
+    let cancelled = false;
+    let idleHandle: number | undefined;
+    let fallbackTimer: ReturnType<typeof setTimeout> | undefined;
+
+    const runDeferredWork = () => {
+      if (cancelled) return;
+      NotificationService.requestPermission()
+        .then((granted) => {
+          if (!granted || cancelled) return;
+          return NotificationService.syncNotifications(
+            depsRef.current.classes,
+            depsRef.current.exams,
+            depsRef.current.projects
+          );
+        })
+        .then(() => {
+          if (cancelled) return;
+          const { classes: c, exams: e } = depsRef.current;
+          return syncAndroidWidget(c, e);
+        })
+        .then(() => {
+          // From now on, data edits drive their own debounced re-sync.
+          initialSyncDoneRef.current = true;
+        })
+        .catch(() => {});
+    };
+
+    const scheduleIdle = () => {
+      const w = window as unknown as {
+        requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
+      };
+      if (typeof w.requestIdleCallback === "function") {
+        idleHandle = w.requestIdleCallback(runDeferredWork, { timeout: 5000 });
+      } else {
+        fallbackTimer = setTimeout(runDeferredWork, 4000);
+      }
+    };
+
+    // Wait for the first real interaction, but never longer than 6 seconds.
+    let interactionTimer: ReturnType<typeof setTimeout> | undefined = setTimeout(() => {
+      cleanupInteraction();
+      scheduleIdle();
+    }, 6000);
+
+    const onFirstInteraction = () => {
+      cleanupInteraction();
+      scheduleIdle();
+    };
+
+    function cleanupInteraction() {
+      if (interactionTimer) {
+        clearTimeout(interactionTimer);
+        interactionTimer = undefined;
+      }
+      window.removeEventListener("pointerdown", onFirstInteraction);
+      window.removeEventListener("keydown", onFirstInteraction);
+    }
+
+    window.addEventListener("pointerdown", onFirstInteraction, { once: true, passive: true });
+    window.addEventListener("keydown", onFirstInteraction, { once: true });
+
+    return () => {
+      cancelled = true;
+      cleanupInteraction();
+      const w = window as unknown as { cancelIdleCallback?: (h: number) => void };
+      if (idleHandle !== undefined && typeof w.cancelIdleCallback === "function") {
+        w.cancelIdleCallback(idleHandle);
+      }
+      if (fallbackTimer) clearTimeout(fallbackTimer);
+    };
+  }, []);
 
   // Local notification tap → navigate
   useEffect(() => {

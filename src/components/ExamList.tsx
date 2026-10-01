@@ -7,7 +7,7 @@
  * ============================================================================
  */
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { ExamItem } from "../types";
 import { Plus, Trash, Clock, MapPin, FileText, CheckCircle2, Edit, AlertCircle, Calendar, User, Edit3, X } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
@@ -109,11 +109,18 @@ export default function ExamList({ exams, onAddExam, onEditExam, onToggleComplet
     }, 200);
   };
 
-  const sortedExams = [...exams].sort((a, b) => {
-    if (a.completed && !b.completed) return 1;
-    if (!a.completed && b.completed) return -1;
-    return compareChronologicalTimestamps(a.date, a.time, b.date, b.time);
-  });
+  // Sorting is expensive (compareChronologicalTimestamps parses Jalali dates on
+  // every comparison) and this component re-renders on every App state change,
+  // so the result is memoised.
+  const sortedExams = useMemo(
+    () =>
+      [...exams].sort((a, b) => {
+        if (a.completed && !b.completed) return 1;
+        if (!a.completed && b.completed) return -1;
+        return compareChronologicalTimestamps(a.date, a.time, b.date, b.time);
+      }),
+    [exams]
+  );
 
   return (
     <div className="px-2.5 sm:px-4 pt-2.5 sm:pt-4 space-y-4 sm:space-y-6 text-right pb-36" dir="rtl">

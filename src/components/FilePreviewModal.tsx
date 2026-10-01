@@ -43,7 +43,7 @@ export default function FilePreviewModal({ file, onClose }: FilePreviewModalProp
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.25, ease: "easeInOut" }}
-      className="fixed inset-0 z-[350] bg-black/90 backdrop-blur-md flex flex-col font-sans select-none"
+      className="fixed inset-0 z-[350] bg-black/90 flex flex-col font-sans select-none"
       dir="rtl"
     >
       {/* Top Bar */}
