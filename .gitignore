@@ -49,3 +49,7 @@ Thumbs.db
 .env.local
 .env.*.local
 !.env.example
+
+# Analysis output
+graphify-out/
+

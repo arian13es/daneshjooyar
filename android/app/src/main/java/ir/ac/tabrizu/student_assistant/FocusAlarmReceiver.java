@@ -27,26 +27,13 @@ public class FocusAlarmReceiver extends BroadcastReceiver {
 
         String title = intent.getStringExtra(EXTRA_TITLE);
         String body = intent.getStringExtra(EXTRA_BODY);
-        if (title == null) title = "پایان زمان تمرکز";
-        if (body == null) body = "زمان مطالعه به پایان رسید.";
+        if (title == null) title = context.getString(R.string.alarm_default_title);
+        if (body == null) body = context.getString(R.string.alarm_default_body);
 
-        // The activity is what the user sees; the service keeps the sound
-        // playing if the activity cannot be shown (e.g. device locked down).
-        Intent activityIntent = new Intent(context, FocusAlarmActivity.class);
-        activityIntent.putExtra(EXTRA_TITLE, title);
-        activityIntent.putExtra(EXTRA_BODY, body);
-        activityIntent.addFlags(
-                Intent.FLAG_ACTIVITY_NEW_TASK
-                        | Intent.FLAG_ACTIVITY_CLEAR_TOP
-                        | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS
-        );
-        try {
-            context.startActivity(activityIntent);
-        } catch (Exception ignored) {
-            // Some OEMs block background activity starts; the service below is
-            // the fallback so the user still hears the alarm.
-        }
-
+        // The foreground service is started first: it plays the sound through the
+        // ALARM stream and posts a high-importance notification carrying a
+        // full-screen intent, which is the supported way to raise an alarm UI
+        // from the background on Android 10+.
         Intent serviceIntent = new Intent(context, FocusAlarmService.class);
         serviceIntent.putExtra(EXTRA_TITLE, title);
         serviceIntent.putExtra(EXTRA_BODY, body);
@@ -58,6 +45,24 @@ public class FocusAlarmReceiver extends BroadcastReceiver {
             }
         } catch (Exception ignored) {
             // Nothing more we can do without a foreground service.
+        }
+
+        // Below Android 10 a direct activity start from a receiver still works
+        // and gives an immediate alarm screen without waiting for the
+        // notification to be promoted.
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            Intent activityIntent = new Intent(context, FocusAlarmActivity.class);
+            activityIntent.putExtra(EXTRA_TITLE, title);
+            activityIntent.putExtra(EXTRA_BODY, body);
+            activityIntent.addFlags(
+                    Intent.FLAG_ACTIVITY_NEW_TASK
+                            | Intent.FLAG_ACTIVITY_CLEAR_TOP
+                            | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS
+            );
+            try {
+                context.startActivity(activityIntent);
+            } catch (Exception ignored) {
+            }
         }
     }
 
