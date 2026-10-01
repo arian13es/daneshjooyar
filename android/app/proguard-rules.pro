@@ -20,3 +20,12 @@
 # Preserve AndroidX and Core components
 -keep class androidx.core.app.NotificationCompat** { *; }
 
+# Preserve WebView JavaScript Interfaces
+-keepattributes JavascriptInterface
+-keepclassmembers class * {
+    @android.webkit.JavascriptInterface <methods>;
+}
+-keep class org.apache.cordova.** { *; }
+-dontwarn org.apache.cordova.**
+
+
