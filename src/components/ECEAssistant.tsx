@@ -358,7 +358,7 @@ export default function ECEAssistant({
       <div className="px-3 sm:px-5 pt-2.5 sm:pt-3 pb-1 shrink-0">
         <nav 
           aria-label="بخش‌های دستیار"
-          className="bg-slate-200/60 dark:bg-slate-900/90 backdrop-blur-md p-1 sm:p-1.5 rounded-2xl flex max-w-lg md:mx-auto w-full border border-slate-300/60 dark:border-slate-800/80 shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)]"
+          className="bg-slate-200/90 dark:bg-slate-800/90 p-1 sm:p-1.5 rounded-2xl flex max-w-lg md:mx-auto w-full border border-slate-300/70 dark:border-slate-700/80 shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)]"
         >
           {([
             { id: "chat" as const, icon: Sparkles, shortLabel: "دستیار", fullLabel: "دستیار هوشمند" },
@@ -402,19 +402,14 @@ export default function ECEAssistant({
         </nav>
       </div>
 
-      {/* 2. Main Content Area */}
+      {/* 2. Main Content Area — Instant 0ms Switching with Zero Unmount */}
       <div className="flex-1 min-h-0 relative">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeTab}
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -6 }}
-            transition={{ duration: 0.18, ease: [0.25, 1, 0.5, 1] }}
-            className="h-full w-full flex flex-col min-h-0"
-          >
-            {activeTab === "chat" ? (
-              <div className="flex flex-col h-full bg-slate-50 dark:bg-slate-900 relative">
+        {/* Chat Tab */}
+        <div
+          className={`h-full w-full flex flex-col min-h-0 ${activeTab === "chat" ? "" : "hidden"}`}
+          aria-hidden={activeTab !== "chat"}
+        >
+          <div className="flex flex-col h-full bg-slate-50 dark:bg-slate-900 relative">
                 {/* Chat Top Header (Minimal & Uncluttered) */}
                 <div className="bg-white dark:bg-slate-900 px-4 sm:px-5 py-2.5 flex items-center justify-between border-b border-slate-200/80 dark:border-slate-800 shrink-0 z-10">
                   <div className="flex items-center gap-2.5">
@@ -620,23 +615,39 @@ export default function ECEAssistant({
                   </form>
                 </div>
               </div>
-            ) : activeTab === "gpa" ? (
-              <CumulativeGpaCalculator />
-            ) : activeTab === "calendar" ? (
-              <div className="h-full overflow-y-auto px-2.5 sm:px-4 pb-36 w-full max-w-5xl mx-auto">
-                <CalendarTab 
-                  notes={calendarNotes}
-                  onSaveNote={onSaveNote}
-                  onDeleteNote={onDeleteNote}
-                  exams={exams}
-                  projects={projects}
-                />
-              </div>
-            ) : activeTab === "food" ? (
-              <FoodReservation />
-            ) : null}
-          </motion.div>
-        </AnimatePresence>
+            </div>
+
+        {/* GPA Calculator Tab */}
+        <div
+          className={`h-full w-full flex flex-col min-h-0 ${activeTab === "gpa" ? "" : "hidden"}`}
+          aria-hidden={activeTab !== "gpa"}
+        >
+          <CumulativeGpaCalculator />
+        </div>
+
+        {/* Calendar Tab */}
+        <div
+          className={`h-full w-full flex flex-col min-h-0 ${activeTab === "calendar" ? "" : "hidden"}`}
+          aria-hidden={activeTab !== "calendar"}
+        >
+          <div className="h-full overflow-y-auto px-2.5 sm:px-4 pb-36 w-full max-w-5xl mx-auto">
+            <CalendarTab 
+              notes={calendarNotes}
+              onSaveNote={onSaveNote}
+              onDeleteNote={onDeleteNote}
+              exams={exams}
+              projects={projects}
+            />
+          </div>
+        </div>
+
+        {/* Food Reservation Tab */}
+        <div
+          className={`h-full w-full flex flex-col min-h-0 ${activeTab === "food" ? "" : "hidden"}`}
+          aria-hidden={activeTab !== "food"}
+        >
+          <FoodReservation />
+        </div>
       </div>
 
       {/* Clear Chat Confirmation Modal */}
@@ -646,7 +657,7 @@ export default function ECEAssistant({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[220] flex items-center justify-center p-4 text-right"
+            className="fixed inset-0 bg-slate-950/80 z-[220] flex items-center justify-center p-4 text-right"
             dir="rtl"
           >
             <motion.div

@@ -561,7 +561,9 @@ export default function CampusMap({
   }, []);
 
 
-  // 3. Category Filter & Theme Icon Adaptation
+  // 3. Category Filter & Theme Icon Adaptation (Quantized zoom tier to prevent redundant rebuilds on pinch/zoom)
+  const zoomTier = zoomLevel >= 16.8 ? 2 : zoomLevel >= 16.2 ? 1 : 0;
+
   useEffect(() => {
     const bMap = buildingMarkersRef.current;
     CAMPUS_BUILDINGS.forEach(b => {
@@ -580,7 +582,7 @@ export default function CampusMap({
       const isDimmed = selectedCategory !== "all" && selectedCategory !== "gate" && !isSelected;
       marker.setIcon(buildGateDivIcon(g, isSelected, isDimmed, isDarkMode));
     });
-  }, [selectedCategory, selectedBuilding, selectedGate, zoomLevel, isDarkMode]);
+  }, [selectedCategory, selectedBuilding?.id, selectedGate?.id, zoomTier, isDarkMode]);
 
   // 4. Geolocation Tracking with Native Permission Request
   const isLiveNavigatingRef = useRef(isLiveNavigating);
@@ -1158,7 +1160,7 @@ export default function CampusMap({
 
       {/* 4. ROUTE PLANNER MODAL */}
       {isRoutePlannerOpen && (
-        <div className="fixed inset-0 z-[600] bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
+        <div className="fixed inset-0 z-[600] bg-black/75 flex items-end sm:items-center justify-center p-0 sm:p-4">
           <div className="w-full sm:max-w-md bg-white dark:bg-slate-900 rounded-t-3xl sm:rounded-3xl p-4 sm:p-5 shadow-2xl border border-slate-200 dark:border-slate-800 flex flex-col gap-3.5 max-h-[85vh] overflow-y-auto animate-in slide-in-from-bottom duration-250">
             <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2.5">
               <div className="flex items-center gap-2">
@@ -1451,7 +1453,7 @@ export default function CampusMap({
 
       {/* 7. STEP-BY-STEP PREVIEW DRAWER */}
       {showStepsPreview && routeResult && (
-        <div className="fixed inset-0 z-[600] bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
+        <div className="fixed inset-0 z-[600] bg-black/75 flex items-end sm:items-center justify-center p-0 sm:p-4">
           <div className="w-full sm:max-w-md bg-white dark:bg-slate-900 rounded-t-3xl sm:rounded-3xl p-4 shadow-2xl border border-slate-200 dark:border-slate-800 flex flex-col gap-3 max-h-[65vh] overflow-hidden animate-in slide-in-from-bottom duration-250">
             <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
               <h3 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white flex items-center gap-2">
@@ -1487,7 +1489,7 @@ export default function CampusMap({
 
       {/* 8. ORIGIN PICKER MODAL */}
       {showOriginPicker && (
-        <div className="fixed inset-0 z-[600] bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
+        <div className="fixed inset-0 z-[600] bg-black/75 flex items-end sm:items-center justify-center p-0 sm:p-4">
           <div className="w-full sm:max-w-md bg-white dark:bg-slate-900 rounded-t-3xl sm:rounded-3xl p-4 shadow-2xl border border-slate-200 dark:border-slate-800 flex flex-col gap-3 max-h-[70vh] overflow-hidden animate-in slide-in-from-bottom duration-250">
             <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
               <h3 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white flex items-center gap-2">
@@ -1576,7 +1578,7 @@ export default function CampusMap({
 
       {/* 9. DESTINATION PICKER MODAL */}
       {showDestPicker && (
-        <div className="fixed inset-0 z-[600] bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
+        <div className="fixed inset-0 z-[600] bg-black/75 flex items-end sm:items-center justify-center p-0 sm:p-4">
           <div className="w-full sm:max-w-md bg-white dark:bg-slate-900 rounded-t-3xl sm:rounded-3xl p-4 shadow-2xl border border-slate-200 dark:border-slate-800 flex flex-col gap-3 max-h-[70vh] overflow-hidden animate-in slide-in-from-bottom duration-250">
             <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
               <h3 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white flex items-center gap-2">

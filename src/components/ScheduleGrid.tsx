@@ -265,8 +265,8 @@ export default function ScheduleGrid({ classes, profile, onAddClass, onEditClass
   };
 
   return (
-    <div className="px-2.5 sm:px-4 pt-4 sm:pt-5 space-y-4 sm:space-y-6 text-right pb-36" dir="rtl">
-      <div className="flex items-center justify-between py-1">
+    <div className="px-2.5 sm:px-4 pt-2.5 sm:pt-4 space-y-4 sm:space-y-6 text-right pb-36" dir="rtl">
+      <div className="flex items-center justify-between">
         <h2 className="font-black text-slate-900 dark:text-white text-lg sm:text-xl flex items-center gap-2.5 sm:gap-3">
            <div className="w-1.5 h-6 bg-gradient-to-b from-blue-500 to-indigo-600 rounded-full" /> 
            برنامه هفتگی
@@ -275,19 +275,19 @@ export default function ScheduleGrid({ classes, profile, onAddClass, onEditClass
           <button 
             type="button"
             onClick={() => setShowExportModal(true)} 
-            className="h-10 px-3.5 bg-indigo-50 dark:bg-slate-800 text-indigo-600 dark:text-indigo-300 hover:bg-indigo-100 dark:hover:bg-slate-700 rounded-xl sm:rounded-[1.25rem] inline-flex items-center justify-center gap-2 text-xs font-black transition-all active:scale-95 shadow-xs border border-indigo-100 dark:border-slate-700 cursor-pointer"
+            className="h-10 sm:h-12 px-3.5 bg-indigo-50 dark:bg-slate-800 text-indigo-600 dark:text-indigo-300 hover:bg-indigo-100 dark:hover:bg-slate-700 rounded-xl sm:rounded-[1.25rem] inline-flex items-center justify-center gap-2 text-xs font-black transition-all active:scale-95 shadow-xs border border-indigo-100 dark:border-slate-700 cursor-pointer"
             title="خروجی تصویر باکیفیت برنامه هفتگی"
           >
-            <ImageIcon className="h-4 w-4 text-indigo-500 shrink-0" />
+            <ImageIcon className="h-4 w-4 sm:h-5 sm:w-5 text-indigo-500 shrink-0" />
             <span>خروجی تصویر</span>
           </button>
           <button 
             type="button"
             onClick={openAddModal} 
-            className="h-10 w-10 bg-slate-900 text-white rounded-xl sm:rounded-[1.25rem] inline-flex items-center justify-center shadow-md dark:shadow-none active:scale-95 transition-all cursor-pointer shrink-0"
+            className="h-10 w-10 sm:h-12 sm:w-12 bg-slate-900 text-white rounded-xl sm:rounded-[1.25rem] inline-flex items-center justify-center shadow-xl dark:shadow-none shadow-slate-900/20 active:scale-95 transition-all cursor-pointer shrink-0"
             title="افزودن کلاس جدید"
           >
-            <Plus className="h-5 w-5 shrink-0" />
+            <Plus className="h-5 w-5 sm:h-6 sm:w-6 shrink-0" />
           </button>
         </div>
       </div>
@@ -433,7 +433,7 @@ export default function ScheduleGrid({ classes, profile, onAddClass, onEditClass
             animate={{ opacity: 1 }} 
             exit={{ opacity: 0 }} 
             transition={{ duration: 0.25, ease: "easeInOut" }}
-            className="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[200] flex items-end sm:items-center justify-center p-4 pb-[calc(1rem+env(safe-area-inset-bottom,0px))] sm:pb-4 font-sans"
+            className="fixed inset-0 bg-slate-950/80 z-[200] flex items-end sm:items-center justify-center p-4 pb-[calc(1rem+env(safe-area-inset-bottom,0px))] sm:pb-4 font-sans"
             onClick={closeModal}
           >
             <motion.div
@@ -639,7 +639,7 @@ export default function ScheduleGrid({ classes, profile, onAddClass, onEditClass
             animate={{ opacity: 1 }} 
             exit={{ opacity: 0 }} 
             transition={{ duration: 0.22, ease: "easeInOut" }}
-            className="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[250] flex items-center justify-center p-4 font-sans"
+            className="fixed inset-0 bg-slate-950/80 z-[250] flex items-center justify-center p-4 font-sans"
           >
             <motion.div 
               initial={{ scale: 0.92, opacity: 0 }} 

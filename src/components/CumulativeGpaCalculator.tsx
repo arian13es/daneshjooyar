@@ -57,10 +57,22 @@ export default function CumulativeGpaCalculator() {
     onConfirm: () => void;
   } | null>(null);
 
+  const coursesRef = React.useRef(courses);
+  coursesRef.current = courses;
+
   useEffect(() => {
-    safeStorageSet("gpa_calc_courses_v2", courses);
-    safeStorageRemove("gpa_calc_courses");
+    const timer = setTimeout(() => {
+      safeStorageSet("gpa_calc_courses_v2", courses);
+      safeStorageRemove("gpa_calc_courses");
+    }, 350);
+    return () => clearTimeout(timer);
   }, [courses]);
+
+  useEffect(() => {
+    return () => {
+      safeStorageSet("gpa_calc_courses_v2", coursesRef.current);
+    };
+  }, []);
 
   const normalizeNum = (val: string) => {
     return String(val || "")
@@ -358,7 +370,7 @@ export default function CumulativeGpaCalculator() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[220] flex items-end sm:items-center justify-center p-4 text-right"
+            className="fixed inset-0 bg-slate-950/80 z-[220] flex items-end sm:items-center justify-center p-4 text-right"
             dir="rtl"
           >
             <motion.div
@@ -489,7 +501,7 @@ export default function CumulativeGpaCalculator() {
             animate={{ opacity: 1 }} 
             exit={{ opacity: 0 }} 
             transition={{ duration: 0.2, ease: "easeInOut" }}
-            className="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[250] flex items-center justify-center p-4 select-none"
+            className="fixed inset-0 bg-slate-950/80 z-[250] flex items-center justify-center p-4 select-none"
             dir="rtl"
           >
             <motion.div 

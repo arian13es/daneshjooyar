@@ -191,7 +191,7 @@ export default function ExamList({ exams, onAddExam, onEditExam, onToggleComplet
             animate={{ opacity: 1 }} 
             exit={{ opacity: 0 }} 
             transition={{ duration: 0.25, ease: "easeInOut" }}
-            className="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[200] flex items-end sm:items-center justify-center p-4 pb-[calc(1rem+env(safe-area-inset-bottom,0px))] sm:pb-4"
+            className="fixed inset-0 bg-slate-950/80 z-[200] flex items-end sm:items-center justify-center p-4 pb-[calc(1rem+env(safe-area-inset-bottom,0px))] sm:pb-4"
             onClick={closeModal}
           >
             <motion.div
@@ -328,7 +328,7 @@ export default function ExamList({ exams, onAddExam, onEditExam, onToggleComplet
             animate={{ opacity: 1 }} 
             exit={{ opacity: 0 }} 
             transition={{ duration: 0.22, ease: "easeInOut" }}
-            className="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[250] flex items-center justify-center p-4"
+            className="fixed inset-0 bg-slate-950/80 z-[250] flex items-center justify-center p-4"
           >
             <motion.div 
               initial={{ scale: 0.92, opacity: 0 }} 
