@@ -4,11 +4,9 @@ import { Capacitor } from "@capacitor/core";
 import { safeStorageGetString } from "../utils/storageUtils";
 
 /** Duration of the CSS cross-dissolve transition in milliseconds */
-const SPLASH_FADE_MS = 450;
-/** Duration the motion logo plays before dissolving smoothly */
-const SPLASH_MIN_VISIBLE_MS = 650;
-/** Failsafe maximum wait duration */
-const SPLASH_MAX_WAIT_MS = 1500;
+const SPLASH_FADE_MS = 550;
+/** Duration the motion logo plays before dissolving smoothly (full spring + settle) */
+const SPLASH_MIN_VISIBLE_MS = 1400;
 
 export function useAppReady(): {
   isAppReady: boolean;
@@ -35,22 +33,32 @@ export function useAppReady(): {
       started = true;
       if (minVisibleTimer) clearTimeout(minVisibleTimer);
 
-      requestAnimationFrame(() => {
-        const splashOverlay = document.querySelector("#native-splash .splash-overlay");
-        if (splashOverlay) {
-          splashOverlay.classList.add("is-fading");
-        }
+      const triggerFade = () => {
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            const splashOverlay = document.querySelector("#native-splash .splash-overlay");
+            if (splashOverlay) {
+              splashOverlay.classList.add("is-fading");
+            }
 
-        // Defer React re-render until CSS transition finishes so JS does not compete with GPU fade
-        removeTimer = setTimeout(() => {
-          setIsAppReady(true);
-          const el = document.getElementById("native-splash");
-          if (el) {
-            el.style.display = "none";
-            el.remove();
-          }
-        }, SPLASH_FADE_MS + 40);
-      });
+            // Defer React re-render until CSS transition finishes so JS does not compete with GPU fade
+            removeTimer = setTimeout(() => {
+              setIsAppReady(true);
+              const el = document.getElementById("native-splash");
+              if (el) {
+                el.style.display = "none";
+                el.remove();
+              }
+            }, SPLASH_FADE_MS + 60);
+          });
+        });
+      };
+
+      if (typeof document !== "undefined" && "fonts" in document) {
+        document.fonts.ready.then(triggerFade).catch(triggerFade);
+      } else {
+        triggerFade();
+      }
     };
 
     minVisibleTimer = setTimeout(beginEntrance, SPLASH_MIN_VISIBLE_MS);

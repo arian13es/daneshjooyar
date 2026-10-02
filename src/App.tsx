@@ -172,7 +172,7 @@ export default function App() {
             >
               <motion.div
                 key={activeTab}
-                initial={{ opacity: 0 }}
+                initial={false}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.18, ease: "easeOut" }}
                 className="flex-1 flex flex-col min-h-0 w-full h-full"

@@ -263,16 +263,11 @@ export default function Dashboard({
     );
   };
 
-  // Sections used to stagger in with y+opacity (0.4s each, 0.05s apart) across
-  // all seven cards. That ran on the main thread while those same cards contain
-  // blurred decorative circles, so every frame re-rasterized them. A single
-  // short opacity fade keeps the entrance without the per-frame cost.
+  // Keep dashboard cards immediately painted at full opacity so the cold start
+  // does not execute multiple concurrent JS animation loops under the splash screen.
   const sectionVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { duration: 0.22, ease: "easeOut" }
-    }
+    hidden: { opacity: 1 },
+    visible: { opacity: 1 }
   };
 
   return (
