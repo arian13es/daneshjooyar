@@ -3,7 +3,7 @@ package ir.ac.tabrizu.student_assistant;
 import android.content.Context;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
-import android.media.Ringtone;
+import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.media.ToneGenerator;
 import android.net.Uri;
@@ -13,33 +13,24 @@ import android.os.Looper;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.os.VibratorManager;
+import android.util.Log;
 
 /**
- * Owns the audible + haptic side of the focus alarm.
- *
- * Both the alarm Activity and its fallback Service need this, so it lives in one
- * place and is started by exactly one of them at a time — otherwise the two
- * would play over each other.
- *
- * The sound deliberately uses {@link AudioAttributes#USAGE_ALARM}, which routes
- * it through the device's alarm volume. That is what lets it ring at full volume
- * while the phone is on silent or vibrate, the same way the stock Clock app does.
- *
- * Two independent sound paths are used, because a device with no alarm tone
- * configured (common on emulators and some OEM builds) makes
- * RingtoneManager.getRingtone() return null — which previously produced exactly
- * one short, quiet blip and then silence:
- *   1. the user's configured alarm ringtone, looped;
- *   2. a synthesized two-tone alarm siren, which is guaranteed to be audible.
+ * Singleton alarm audio and haptics controller.
+ * Guarantees that only one instance of MediaPlayer/Vibrator runs at any time,
+ * and calling stop() from anywhere (Receiver, Activity, Notification) will
+ * immediately silence the exact running alarm.
  */
 public final class FocusAlarmSound {
 
-    private static final long[] VIBRATION_PATTERN = { 0, 700, 400, 700, 400, 900 };
-    private static final long SIREN_INTERVAL_MS = 900;
+    private static final String TAG = "FocusAlarmSound";
+    private static final long[] VIBRATION_PATTERN = { 0, 800, 400, 800, 400, 1000 };
+    private static final long SIREN_INTERVAL_MS = 800;
+
+    private static volatile FocusAlarmSound sInstance;
 
     private final Handler handler = new Handler(Looper.getMainLooper());
-
-    private Ringtone ringtone;
+    private MediaPlayer mediaPlayer;
     private ToneGenerator toneGenerator;
     private Vibrator vibrator;
     private boolean ringing;
@@ -57,44 +48,88 @@ public final class FocusAlarmSound {
     private FocusAlarmSound() {
     }
 
-    public static FocusAlarmSound create() {
-        return new FocusAlarmSound();
+    public static synchronized FocusAlarmSound getInstance() {
+        if (sInstance == null) {
+            sInstance = new FocusAlarmSound();
+        }
+        return sInstance;
     }
 
-    public void start(Context context) {
-        if (ringing) return;
+    /** Backward compatibility alias */
+    public static FocusAlarmSound create() {
+        return getInstance();
+    }
+
+    public synchronized void start(Context context) {
+        if (ringing) {
+            Log.i(TAG, "FocusAlarmSound already ringing, ignoring redundant start");
+            return;
+        }
         ringing = true;
-        boolean toneStarted = startRingtone(context);
-        startVibration(context);
-        if (!toneStarted) {
-            // No usable system alarm tone: drive the synthesized siren instead.
+        Log.i(TAG, "Starting focus alarm sound and vibration (Singleton)");
+
+        boolean mediaStarted = startMediaPlayer(context.getApplicationContext());
+        startVibration(context.getApplicationContext());
+
+        if (!mediaStarted) {
+            Log.w(TAG, "MediaPlayer failed to start, falling back to ToneGenerator siren");
             startSiren();
         }
     }
 
-    /** @return true when a looping system ringtone actually started. */
-    private boolean startRingtone(Context context) {
+    private boolean startMediaPlayer(Context context) {
         try {
+            stopMediaPlayer();
+
             Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
             if (alarmUri == null) {
                 alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
             }
+            if (alarmUri == null) {
+                alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            }
             if (alarmUri == null) return false;
 
-            ringtone = RingtoneManager.getRingtone(context.getApplicationContext(), alarmUri);
-            if (ringtone == null) return false;
+            mediaPlayer = new MediaPlayer();
+            mediaPlayer.setDataSource(context, alarmUri);
 
-            ringtone.setAudioAttributes(new AudioAttributes.Builder()
+            AudioAttributes attrs = new AudioAttributes.Builder()
                     .setUsage(AudioAttributes.USAGE_ALARM)
                     .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                    .build());
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                ringtone.setLooping(true);
-            }
-            ringtone.play();
+                    .build();
+            mediaPlayer.setAudioAttributes(attrs);
+            mediaPlayer.setLooping(true);
+            mediaPlayer.setVolume(1.0f, 1.0f);
+
+            mediaPlayer.setOnErrorListener((mp, what, extra) -> {
+                Log.e(TAG, "MediaPlayer error: what=" + what + " extra=" + extra);
+                stopMediaPlayer();
+                startSiren();
+                return true;
+            });
+
+            mediaPlayer.prepare();
+            mediaPlayer.start();
             return true;
         } catch (Exception e) {
+            Log.e(TAG, "Failed to start MediaPlayer for alarm", e);
+            stopMediaPlayer();
             return false;
+        }
+    }
+
+    private void stopMediaPlayer() {
+        try {
+            if (mediaPlayer != null) {
+                if (mediaPlayer.isPlaying()) {
+                    mediaPlayer.stop();
+                }
+                mediaPlayer.reset();
+                mediaPlayer.release();
+            }
+        } catch (Exception ignored) {
+        } finally {
+            mediaPlayer = null;
         }
     }
 
@@ -111,18 +146,17 @@ public final class FocusAlarmSound {
         handler.post(sirenTick);
     }
 
-    /** Alternates two tones so it reads as an alarm rather than a notification. */
     private void beep() {
         if (toneGenerator == null) return;
         try {
-            toneGenerator.startTone(ToneGenerator.TONE_CDMA_HIGH_L, 420);
+            toneGenerator.startTone(ToneGenerator.TONE_CDMA_HIGH_L, 400);
             handler.postDelayed(() -> {
                 if (!ringing || toneGenerator == null) return;
                 try {
-                    toneGenerator.startTone(ToneGenerator.TONE_CDMA_HIGH_L, 420);
+                    toneGenerator.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 400);
                 } catch (Exception ignored) {
                 }
-            }, 460);
+            }, 450);
         } catch (Exception ignored) {
         }
     }
@@ -130,8 +164,7 @@ public final class FocusAlarmSound {
     private void startVibration(Context context) {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                VibratorManager vm =
-                        (VibratorManager) context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE);
+                VibratorManager vm = (VibratorManager) context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE);
                 vibrator = vm != null ? vm.getDefaultVibrator() : null;
             } else {
                 vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
@@ -139,23 +172,21 @@ public final class FocusAlarmSound {
             if (vibrator == null || !vibrator.hasVibrator()) return;
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                // Repeat index 0 => loop the whole pattern until cancelled.
                 vibrator.vibrate(VibrationEffect.createWaveform(VIBRATION_PATTERN, 0));
             } else {
                 vibrator.vibrate(VIBRATION_PATTERN, 0);
             }
-        } catch (Exception ignored) {
-            // Vibration is a bonus, not a requirement.
+        } catch (Exception e) {
+            Log.w(TAG, "Vibration start failed", e);
         }
     }
 
-    public void stop() {
+    public synchronized void stop() {
+        Log.i(TAG, "FocusAlarmSound stop requested");
         ringing = false;
         handler.removeCallbacks(sirenTick);
-        try {
-            if (ringtone != null && ringtone.isPlaying()) ringtone.stop();
-        } catch (Exception ignored) {
-        }
+        stopMediaPlayer();
+
         if (sirenOn && toneGenerator != null) {
             try {
                 toneGenerator.stopTone();
@@ -163,16 +194,15 @@ public final class FocusAlarmSound {
             }
         }
         sirenOn = false;
+
         try {
             if (vibrator != null) vibrator.cancel();
         } catch (Exception ignored) {
         }
-        ringtone = null;
         vibrator = null;
     }
 
-    /** Releases the ToneGenerator; call only when the alarm is fully finished. */
-    public void release() {
+    public synchronized void release() {
         stop();
         if (toneGenerator != null) {
             try {
@@ -183,7 +213,7 @@ public final class FocusAlarmSound {
         }
     }
 
-    public boolean isRinging() {
+    public synchronized boolean isRinging() {
         return ringing;
     }
 }

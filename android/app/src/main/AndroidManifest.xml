@@ -59,18 +59,21 @@
         <activity
             android:name=".FocusAlarmActivity"
             android:exported="false"
-            android:launchMode="singleInstance"
+            android:launchMode="singleTask"
             android:excludeFromRecents="true"
-            android:taskAffinity=""
+            android:taskAffinity="ir.ac.tabrizu.student_assistant.alarm"
+            android:showOnLockScreen="true"
             android:showWhenLocked="true"
             android:turnScreenOn="true"
+            android:inheritShowWhenLocked="true"
+            android:showForAllUsers="true"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.FocusAlarm" />
 
         <service
             android:name=".FocusAlarmService"
             android:exported="false"
-            android:foregroundServiceType="shortService" />    </application>
+            android:foregroundServiceType="mediaPlayback" />    </application>
 
     <!-- Permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -90,6 +93,8 @@
     <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
     <!-- Android 14+ requires a declared type for the alarm foreground service -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SHORT_SERVICE" />
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
     <uses-feature android:name="android.hardware.location.gps" android:required="false" />
 </manifest>

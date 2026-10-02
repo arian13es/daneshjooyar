@@ -1,34 +1,38 @@
 package ir.ac.tabrizu.student_assistant;
 
 import android.app.Activity;
-import android.app.KeyguardManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.view.View;
+import android.os.PowerManager;
+import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.core.content.res.ResourcesCompat;
 
 import java.util.Calendar;
 import java.util.Locale;
 
 /**
- * Full-screen alarm screen shown when a focus session ends — the same pattern
- * the stock Clock app uses: it turns the screen on, appears above the lock
- * screen, and keeps sounding until the user acknowledges it.
- *
- * This is a plain Activity on purpose. Extending BridgeActivity would spin up a
- * whole WebView just to draw three text views and a button, which would both
- * slow the alert down and waste memory while the phone is alarming.
+ * Full-screen alarm activity displayed directly over the lockscreen.
+ * Uses native Vazirmatn typography and applies lockscreen window flags before super.onCreate().
  */
 public class FocusAlarmActivity extends Activity {
 
+    private static final String TAG = "FocusAlarmActivity";
     private TextView clockView;
-    private FocusAlarmSound sound;
+    private PowerManager.WakeLock screenWakeLock;
     private final Handler handler = new Handler(Looper.getMainLooper());
+    private boolean isDismissed = false;
+
     private final Runnable ticker = new Runnable() {
         @Override
         public void run() {
@@ -37,25 +41,49 @@ public class FocusAlarmActivity extends Activity {
         }
     };
 
+    private final BroadcastReceiver dismissReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent != null && FocusAlarmReceiver.ACTION_DISMISS_ACTIVITY.equals(intent.getAction())) {
+                Log.i(TAG, "ACTION_DISMISS_ACTIVITY received, closing activity");
+                dismissAlarm();
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_focus_alarm);
-
-        // Show over the lock screen and turn the display on.
+        // Crucial: Set window flags BEFORE super.onCreate() so the WindowManager
+        // assigns the lockscreen window tokens during the initial attachment phase.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
             setShowWhenLocked(true);
             setTurnScreenOn(true);
-            KeyguardManager km = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
-            if (km != null) km.requestDismissKeyguard(this, null);
-        } else {
-            getWindow().addFlags(
-                    WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
-                            | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
-                            | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
-            );
         }
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        getWindow().addFlags(
+                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+                        | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
+                        | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+                        | WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON
+        );
+
+        super.onCreate(savedInstanceState);
+
+        // Keep screen bright while alarm is ringing
+        try {
+            PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+            if (pm != null) {
+                screenWakeLock = pm.newWakeLock(
+                        PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP,
+                        "Daneshjooyar:AlarmScreenWakeLock"
+                );
+                screenWakeLock.acquire(10 * 60 * 1000L);
+            }
+        } catch (Exception e) {
+            Log.w(TAG, "Screen wake lock failed", e);
+        }
+
+        setContentView(R.layout.activity_focus_alarm);
 
         String title = getIntent() != null
                 ? getIntent().getStringExtra(FocusAlarmReceiver.EXTRA_TITLE)
@@ -71,11 +99,36 @@ public class FocusAlarmActivity extends Activity {
         clockView = findViewById(R.id.alarm_clock);
         Button dismiss = findViewById(R.id.alarm_dismiss);
 
-        titleView.setText(title);
-        bodyView.setText(body);
+        // Apply Vazirmatn typeface programmatically as guaranteed fallback
+        try {
+            Typeface vazirBold = ResourcesCompat.getFont(this, R.font.vazirmatn_bold);
+            Typeface vazirReg = ResourcesCompat.getFont(this, R.font.vazirmatn);
+            if (clockView != null && vazirBold != null) clockView.setTypeface(vazirBold);
+            if (titleView != null && vazirBold != null) titleView.setTypeface(vazirBold);
+            if (bodyView != null && vazirReg != null) bodyView.setTypeface(vazirReg);
+            if (dismiss != null && vazirBold != null) dismiss.setTypeface(vazirBold);
+        } catch (Exception e) {
+            Log.w(TAG, "Could not load custom typeface font", e);
+        }
+
+        if (titleView != null) titleView.setText(title);
+        if (bodyView != null) bodyView.setText(body);
         updateClock();
 
-        dismiss.setOnClickListener(v -> dismissAlarm());
+        if (dismiss != null) {
+            dismiss.setOnClickListener(v -> dismissAlarm());
+        }
+
+        // Register receiver to finish this activity if the user taps "Stop" from notification
+        IntentFilter filter = new IntentFilter(FocusAlarmReceiver.ACTION_DISMISS_ACTIVITY);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(dismissReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
+        } else {
+            registerReceiver(dismissReceiver, filter);
+        }
+
+        // Ensure alarm sound is ringing
+        FocusAlarmSound.getInstance().start(this);
     }
 
     private void updateClock() {
@@ -96,9 +149,32 @@ public class FocusAlarmActivity extends Activity {
         return sb.toString();
     }
 
-    private void dismissAlarm() {
-        if (sound != null) sound.stop();
-        FocusAlarmService.stop(this);
+    private synchronized void dismissAlarm() {
+        if (isDismissed) return;
+        isDismissed = true;
+        Log.i(TAG, "Dismissing alarm on user request");
+
+        handler.removeCallbacks(ticker);
+
+        // Stop sound immediately via singleton
+        FocusAlarmSound.getInstance().stop();
+
+        // Cancel receiver notifications and wake locks
+        FocusAlarmReceiver.cancel(this);
+
+        if (screenWakeLock != null && screenWakeLock.isHeld()) {
+            try {
+                screenWakeLock.release();
+            } catch (Exception ignored) {
+            }
+            screenWakeLock = null;
+        }
+
+        try {
+            unregisterReceiver(dismissReceiver);
+        } catch (Exception ignored) {
+        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             finishAndRemoveTask();
         } else {
@@ -109,36 +185,40 @@ public class FocusAlarmActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        // Take over the alarm from the fallback service so the two never ring
-        // over each other, and keep ringing until the user stops it.
-        FocusAlarmService.stop(this);
-        if (sound == null) sound = FocusAlarmSound.create();
-        sound.start(this);
-
-        handler.removeCallbacks(ticker);
-        handler.post(ticker);
+        if (!isDismissed) {
+            FocusAlarmSound.getInstance().start(this);
+            handler.removeCallbacks(ticker);
+            handler.post(ticker);
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         handler.removeCallbacks(ticker);
-        if (sound != null) sound.stop();
     }
 
     @Override
     public void onBackPressed() {
-        // The alarm must be acknowledged explicitly, never dismissed by accident.
-        View root = findViewById(R.id.alarm_root);
-        if (root != null) {
-            root.announceForAccessibility(getString(R.string.alarm_hint));
-        }
+        // Prevent accidental dismissal via back button — must tap the big stop button
     }
 
     @Override
     protected void onDestroy() {
         handler.removeCallbacks(ticker);
-        if (sound != null) sound.stop();
+        FocusAlarmSound.getInstance().stop();
+
+        if (screenWakeLock != null && screenWakeLock.isHeld()) {
+            try {
+                screenWakeLock.release();
+            } catch (Exception ignored) {
+            }
+            screenWakeLock = null;
+        }
+        try {
+            unregisterReceiver(dismissReceiver);
+        } catch (Exception ignored) {
+        }
         super.onDestroy();
     }
 }

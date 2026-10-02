@@ -138,16 +138,11 @@ export default function App() {
   };
 
   return (
-    <motion.div
-      initial={false}
-      animate={{ opacity: isAppReady ? 1 : 0 }}
-      transition={{ duration: 0.42, ease: [0.4, 0, 0.2, 1] as const }}
+    <div
       style={{
-        // Owns a stacking context so the splash overlay painted above it can
-        // cross-dissolve into the app instead of cutting to a blank frame.
         isolation: "isolate",
         zIndex: 0,
-        willChange: "opacity",
+        transform: "translateZ(0)",
       }}
       className="w-full h-full bg-slate-50 dark:bg-slate-900 flex flex-col font-sans overflow-hidden"
       dir="rtl"
@@ -255,6 +250,6 @@ export default function App() {
         isFocusMinimized={isFocusMinimized}
         setIsFocusMinimized={setIsFocusMinimized}
       />
-    </motion.div>
+    </div>
   );
 }

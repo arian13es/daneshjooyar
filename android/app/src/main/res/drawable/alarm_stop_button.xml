@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Large, high-contrast stop button. Ripple feedback is kept because this is
-     the one control the user has to hit while half asleep. -->
+<!-- Modern gradient button for stopping the focus alarm with ripple feedback -->
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
-    android:color="#33FFFFFF">
+    android:color="#44FFFFFF">
     <item>
         <shape android:shape="rectangle">
-            <corners android:radius="22dp" />
-            <solid android:color="@color/alarmStop" />
+            <gradient
+                android:type="linear"
+                android:angle="45"
+                android:startColor="#4F46E5"
+                android:endColor="#7C3AED" />
+            <corners android:radius="20dp" />
+            <stroke
+                android:width="1.5dp"
+                android:color="#818CF8" />
         </shape>
     </item>
 </ripple>

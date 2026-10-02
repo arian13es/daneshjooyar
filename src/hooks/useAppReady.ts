@@ -3,15 +3,11 @@ import { SplashScreen } from "@capacitor/splash-screen";
 import { Capacitor } from "@capacitor/core";
 import { safeStorageGetString } from "../utils/storageUtils";
 
-/** Must stay in sync with the .splash-overlay opacity transition in index.html. */
-const SPLASH_FADE_MS = 450;
-/**
- * The logo intro in index.html runs for ~340ms. The splash is held on screen at
- * least this long so the animation is never cut off half-way, which made the
- * entrance look like it "stuttered" into the app.
- */
-const SPLASH_MIN_VISIBLE_MS = 420;
-/** Safety net: never keep the user on the splash for longer than this. */
+/** Duration of the CSS cross-dissolve transition in milliseconds */
+const SPLASH_FADE_MS = 750;
+/** Duration the motion logo plays before dissolving smoothly */
+const SPLASH_MIN_VISIBLE_MS = 1350;
+/** Failsafe maximum wait duration */
 const SPLASH_MAX_WAIT_MS = 2500;
 
 export function useAppReady(): {
@@ -25,8 +21,9 @@ export function useAppReady(): {
   });
 
   useEffect(() => {
+    // Immediately dismiss the OS native splash so the HTML motion logo is visible from frame 1
     if (Capacitor.isNativePlatform()) {
-      SplashScreen.hide().catch(() => {});
+      SplashScreen.hide({ fadeOutDuration: 100 }).catch(() => {});
     }
 
     const mountedAt = Date.now();
@@ -40,11 +37,6 @@ export function useAppReady(): {
     const isAppMounted = () =>
       Boolean((window as unknown as { __APP_MOUNTED__?: boolean }).__APP_MOUNTED__);
 
-    /**
-     * Cross-dissolve: the splash stays on top while the app fades in underneath
-     * it, then the splash dissolves away. Because the splash is painted above
-     * the app in the same stacking context, there is never a blank frame.
-     */
     const beginEntrance = () => {
       if (started) return;
       started = true;
@@ -52,22 +44,20 @@ export function useAppReady(): {
       if (minVisibleTimer) clearTimeout(minVisibleTimer);
       if (maxWaitTimer) clearTimeout(maxWaitTimer);
 
-      // Two frames: one to commit the app's mounted state, one to guarantee the
-      // compositor has the app's first layer ready before we start dissolving.
       rafId = requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          const splashOverlay = document.querySelector("#native-splash .splash-overlay");
-          if (splashOverlay) {
-            splashOverlay.classList.add("is-fading");
-          }
-          // Triggers the app's own opacity fade-in underneath the splash.
-          setIsAppReady(true);
+        const splashOverlay = document.querySelector("#native-splash .splash-overlay");
+        if (splashOverlay) {
+          splashOverlay.classList.add("is-fading");
+        }
+        setIsAppReady(true);
 
-          removeTimer = setTimeout(() => {
-            document.getElementById("native-splash")?.remove();
-            setHasProfile(!!safeStorageGetString("tabriz_profile_v2", ""));
-          }, SPLASH_FADE_MS + 60);
-        });
+        removeTimer = setTimeout(() => {
+          const el = document.getElementById("native-splash");
+          if (el) {
+            el.style.display = "none";
+            el.remove();
+          }
+        }, SPLASH_FADE_MS + 60);
       });
     };
 
@@ -86,9 +76,6 @@ export function useAppReady(): {
       beginEntrance();
     };
 
-    // React sets window.__APP_MOUNTED__ right after createRoot().render(), so the
-    // entrance starts when the app is genuinely on screen rather than after a
-    // fixed delay. Polling is cheap; the cap below guarantees we never stick.
     pollTimer = setInterval(() => {
       if (isAppMounted()) requestEntranceWhenAllowed();
     }, 16);
@@ -106,3 +93,4 @@ export function useAppReady(): {
 
   return { isAppReady, hasProfile, setHasProfile };
 }
+

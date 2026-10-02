@@ -28,6 +28,10 @@ html, body {
   color: #0f172a;
   -webkit-tap-highlight-color: transparent;
   user-select: none;
+  /* Prevent rubber-banding / blank overscroll in Android WebView */
+  overscroll-behavior: none;
+  overscroll-behavior-y: none;
+  touch-action: pan-y;
   /* Fixed dark mode transition delay */
   transition: none;
   color-scheme: light;

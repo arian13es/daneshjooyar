@@ -224,7 +224,9 @@ export default function ExamFocusMode({
     if (remaining <= 0) {
       triggerFocusAlert();
       setIsActive(false);
-      clearNativeAlarm();
+      // DO NOT call clearNativeAlarm() here!
+      // The native alarm (sound, notification, screen) is ringing right now
+      // and must stay active until the user taps "Stop" on the alarm screen or notification!
 
       if (!session.isBreak) {
         const totalStudied = session.baseStudiedSeconds + session.totalDurationSeconds;
@@ -270,7 +272,7 @@ export default function ExamFocusMode({
         // Expired while app was closed or device was sleeping
         triggerFocusAlert();
         setIsActive(false);
-        clearNativeAlarm();
+        // Do NOT call clearNativeAlarm() here so the native alarm keeps ringing
         if (!session.isBreak) {
           setStudiedSeconds(session.baseStudiedSeconds + session.totalDurationSeconds);
           setIsBreak(true);
@@ -375,61 +377,41 @@ export default function ExamFocusMode({
     safeStorageSet(FOCUS_STORAGE_KEY, newSession);
 
     if (Capacitor.isNativePlatform()) {
-      const endDate = new Date(targetEndTime);
-      // Dedicated max-importance channel with sound + vibration. This is the
-      // only alert path that still works while the screen is off.
-      try {
-        await LocalNotifications.createChannel({
-          id: FOCUS_ALERT_CHANNEL_ID,
-          name: "Focus timer alerts",
-          description: "Alerts when a study or break session ends",
-          importance: 5,
-          visibility: 1,
-          sound: FOCUS_ALERT_SOUND,
-          vibration: true,
-          lights: true,
-          lightColor: "#4f46e5",
-        });
-      } catch (e) {
-        console.warn("Focus channel creation failed:", e);
-      }
       try {
         // The primary alert: a native full-screen alarm that wakes the screen
-        // and sounds on the ALARM stream, so it still fires when the phone is
-        // asleep, silenced, or the app has been killed.
-        await NativeHelper.scheduleFocusAlarm?.({
+        // and sounds loudly on the ALARM stream via setAlarmClock, so it still
+        // fires when the phone is asleep, silenced, or the app has been killed.
+        const alarmRes = await NativeHelper.scheduleFocusAlarm?.({
           triggerAtMillis: targetEndTime,
           title: isBreak ? "پایان زمان استراحت" : "پایان زمان تمرکز",
           body: isBreak
             ? "زمان استراحت به پایان رسید. آماده شروع مجدد هستید؟"
             : `دوره «${exam?.courseName || "مطالعه"}» به پایان رسید. خسته نباشید!`,
         });
+        if (alarmRes && !alarmRes.scheduled) {
+          throw new Error("Native alarm scheduling unconfirmed");
+        }
       } catch (e) {
-        console.warn("Native focus alarm failed:", e);
-      }
-      try {
-        await NativeHelper.setSystemAlarm?.({
-          hour: endDate.getHours(),
-          minute: endDate.getMinutes(),
-          message: "پایان تمرکز: " + (exam?.courseName || "مطالعه"),
-        });
-        await LocalNotifications.schedule({
-          notifications: [
-            {
-              id: 888,
-              title: isBreak ? "پایان زمان استراحت!" : "پایان زمان تمرکز!",
-              body: isBreak
-                ? "زمان استراحت به پایان رسید. آماده شروع مجدد هستید؟"
-                : "زمان مطالعه به پایان رسید. خسته نباشید!",
-              schedule: { at: endDate, allowWhileIdle: true },
-              channelId: FOCUS_ALERT_CHANNEL_ID,
-              sound: FOCUS_ALERT_SOUND,
-              smallIcon: "ic_launcher",
-            },
-          ],
-        });
-      } catch (e) {
-        console.warn("Alarm set failed:", e);
+        console.warn("Native focus alarm scheduling failed:", e);
+        // Fallback to local notification only if native alarm scheduling failed
+        try {
+          const endDate = new Date(targetEndTime);
+          await LocalNotifications.schedule({
+            notifications: [
+              {
+                id: 888,
+                title: isBreak ? "پایان زمان استراحت!" : "پایان زمان تمرکز!",
+                body: isBreak
+                  ? "زمان استراحت به پایان رسید. آماده شروع مجدد هستید؟"
+                  : "زمان مطالعه به پایان رسید. خسته نباشید!",
+                schedule: { at: endDate, allowWhileIdle: true },
+                smallIcon: "ic_launcher",
+              },
+            ],
+          });
+        } catch (err) {
+          console.warn("Fallback local notification failed:", err);
+        }
       }
     }
     setIsActive(true);

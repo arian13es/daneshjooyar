@@ -12,28 +12,22 @@ import android.media.AudioAttributes;
 import android.media.RingtoneManager;
 import android.os.Build;
 import android.os.IBinder;
+import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
 /**
- * Fallback path for the focus alarm.
- *
- * The full-screen {@link FocusAlarmActivity} is the primary alert. Some OEM
- * builds refuse background activity starts, so this foreground service keeps the
- * alarm sounding and posts a high-importance notification carrying a
- * full-screen intent. When the activity does come up it calls
- * {@link #stop(Context)}, so the two never ring at the same time.
- *
- * The service type must be {@code alarm}: Android 14+ throws
- * IllegalArgumentException from startForeground() when the runtime type does not
- * match the manifest, which silently killed the alert on those devices.
+ * Foreground service fallback for the focus alarm.
+ * Delegates directly to the FocusAlarmSound singleton so any stop command
+ * immediately silences the alarm without orphaned MediaPlayer instances.
  */
 public class FocusAlarmService extends Service {
 
-    public static final String CHANNEL_ID = "focus_alarm_fullscreen_v1";
+    public static final String CHANNEL_ID = "focus_alarm_fullscreen_v4";
     public static final int NOTIFICATION_ID = 8891;
+    public static final String ACTION_STOP = "ir.ac.tabrizu.student_assistant.ACTION_STOP_FOCUS_ALARM";
+    private static final String TAG = "FocusAlarmService";
 
-    private FocusAlarmSound sound;
     private boolean foregroundStarted;
 
     @Override
@@ -42,13 +36,13 @@ public class FocusAlarmService extends Service {
     }
 
     @Override
-    public void onCreate() {
-        super.onCreate();
-        sound = FocusAlarmSound.create();
-    }
-
-    @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        if (intent != null && ACTION_STOP.equals(intent.getAction())) {
+            Log.i(TAG, "Stop action received in FocusAlarmService");
+            stopAlarm();
+            return START_NOT_STICKY;
+        }
+
         String title = intent != null ? intent.getStringExtra(FocusAlarmReceiver.EXTRA_TITLE) : null;
         String body = intent != null ? intent.getStringExtra(FocusAlarmReceiver.EXTRA_BODY) : null;
         if (title == null) title = getString(R.string.alarm_default_title);
@@ -57,8 +51,8 @@ public class FocusAlarmService extends Service {
         createChannel();
         promoteToForeground(title, body);
 
-        // Ring even if the foreground promotion was refused.
-        if (sound != null) sound.start(this);
+        // Ensure singleton audio is playing
+        FocusAlarmSound.getInstance().start(this);
 
         return START_NOT_STICKY;
     }
@@ -67,24 +61,26 @@ public class FocusAlarmService extends Service {
         if (foregroundStarted) return;
         Notification notification = buildNotification(title, body);
         try {
-            if (Build.VERSION.SDK_INT >= 34 /* Build.VERSION_CODES.UPSIDE_DOWN_CAKE */) {
-                // The runtime type MUST match android:foregroundServiceType in
-                // the manifest on Android 14+. Passing this on Android 10-13 throws
-                // IllegalArgumentException because SHORT_SERVICE was introduced in API 34.
+            if (Build.VERSION.SDK_INT >= 34 /* Android 14+ */) {
                 startForeground(
                         NOTIFICATION_ID,
                         notification,
-                        ServiceInfo.FOREGROUND_SERVICE_TYPE_SHORT_SERVICE
+                        ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK
+                );
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                startForeground(
+                        NOTIFICATION_ID,
+                        notification,
+                        ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK
                 );
             } else {
                 startForeground(NOTIFICATION_ID, notification);
             }
             foregroundStarted = true;
         } catch (Exception e) {
-            // Some OEM builds refuse the promotion; post a normal notification
-            // so the ring is still reachable, and the ringtone keeps playing.
+            Log.w(TAG, "startForeground failed, posting standard notification", e);
             try {
-                NotificationManager nm = getSystemService(NotificationManager.class);
+                NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                 if (nm != null) nm.notify(NOTIFICATION_ID, notification);
             } catch (Exception ignored) {
             }
@@ -93,7 +89,7 @@ public class FocusAlarmService extends Service {
 
     private void createChannel() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return;
-        NotificationManager nm = getSystemService(NotificationManager.class);
+        NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         if (nm == null || nm.getNotificationChannel(CHANNEL_ID) != null) return;
 
         NotificationChannel channel = new NotificationChannel(
@@ -104,7 +100,7 @@ public class FocusAlarmService extends Service {
         channel.setDescription(getString(R.string.alarm_channel_description));
         channel.setBypassDnd(true);
         channel.enableVibration(true);
-        channel.setVibrationPattern(new long[] { 0, 700, 400, 700, 400, 900 });
+        channel.setVibrationPattern(new long[] { 0, 800, 400, 800, 400, 1000 });
         channel.setSound(
                 RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM),
                 new AudioAttributes.Builder()
@@ -125,13 +121,30 @@ public class FocusAlarmService extends Service {
     }
 
     private Notification buildNotification(String title, String body) {
-        Intent openIntent = new Intent(this, FocusAlarmActivity.class);
-        openIntent.putExtra(FocusAlarmReceiver.EXTRA_TITLE, title);
-        openIntent.putExtra(FocusAlarmReceiver.EXTRA_BODY, body);
-        openIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        Intent fullScreenIntent = new Intent(this, FocusAlarmActivity.class);
+        fullScreenIntent.putExtra(FocusAlarmReceiver.EXTRA_TITLE, title);
+        fullScreenIntent.putExtra(FocusAlarmReceiver.EXTRA_BODY, body);
+        fullScreenIntent.addFlags(
+                Intent.FLAG_ACTIVITY_NEW_TASK
+                        | Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+        );
 
-        PendingIntent contentIntent = PendingIntent.getActivity(
-                this, FocusAlarmReceiver.REQUEST_CODE, openIntent, pendingIntentFlags());
+        PendingIntent fullScreenPending = PendingIntent.getActivity(
+                this,
+                FocusAlarmReceiver.REQUEST_CODE + 2,
+                fullScreenIntent,
+                pendingIntentFlags()
+        );
+
+        Intent stopIntent = new Intent(this, FocusAlarmReceiver.class);
+        stopIntent.setAction(FocusAlarmReceiver.ACTION_STOP_ALARM);
+        PendingIntent stopPending = PendingIntent.getBroadcast(
+                this,
+                FocusAlarmReceiver.REQUEST_CODE + 3,
+                stopIntent,
+                pendingIntentFlags()
+        );
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle(title)
@@ -141,45 +154,41 @@ public class FocusAlarmService extends Service {
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setOngoing(true)
                 .setAutoCancel(false)
-                .setContentIntent(contentIntent)
-                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
-
-        // This is the supported way to raise a full-screen alarm from the
-        // background on Android 10+; a bare startActivity() from a receiver is
-        // blocked there, which is why the alarm screen never appeared.
-        try {
-            Intent fullScreenIntent = new Intent(this, FocusAlarmActivity.class);
-            fullScreenIntent.putExtra(FocusAlarmReceiver.EXTRA_TITLE, title);
-            fullScreenIntent.putExtra(FocusAlarmReceiver.EXTRA_BODY, body);
-            fullScreenIntent.addFlags(
-                    Intent.FLAG_ACTIVITY_NEW_TASK
-                            | Intent.FLAG_ACTIVITY_CLEAR_TOP
-                            | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS
-            );
-            PendingIntent fullScreenPending = PendingIntent.getActivity(
-                    this,
-                    FocusAlarmReceiver.REQUEST_CODE + 1,
-                    fullScreenIntent,
-                    pendingIntentFlags()
-            );
-            builder.setFullScreenIntent(fullScreenPending, true);
-        } catch (Exception ignored) {
-            // Falls back to the heads-up notification above.
-        }
+                .setContentIntent(fullScreenPending)
+                .setFullScreenIntent(fullScreenPending, true)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .addAction(android.R.drawable.ic_menu_close_clear_cancel, "توقف زنگ", stopPending);
 
         return builder.build();
     }
 
+    private void stopAlarm() {
+        Log.i(TAG, "stopAlarm invoked in service");
+        FocusAlarmSound.getInstance().stop();
+        try {
+            stopForeground(true);
+        } catch (Exception ignored) {
+        }
+        stopSelf();
+    }
+
     @Override
     public void onDestroy() {
-        if (sound != null) sound.stop();
+        FocusAlarmSound.getInstance().stop();
         super.onDestroy();
     }
 
     public static void stop(Context context) {
         try {
-            context.stopService(new Intent(context, FocusAlarmService.class));
+            FocusAlarmSound.getInstance().stop();
+            Intent intent = new Intent(context, FocusAlarmService.class);
+            intent.setAction(ACTION_STOP);
+            context.startService(intent);
         } catch (Exception ignored) {
+            try {
+                context.stopService(new Intent(context, FocusAlarmService.class));
+            } catch (Exception ignored2) {
+            }
         }
     }
 }

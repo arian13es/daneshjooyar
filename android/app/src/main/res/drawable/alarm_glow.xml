@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Soft radial glow behind the ringing icon. -->
+<!-- Multi-stop soft radial glow for the alarm completion badge -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="oval">
     <gradient
         android:type="radial"
-        android:gradientRadius="66dp"
-        android:startColor="#556366F1"
-        android:centerColor="#2A6366F1"
-        android:endColor="#006366F1" />
+        android:gradientRadius="70dp"
+        android:startColor="#666366F1"
+        android:centerColor="#264F46E5"
+        android:endColor="#000A0F1D" />
 </shape>
