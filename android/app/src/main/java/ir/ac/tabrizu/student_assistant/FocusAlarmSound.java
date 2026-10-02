@@ -123,14 +123,19 @@ public final class FocusAlarmSound {
                         .build());
             }
 
+            boolean nativeLooping = false;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 ringtone.setLooping(true);
+                nativeLooping = true;
             }
 
             ringtone.play();
             handler.removeCallbacks(ringtoneWatchdog);
-            handler.postDelayed(ringtoneWatchdog, 1500);
-            Log.i(TAG, "Playing alarm via RingtoneManager");
+            if (!nativeLooping) {
+                // Only post periodic watchdog on legacy Android where native looping is absent
+                handler.postDelayed(ringtoneWatchdog, 3000);
+            }
+            Log.i(TAG, "Playing alarm via RingtoneManager (nativeLooping=" + nativeLooping + ")");
             return true;
         } catch (Exception e) {
             Log.w(TAG, "RingtoneManager playback failed", e);

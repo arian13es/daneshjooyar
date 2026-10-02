@@ -19,7 +19,7 @@ import {
   X, 
   ChevronLeft
 } from "lucide-react";
-import { NotificationService } from "../services/NotificationService";
+import { NotificationService, NativeHelper } from "../services/NotificationService";
 import { safeStorageGetString, safeStorageSet } from "../utils/storageUtils";
 
 interface NotificationSettingsModalProps {
@@ -214,6 +214,28 @@ export default function NotificationSettingsModal({ onClose }: NotificationSetti
                   تنظیم
                 </button>
               )}
+            </div>
+
+            {/* 4. OEM AutoStart & Background Power Management (Xiaomi / Huawei / Samsung) */}
+            <div className="p-2.5 px-3 flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2 min-w-0">
+                <Sparkles className="h-3.5 w-3.5 text-slate-500 dark:text-slate-400 shrink-0" />
+                <span className="text-[11px] font-black text-slate-700 dark:text-slate-300 truncate">
+                  شروع خودکار (شیائومی / هواوی)
+                </span>
+              </div>
+              <button
+                onClick={async () => {
+                  try {
+                    await NativeHelper.openAutoStartSettings?.();
+                  } catch (e) {
+                    console.warn(e);
+                  }
+                }}
+                className="text-[10px] font-black text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/40 px-2.5 py-1 rounded-lg hover:bg-indigo-100 shrink-0"
+              >
+                بررسی
+              </button>
             </div>
 
             {/* Android 12+ silently drops every exact alarm when this is off,

@@ -13,6 +13,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.PowerManager;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
@@ -114,6 +115,52 @@ public class FocusAlarmActivity extends Activity {
         TextView bodyView = findViewById(R.id.alarm_body);
         clockView = findViewById(R.id.alarm_clock);
         Button dismiss = findViewById(R.id.alarm_dismiss);
+        View root = findViewById(R.id.alarm_root);
+        TextView tagView = findViewById(R.id.alarm_tag);
+        TextView hintView = findViewById(R.id.alarm_hint);
+
+        boolean isDark = getIntent() != null && getIntent().getBooleanExtra(FocusAlarmReceiver.EXTRA_IS_DARK_MODE, false);
+        if (getIntent() == null || !getIntent().hasExtra(FocusAlarmReceiver.EXTRA_IS_DARK_MODE)) {
+            try {
+                isDark = getSharedPreferences("app_settings", MODE_PRIVATE).getBoolean("is_dark_mode", false);
+            } catch (Exception ignored) {}
+        }
+
+        if (!isDark) {
+            // Light Theme styling: clean slate/white background with dark legible typography
+            if (root != null) root.setBackgroundColor(0xFFF8FAFC);
+            if (clockView != null) clockView.setTextColor(0xFF0F172A);
+            if (titleView != null) titleView.setTextColor(0xFF1E293B);
+            if (bodyView != null) bodyView.setTextColor(0xFF475569);
+            if (tagView != null) tagView.setTextColor(0xFF4338CA);
+            if (hintView != null) hintView.setTextColor(0xFF64748B);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                int flags = getWindow().getDecorView().getSystemUiVisibility();
+                flags |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    flags |= View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
+                }
+                getWindow().getDecorView().setSystemUiVisibility(flags);
+            }
+        } else {
+            // Dark Theme styling: luxury deep dark background
+            if (root != null) root.setBackgroundColor(0xFF0A0F1D);
+            if (clockView != null) clockView.setTextColor(0xFFFFFFFF);
+            if (titleView != null) titleView.setTextColor(0xFFF1F5F9);
+            if (bodyView != null) bodyView.setTextColor(0xFF94A3B8);
+            if (tagView != null) tagView.setTextColor(0xFF818CF8);
+            if (hintView != null) hintView.setTextColor(0xFF64748B);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                int flags = getWindow().getDecorView().getSystemUiVisibility();
+                flags &= ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    flags &= ~View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
+                }
+                getWindow().getDecorView().setSystemUiVisibility(flags);
+            }
+        }
 
         // Apply Vazirmatn typeface programmatically as guaranteed fallback
         try {
@@ -123,6 +170,8 @@ public class FocusAlarmActivity extends Activity {
             if (titleView != null && vazirBold != null) titleView.setTypeface(vazirBold);
             if (bodyView != null && vazirReg != null) bodyView.setTypeface(vazirReg);
             if (dismiss != null && vazirBold != null) dismiss.setTypeface(vazirBold);
+            if (tagView != null && vazirBold != null) tagView.setTypeface(vazirBold);
+            if (hintView != null && vazirReg != null) hintView.setTypeface(vazirReg);
         } catch (Exception e) {
             Log.w(TAG, "Could not load custom typeface font", e);
         }

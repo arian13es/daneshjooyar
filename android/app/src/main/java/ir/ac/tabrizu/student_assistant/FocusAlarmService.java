@@ -24,7 +24,7 @@ import androidx.core.app.NotificationCompat;
  */
 public class FocusAlarmService extends Service {
 
-    public static final String CHANNEL_ID = "focus_alarm_clock_channel_v7";
+    public static final String CHANNEL_ID = "focus_alarm_clock_channel_v8";
     public static final int NOTIFICATION_ID = 8891;
     public static final String ACTION_STOP = "ir.ac.tabrizu.student_assistant.ACTION_STOP_FOCUS_ALARM";
     public static final String ACTION_START = "ir.ac.tabrizu.student_assistant.ACTION_START_FOCUS_ALARM";
@@ -67,6 +67,9 @@ public class FocusAlarmService extends Service {
             Intent activityIntent = new Intent(this, FocusAlarmActivity.class);
             activityIntent.putExtra(FocusAlarmReceiver.EXTRA_TITLE, title);
             activityIntent.putExtra(FocusAlarmReceiver.EXTRA_BODY, body);
+            if (intentHasDarkExtra(title)) {
+                // extra passed through intent if available
+            }
             activityIntent.addFlags(
                     Intent.FLAG_ACTIVITY_NEW_TASK
                             | Intent.FLAG_ACTIVITY_CLEAR_TOP
@@ -77,6 +80,10 @@ public class FocusAlarmService extends Service {
         } catch (Exception e) {
             Log.w(TAG, "Failed to start FocusAlarmActivity directly from service; relying on fullScreenIntent", e);
         }
+    }
+
+    private boolean intentHasDarkExtra(String unused) {
+        return false;
     }
 
     private void promoteToForeground(String title, String body) {
@@ -122,15 +129,9 @@ public class FocusAlarmService extends Service {
         );
         channel.setDescription(getString(R.string.alarm_channel_description));
         channel.setBypassDnd(true);
-        channel.enableVibration(true);
-        channel.setVibrationPattern(new long[] { 0, 1000, 500, 1000, 500, 1200 });
-        channel.setSound(
-                RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM),
-                new AudioAttributes.Builder()
-                        .setUsage(AudioAttributes.USAGE_ALARM)
-                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                        .build()
-        );
+        // Audio and vibration are managed exclusively by FocusAlarmSound to avoid duplicate overlapping tracks
+        channel.enableVibration(false);
+        channel.setSound(null, null);
         channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
         nm.createNotificationChannel(channel);
     }
@@ -179,6 +180,8 @@ public class FocusAlarmService extends Service {
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setOngoing(true)
                 .setAutoCancel(false)
+                .setSilent(true)
+                .setSound(null)
                 .setContentIntent(fullScreenPending)
                 .setFullScreenIntent(fullScreenPending, true)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)

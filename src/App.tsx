@@ -154,6 +154,8 @@ export default function App() {
           className={`flex-1 flex flex-col min-h-0 ${
             activeTab === "map"
               ? "p-0 max-w-none"
+              : activeTab === "assistant"
+              ? "pt-[calc(0.25rem+env(safe-area-inset-top,0px))] max-w-2xl lg:max-w-4xl"
               : "pt-[calc(0.75rem+env(safe-area-inset-top,0px))] sm:pt-[calc(1rem+env(safe-area-inset-top,0px))] max-w-2xl lg:max-w-4xl"
           } w-full mx-auto relative h-full`}
         >
@@ -249,6 +251,7 @@ export default function App() {
         setFocusExam={setFocusExam}
         isFocusMinimized={isFocusMinimized}
         setIsFocusMinimized={setIsFocusMinimized}
+        isDarkMode={isDarkMode}
       />
     </div>
   );

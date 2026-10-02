@@ -38,6 +38,7 @@
 
             <!-- Top university tag / session pill -->
             <TextView
+                android:id="@+id/alarm_tag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/widget_pill_bg"
@@ -137,6 +138,7 @@
 
             <!-- Hint below button -->
             <TextView
+                android:id="@+id/alarm_hint"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"

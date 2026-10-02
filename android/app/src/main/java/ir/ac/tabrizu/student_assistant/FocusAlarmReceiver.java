@@ -23,6 +23,7 @@ public class FocusAlarmReceiver extends BroadcastReceiver {
 
     public static final String EXTRA_TITLE = "title";
     public static final String EXTRA_BODY = "body";
+    public static final String EXTRA_IS_DARK_MODE = "is_dark_mode";
     public static final int REQUEST_CODE = 4821;
     public static final int NOTIFICATION_ID = 8891;
     private static final String TAG = "FocusAlarmReceiver";
@@ -50,6 +51,7 @@ public class FocusAlarmReceiver extends BroadcastReceiver {
 
         String title = intent.getStringExtra(EXTRA_TITLE);
         String body = intent.getStringExtra(EXTRA_BODY);
+        boolean isDark = intent.getBooleanExtra(EXTRA_IS_DARK_MODE, false);
         if (title == null) title = context.getString(R.string.alarm_default_title);
         if (body == null) body = context.getString(R.string.alarm_default_body);
 
@@ -77,6 +79,7 @@ public class FocusAlarmReceiver extends BroadcastReceiver {
         Intent serviceIntent = new Intent(context, FocusAlarmService.class);
         serviceIntent.putExtra(EXTRA_TITLE, title);
         serviceIntent.putExtra(EXTRA_BODY, body);
+        serviceIntent.putExtra(EXTRA_IS_DARK_MODE, isDark);
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 context.startForegroundService(serviceIntent);
@@ -94,6 +97,7 @@ public class FocusAlarmReceiver extends BroadcastReceiver {
             Intent activityIntent = new Intent(context, FocusAlarmActivity.class);
             activityIntent.putExtra(EXTRA_TITLE, title);
             activityIntent.putExtra(EXTRA_BODY, body);
+            activityIntent.putExtra(EXTRA_IS_DARK_MODE, isDark);
             activityIntent.addFlags(
                     Intent.FLAG_ACTIVITY_NEW_TASK
                             | Intent.FLAG_ACTIVITY_CLEAR_TOP
@@ -110,7 +114,7 @@ public class FocusAlarmReceiver extends BroadcastReceiver {
      * Schedules the focus alarm via AlarmManager.setAlarmClock.
      * Fires a BroadcastReceiver PendingIntent so Android delivers with system wake privileges.
      */
-    public static boolean schedule(Context context, long triggerAtMillis, String title, String body) {
+    public static boolean schedule(Context context, long triggerAtMillis, String title, String body, boolean isDark) {
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         if (am == null) return false;
 
@@ -123,6 +127,7 @@ public class FocusAlarmReceiver extends BroadcastReceiver {
         broadcastIntent.setAction(ACTION_FOCUS_ALARM);
         broadcastIntent.putExtra(EXTRA_TITLE, title);
         broadcastIntent.putExtra(EXTRA_BODY, body);
+        broadcastIntent.putExtra(EXTRA_IS_DARK_MODE, isDark);
 
         PendingIntent operationPendingIntent = PendingIntent.getBroadcast(
                 context,
@@ -135,6 +140,7 @@ public class FocusAlarmReceiver extends BroadcastReceiver {
         Intent activityIntent = new Intent(context, FocusAlarmActivity.class);
         activityIntent.putExtra(EXTRA_TITLE, title);
         activityIntent.putExtra(EXTRA_BODY, body);
+        activityIntent.putExtra(EXTRA_IS_DARK_MODE, isDark);
         activityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         PendingIntent showPendingIntent = PendingIntent.getActivity(
@@ -148,29 +154,31 @@ public class FocusAlarmReceiver extends BroadcastReceiver {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 AlarmManager.AlarmClockInfo info = new AlarmManager.AlarmClockInfo(triggerAtMillis, showPendingIntent);
                 am.setAlarmClock(info, operationPendingIntent);
-                Log.i(TAG, "Scheduled focus alarm via setAlarmClock at " + triggerAtMillis);
-                return true;
-            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAtMillis, operationPendingIntent);
+                Log.i(TAG, "Focus alarm scheduled via setAlarmClock for " + triggerAtMillis + " (isDark=" + isDark + ")");
                 return true;
             } else {
                 am.setExact(AlarmManager.RTC_WAKEUP, triggerAtMillis, operationPendingIntent);
+                Log.i(TAG, "Focus alarm scheduled via setExact for " + triggerAtMillis);
                 return true;
             }
-        } catch (SecurityException se) {
-            Log.w(TAG, "Exact alarm permission rejected, falling back to setAndAllowWhileIdle", se);
+        } catch (Exception e) {
+            Log.w(TAG, "setAlarmClock failed; falling back to setExactAndAllowWhileIdle", e);
             try {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    am.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAtMillis, operationPendingIntent);
-                    return true;
+                    am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAtMillis, operationPendingIntent);
+                } else {
+                    am.setExact(AlarmManager.RTC_WAKEUP, triggerAtMillis, operationPendingIntent);
                 }
-            } catch (Exception ignored) {
+                return true;
+            } catch (Exception fallbackErr) {
+                Log.e(TAG, "All AlarmManager schedule paths failed", fallbackErr);
+                return false;
             }
-            return false;
-        } catch (Exception e) {
-            Log.e(TAG, "Failed to schedule alarm", e);
-            return false;
         }
+    }
+
+    public static boolean schedule(Context context, long triggerAtMillis, String title, String body) {
+        return schedule(context, triggerAtMillis, title, body, false);
     }
 
     /** Removes a previously scheduled alert and stops all ringing audio immediately. */

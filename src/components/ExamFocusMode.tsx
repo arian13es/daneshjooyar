@@ -107,20 +107,26 @@ const VIBRATION_PATTERN = [0, 400, 200, 400, 200, 700];
 
 /** Fires the end-of-timer alert through every channel available on the device. */
 export function triggerFocusAlert(): void {
-  playChimeTone();
+  // Only play the synthesized Web Audio chime on web browsers.
+  // On Android, FocusAlarmService + FocusAlarmSound manage the exclusive Clock-style alarm audio.
+  if (!Capacitor.isNativePlatform()) {
+    playChimeTone();
+  }
 
   // Web vibration (works in the browser; ignored by most Android WebViews).
   try {
-    if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+    if (typeof navigator !== "undefined" && "vibrate" in navigator && !Capacitor.isNativePlatform()) {
       navigator.vibrate(VIBRATION_PATTERN);
     }
   } catch {
     /* ignore */
   }
 
-  // Native vibration – the reliable path inside the Android WebView.
+  // Native vibration – managed by native alarm service on Android, fallback for webview if not ringing
   try {
-    void NativeHelper.vibrate?.({ pattern: VIBRATION_PATTERN }).catch(() => {});
+    if (!Capacitor.isNativePlatform()) {
+      void NativeHelper.vibrate?.({ pattern: VIBRATION_PATTERN }).catch(() => {});
+    }
   } catch {
     /* ignore */
   }
@@ -143,6 +149,7 @@ interface ExamFocusModeProps {
   onComplete: (examId: string, minutesStudied: number) => void;
   isMinimized: boolean;
   onMinimize: () => void;
+  isDarkMode?: boolean;
 }
 
 export default function ExamFocusMode({
@@ -151,18 +158,24 @@ export default function ExamFocusMode({
   onComplete,
   isMinimized,
   onMinimize,
+  isDarkMode: propIsDarkMode,
 }: ExamFocusModeProps) {
+  const isDarkMode =
+    propIsDarkMode ??
+    (typeof document !== "undefined" && document.documentElement.classList.contains("dark"));
+
   useEffect(() => {
     if (!exam || isMinimized) return;
     const prevHtmlBg = document.documentElement.style.backgroundColor;
     const prevBodyBg = document.body.style.backgroundColor;
-    document.documentElement.style.backgroundColor = "#020617";
-    document.body.style.backgroundColor = "#020617";
+    const targetBg = isDarkMode ? "#020617" : "#f8fafc";
+    document.documentElement.style.backgroundColor = targetBg;
+    document.body.style.backgroundColor = targetBg;
     return () => {
       document.documentElement.style.backgroundColor = prevHtmlBg;
       document.body.style.backgroundColor = prevBodyBg;
     };
-  }, [exam, isMinimized]);
+  }, [exam, isMinimized, isDarkMode]);
 
   const [selectedMinutes, setSelectedMinutes] = useState(25);
   const [customMinutes, setCustomMinutes] = useState("");
@@ -387,6 +400,7 @@ export default function ExamFocusMode({
           body: isBreak
             ? "زمان استراحت به پایان رسید. آماده شروع مجدد هستید؟"
             : `دوره «${exam?.courseName || "مطالعه"}» به پایان رسید. خسته نباشید!`,
+          isDarkMode,
         });
         if (alarmRes && !alarmRes.scheduled) {
           throw new Error("Native alarm scheduling unconfirmed");
@@ -513,26 +527,32 @@ export default function ExamFocusMode({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.18, ease: "easeOut" }}
             onPointerDown={unlockFocusAudio}
-            className="fixed inset-0 w-full h-full z-[999999] bg-[#020617] flex flex-col items-center justify-center overflow-hidden"
-            style={{ backgroundColor: "#020617" }}
+            className={`fixed inset-0 w-full h-full z-[999999] flex flex-col items-center justify-center overflow-hidden transition-colors duration-200 ${
+              isDarkMode ? "bg-[#020617] text-white" : "bg-slate-50 text-slate-900"
+            }`}
+            style={{ backgroundColor: isDarkMode ? "#020617" : "#f8fafc" }}
           >
-            {/* Static ambient glow — a plain radial gradient instead of
-                blur(120px) + mix-blend-screen, which is very expensive to
-                rasterize on Android WebView. */}
+            {/* Ambient background glow */}
             <div
               className="absolute inset-0 overflow-hidden pointer-events-none"
               style={{
-                background:
-                  "radial-gradient(60% 45% at 12% 8%, rgba(49,46,129,0.55) 0%, rgba(2,6,23,0) 70%)," +
-                  "radial-gradient(55% 40% at 92% 95%, rgba(30,58,138,0.45) 0%, rgba(2,6,23,0) 70%)",
+                background: isDarkMode
+                  ? "radial-gradient(60% 45% at 12% 8%, rgba(49,46,129,0.55) 0%, rgba(2,6,23,0) 70%)," +
+                    "radial-gradient(55% 40% at 92% 95%, rgba(30,58,138,0.45) 0%, rgba(2,6,23,0) 70%)"
+                  : "radial-gradient(60% 45% at 12% 8%, rgba(99,102,241,0.12) 0%, rgba(248,250,252,0) 70%)," +
+                    "radial-gradient(55% 40% at 92% 95%, rgba(59,130,246,0.08) 0%, rgba(248,250,252,0) 70%)",
               }}
             />
 
-            {/* Top Navigation */}
-            <div className="absolute top-0 inset-x-0 p-6 flex items-center justify-between z-10">
+            {/* Top Navigation with Safe Area Top Inset */}
+            <div className="absolute top-0 inset-x-0 pt-[calc(1.25rem+env(safe-area-inset-top,0px))] px-6 pb-4 flex items-center justify-between z-10">
               <button
                 onClick={onMinimize}
-                className="w-12 h-12 rounded-2xl bg-white/10 hover:bg-white/15 border border-white/10 flex items-center justify-center text-white/70 transition-colors"
+                className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-colors border ${
+                  isDarkMode
+                    ? "bg-white/10 hover:bg-white/15 border-white/10 text-white/70"
+                    : "bg-white hover:bg-slate-100 border-slate-200/80 text-slate-700 shadow-sm"
+                }`}
                 title="کوچک کردن"
                 aria-label="کوچک کردن"
               >
@@ -542,12 +562,13 @@ export default function ExamFocusMode({
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setShowSettings(!showSettings)}
-                  className={
-                    "w-12 h-12 rounded-2xl flex items-center justify-center transition-colors border " +
-                    (showSettings
-                      ? "bg-indigo-500 text-white border-indigo-400"
-                      : "bg-white/10 text-white/70 hover:bg-white/15 border-white/10")
-                  }
+                  className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-colors border ${
+                    showSettings
+                      ? "bg-indigo-600 text-white border-indigo-500 shadow-md"
+                      : isDarkMode
+                      ? "bg-white/10 text-white/70 hover:bg-white/15 border-white/10"
+                      : "bg-white text-slate-700 hover:bg-slate-100 border-slate-200/80 shadow-sm"
+                  }`}
                   title="تنظیمات زمان"
                   aria-label="تنظیمات زمان"
                 >
@@ -558,30 +579,30 @@ export default function ExamFocusMode({
 
             {/* Main Content */}
             <div className="relative z-10 flex flex-col items-center justify-center w-full max-w-md px-6">
-              <div className="text-center mb-10">
-                <h2 className="text-3xl font-black text-white mb-2 tracking-tight">
+              <div className="text-center mb-8">
+                <h2 className={`text-3xl font-black mb-2 tracking-tight ${isDarkMode ? "text-white" : "text-slate-900"}`}>
                   {isBreak ? "زمان استراحت" : "تمرکز عمیق"}
                 </h2>
-                <p className="text-indigo-200/60 font-medium">
+                <p className={`font-bold text-sm ${isDarkMode ? "text-indigo-200/70" : "text-indigo-600"}`}>
                   {exam?.courseName || "در حال مطالعه"}
                 </p>
               </div>
 
               {/* Radial Timer */}
-              <div className="relative w-[280px] h-[280px] flex items-center justify-center mb-12">
+              <div className="relative w-[280px] h-[280px] flex items-center justify-center mb-10">
                 <svg className="absolute inset-0 w-full h-full transform -rotate-90">
                   <circle
                     cx="140"
                     cy="140"
                     r="120"
-                    className="stroke-white/5 fill-none"
+                    className={`fill-none ${isDarkMode ? "stroke-white/10" : "stroke-slate-200"}`}
                     strokeWidth="8"
                   />
                   <circle
                     cx="140"
                     cy="140"
                     r="120"
-                    className="stroke-indigo-500 fill-none transition-all duration-1000 ease-linear"
+                    className={`${isBreak ? "stroke-emerald-500" : "stroke-indigo-600"} fill-none transition-all duration-1000 ease-linear`}
                     strokeWidth="8"
                     strokeLinecap="round"
                     strokeDasharray={circleCircumference}
@@ -591,35 +612,41 @@ export default function ExamFocusMode({
 
                 <div className="flex flex-col items-center justify-center">
                   <span
-                    className="text-6xl sm:text-7xl font-black font-sans text-white tracking-tight tabular-nums drop-shadow-md select-none"
+                    className={`text-6xl sm:text-7xl font-black font-sans tracking-tight tabular-nums select-none ${
+                      isDarkMode ? "text-white drop-shadow-md" : "text-slate-900"
+                    }`}
                     dir="ltr"
                   >
                     {formatTime(timeLeft)}
                   </span>
-                  <span className="text-sm font-bold text-indigo-300 mt-2">
+                  <span className={`text-sm font-black mt-2 ${isBreak ? "text-emerald-600 dark:text-emerald-400" : "text-indigo-600 dark:text-indigo-300"}`}>
                     {isBreak ? "استراحت کن!" : "فوکوس"}
                   </span>
                 </div>
               </div>
 
               {/* Controls */}
-              <div className="flex items-end justify-center gap-6 mb-12">
+              <div className="flex items-end justify-center gap-6 mb-8">
                 <div className="flex flex-col items-center gap-2">
                   <button
                     onClick={resetTimer}
-                    className="w-14 h-14 rounded-full bg-white/10 hover:bg-white/15 border border-white/10 flex items-center justify-center text-white/80 transition-transform active:scale-95"
+                    className={`w-14 h-14 rounded-full flex items-center justify-center transition-transform active:scale-95 border ${
+                      isDarkMode
+                        ? "bg-white/10 hover:bg-white/15 border-white/10 text-white/80"
+                        : "bg-white hover:bg-slate-100 border-slate-200 text-slate-700 shadow-sm"
+                    }`}
                     title="بازنشانی"
                     aria-label="بازنشانی"
                   >
                     <RotateCcw className="w-6 h-6" />
                   </button>
-                  <span className="text-[10px] font-medium text-white/40">بازنشانی</span>
+                  <span className={`text-[10px] font-bold ${isDarkMode ? "text-white/40" : "text-slate-400"}`}>بازنشانی</span>
                 </div>
 
                 <div className="flex flex-col items-center gap-2">
                   <button
                     onClick={toggleTimer}
-                    className="w-20 h-20 rounded-full bg-indigo-600 hover:bg-indigo-500 flex items-center justify-center text-white shadow-[0_0_40px_rgba(79,70,229,0.4)] transition-transform active:scale-95"
+                    className="w-20 h-20 rounded-full bg-indigo-600 hover:bg-indigo-500 flex items-center justify-center text-white shadow-[0_8px_30px_rgba(79,70,229,0.35)] transition-transform active:scale-95"
                     title={isActive ? "توقف" : "شروع"}
                     aria-label={isActive ? "توقف" : "شروع"}
                   >
@@ -629,7 +656,7 @@ export default function ExamFocusMode({
                       <Play className="w-8 h-8 fill-current ml-1" />
                     )}
                   </button>
-                  <span className="text-[10px] font-medium text-white/40">
+                  <span className={`text-[10px] font-bold ${isDarkMode ? "text-white/40" : "text-slate-400"}`}>
                     {isActive ? "توقف" : "شروع"}
                   </span>
                 </div>
@@ -643,26 +670,33 @@ export default function ExamFocusMode({
                       resetTimer();
                       onClose();
                     }}
-                    className="w-14 h-14 rounded-full bg-white/10 hover:bg-white/15 border border-white/10 flex items-center justify-center text-emerald-400 transition-transform active:scale-95"
+                    className={`w-14 h-14 rounded-full flex items-center justify-center text-emerald-500 transition-transform active:scale-95 border ${
+                      isDarkMode
+                        ? "bg-white/10 hover:bg-white/15 border-white/10"
+                        : "bg-white hover:bg-slate-100 border-slate-200 shadow-sm"
+                    }`}
                     title="ثبت و خروج"
                     aria-label="ثبت و خروج"
                   >
                     <Check className="w-6 h-6" />
                   </button>
-                  <span className="text-[10px] font-medium text-white/40">ثبت و خروج</span>
+                  <span className={`text-[10px] font-bold ${isDarkMode ? "text-white/40" : "text-slate-400"}`}>ثبت و خروج</span>
                 </div>
               </div>
 
               {/* Local Music Player */}
-              <div className="w-full bg-white/5 border border-white/10 rounded-3xl p-4 flex items-center gap-4">
+              <div className={`w-full rounded-3xl p-4 flex items-center gap-4 border transition-colors ${
+                isDarkMode ? "bg-white/5 border-white/10" : "bg-white border-slate-200 shadow-sm"
+              }`}>
                 <button
                   onClick={toggleMusic}
-                  className={
-                    "w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 transition-colors " +
-                    (isPlayingMusic
-                      ? "bg-indigo-500 text-white"
-                      : "bg-white/10 text-white/80 hover:bg-white/20")
-                  }
+                  className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 transition-colors ${
+                    isPlayingMusic
+                      ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/25"
+                      : isDarkMode
+                      ? "bg-white/10 text-white/80 hover:bg-white/20"
+                      : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                  }`}
                   title="پخش موسیقی"
                   aria-label="پخش موسیقی"
                 >
@@ -673,17 +707,21 @@ export default function ExamFocusMode({
                   )}
                 </button>
                 <div className="flex-1 min-w-0">
-                  <h4 className="text-sm font-bold text-white truncate">
+                  <h4 className={`text-sm font-bold truncate ${isDarkMode ? "text-white" : "text-slate-900"}`}>
                     {currentSongName || "پخش آهنگ"}
                   </h4>
-                  <p className="text-xs text-white/50 truncate">
+                  <p className={`text-xs truncate ${isDarkMode ? "text-white/50" : "text-slate-500"}`}>
                     {currentSongName ? "در حال پخش از گوشی" : "یک آهنگ از گوشی انتخاب کنید"}
                   </p>
                 </div>
                 {!currentSongName && (
                   <button
                     onClick={() => fileInputRef.current?.click()}
-                    className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-xs font-bold rounded-xl transition-colors cursor-pointer"
+                    className={`px-4 py-2 text-xs font-bold rounded-xl transition-colors cursor-pointer border ${
+                      isDarkMode
+                        ? "bg-white/10 hover:bg-white/20 text-white border-white/10"
+                        : "bg-slate-100 hover:bg-slate-200 text-slate-800 border-slate-200"
+                    }`}
                   >
                     انتخاب
                   </button>
@@ -701,7 +739,7 @@ export default function ExamFocusMode({
                       setCurrentSongName(null);
                       if (fileInputRef.current) fileInputRef.current.value = "";
                     }}
-                    className="px-2 py-2 text-white/50 hover:text-white/80 transition-colors"
+                    className={`px-2 py-2 transition-colors ${isDarkMode ? "text-white/50 hover:text-white/80" : "text-slate-400 hover:text-slate-700"}`}
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -709,26 +747,28 @@ export default function ExamFocusMode({
               </div>
             </div>
 
-            {/* Custom Time Settings Panel */}
+            {/* Custom Time Settings Panel with Safe Area Bottom Inset */}
             <AnimatePresence>
               {showSettings && (
                 <motion.div
                   initial={{ opacity: 0, y: "100%" }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: "100%" }}
-                  className="absolute bottom-0 inset-x-0 bg-slate-900 border-t border-white/10 rounded-t-3xl p-6 z-50 pb-safe shadow-[0_-20px_40px_rgba(0,0,0,0.5)]"
+                  className={`absolute bottom-0 inset-x-0 border-t rounded-t-3xl p-6 pt-5 pb-[calc(2.5rem+env(safe-area-inset-bottom,0px))] z-50 shadow-[0_-20px_40px_rgba(0,0,0,0.25)] max-w-lg mx-auto ${
+                    isDarkMode ? "bg-slate-900 border-white/10 text-white" : "bg-white border-slate-200 text-slate-900"
+                  }`}
                 >
-                  <div className="flex items-center justify-between mb-6">
-                    <h3 className="text-lg font-black text-white">زمان‌بندی</h3>
+                  <div className="flex items-center justify-between mb-5">
+                    <h3 className={`text-lg font-black ${isDarkMode ? "text-white" : "text-slate-900"}`}>زمان‌بندی</h3>
                     <button
                       onClick={() => setShowSettings(false)}
-                      className="text-white/50 hover:text-white transition-colors"
+                      className={`p-1 rounded-lg transition-colors ${isDarkMode ? "text-white/50 hover:text-white" : "text-slate-400 hover:text-slate-700"}`}
                     >
                       <X className="w-6 h-6" />
                     </button>
                   </div>
 
-                  <div className="flex gap-3 mb-6">
+                  <div className="flex gap-2.5 mb-5">
                     {[15, 25, 45, 60].map((mins) => (
                       <button
                         key={mins}
@@ -736,31 +776,36 @@ export default function ExamFocusMode({
                           changeTime(mins);
                           setShowSettings(false);
                         }}
-                        className={
-                          "flex-1 py-3 rounded-2xl font-black text-sm transition-colors " +
-                          (selectedMinutes === mins && !isBreak
-                            ? "bg-indigo-600 text-white"
-                            : "bg-white/5 text-white/70 hover:bg-white/10")
-                        }
+                        className={`flex-1 py-3 rounded-2xl font-black text-sm transition-colors border ${
+                          selectedMinutes === mins && !isBreak
+                            ? "bg-indigo-600 text-white border-indigo-600 shadow-md shadow-indigo-600/20"
+                            : isDarkMode
+                            ? "bg-white/5 text-white/70 hover:bg-white/10 border-white/5"
+                            : "bg-slate-100 text-slate-700 hover:bg-slate-200 border-slate-200/80"
+                        }`}
                       >
                         {toPersianDigits(mins)} دقیقه
                       </button>
                     ))}
                   </div>
 
-                  <form onSubmit={handleCustomTimeSubmit} className="flex gap-3">
+                  <form onSubmit={handleCustomTimeSubmit} className="flex gap-2.5">
                     <input
                       type="number"
                       value={customMinutes}
                       onChange={(e) => setCustomMinutes(e.target.value)}
                       placeholder="زمان سفارشی (دقیقه)"
-                      className="flex-1 bg-white/5 border border-white/10 rounded-2xl px-4 py-3 text-white placeholder-white/30 text-sm font-bold outline-none focus:border-indigo-500 text-left"
+                      className={`flex-1 rounded-2xl px-4 py-3 text-sm font-bold outline-none border transition-colors text-left ${
+                        isDarkMode
+                          ? "bg-white/5 border-white/10 text-white placeholder-white/30 focus:border-indigo-500"
+                          : "bg-slate-50 border-slate-200 text-slate-900 placeholder-slate-400 focus:border-indigo-500"
+                      }`}
                       dir="ltr"
                     />
                     <button
                       type="submit"
                       disabled={!customMinutes}
-                      className="px-6 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white font-black text-sm rounded-2xl transition-colors cursor-pointer"
+                      className="px-6 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white font-black text-sm rounded-2xl transition-colors cursor-pointer shadow-md shadow-indigo-600/20 shrink-0"
                     >
                       تایید
                     </button>

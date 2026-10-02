@@ -48,6 +48,7 @@ export interface GlobalModalsProps {
   setFocusExam: (e: ExamItem | null) => void;
   isFocusMinimized: boolean;
   setIsFocusMinimized: (v: boolean) => void;
+  isDarkMode?: boolean;
 }
 
 export default function GlobalModals(props: GlobalModalsProps) {
@@ -196,6 +197,7 @@ export default function GlobalModals(props: GlobalModalsProps) {
       <ExamFocusMode
         exam={focusExam}
         isMinimized={isFocusMinimized}
+        isDarkMode={props.isDarkMode}
         onMinimize={() => setIsFocusMinimized(true)}
         onClose={() => {
           setFocusExam(null);

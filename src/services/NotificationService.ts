@@ -42,7 +42,9 @@ export interface NativeNotificationHelperPlugin {
     triggerAtMillis: number;
     title: string;
     body: string;
+    isDarkMode?: boolean;
   }): Promise<{ scheduled: boolean; exact: boolean }>;
+  setAppTheme(options: { isDark: boolean }): Promise<void>;
   cancelFocusAlarm(): Promise<void>;
   saveImageToDownloads(options: {
     base64: string;

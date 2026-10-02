@@ -355,7 +355,7 @@ export default function ECEAssistant({
   return (
     <div className="flex-1 flex flex-col h-full min-h-0 bg-slate-50 dark:bg-slate-900 text-right font-sans" dir="rtl">
       {/* 1. Subtab Segmented Navigation (Spacious, native feel) */}
-      <div className="px-3 sm:px-5 pt-2.5 sm:pt-3 pb-1 shrink-0">
+      <div className="px-3 sm:px-5 pt-1 sm:pt-1.5 pb-1 shrink-0">
         <nav 
           aria-label="بخش‌های دستیار"
           className="bg-slate-200/90 dark:bg-slate-800/90 p-1 sm:p-1.5 rounded-2xl flex max-w-lg md:mx-auto w-full border border-slate-300/70 dark:border-slate-700/80 shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)]"
@@ -573,8 +573,8 @@ export default function ECEAssistant({
                   )}
                 </div>
 
-                {/* Floating Command Bar - Adjusted with balanced 10px spacing above the fixed bottom navigation bar */}
-                <div className="px-3 sm:px-4 pt-2 pb-[calc(5rem+env(safe-area-inset-bottom,0px)+10px)] sm:pb-24 md:pb-20 bg-gradient-to-t from-slate-50 via-slate-50/95 to-transparent dark:from-slate-900 dark:via-slate-900/95 shrink-0 relative z-30">
+                {/* Floating Command Bar - Ergonomically spaced just above the fixed bottom navigation bar */}
+                <div className="px-3 sm:px-4 pt-1.5 pb-[calc(4.25rem+env(safe-area-inset-bottom,0px))] sm:pb-20 md:pb-16 bg-gradient-to-t from-slate-50 via-slate-50/95 to-transparent dark:from-slate-900 dark:via-slate-900/95 shrink-0 relative z-30">
                   <form 
                     onSubmit={handleSend}
                     className="max-w-xl mx-auto bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-xl p-1.5 flex items-center gap-2 ring-1 ring-slate-900/5 dark:ring-white/5"

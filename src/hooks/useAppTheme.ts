@@ -2,6 +2,7 @@ import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { StatusBar, Style } from "@capacitor/status-bar";
 import { Capacitor } from "@capacitor/core";
 import { safeStorageSet, safeStorageGetString } from "../utils/storageUtils";
+import { NativeHelper } from "../services/NotificationService";
 
 export function useAppTheme(): [boolean, Dispatch<SetStateAction<boolean>>] {
   const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
@@ -12,6 +13,7 @@ export function useAppTheme(): [boolean, Dispatch<SetStateAction<boolean>>] {
   useEffect(() => {
     if (Capacitor.isNativePlatform()) {
       StatusBar.setOverlaysWebView({ overlay: true }).catch(() => {});
+      NativeHelper.setAppTheme?.({ isDark: isDarkMode }).catch(() => {});
     }
     const metaTheme = document.querySelector('meta[name="theme-color"]');
     if (isDarkMode) {

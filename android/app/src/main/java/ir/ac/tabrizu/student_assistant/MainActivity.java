@@ -67,8 +67,16 @@ public class MainActivity extends BridgeActivity {
             }
             String title = call.getString("title", "پایان زمان تمرکز");
             String body = call.getString("body", "زمان مطالعه به پایان رسید. خسته نباشید!");
+            boolean isDark = Boolean.TRUE.equals(call.getBoolean("isDarkMode", false));
 
-            boolean exact = FocusAlarmReceiver.schedule(getContext(), triggerAt, title, body);
+            try {
+                getContext().getSharedPreferences("app_settings", Context.MODE_PRIVATE)
+                        .edit()
+                        .putBoolean("is_dark_mode", isDark)
+                        .apply();
+            } catch (Exception ignored) {}
+
+            boolean exact = FocusAlarmReceiver.schedule(getContext(), triggerAt, title, body, isDark);
             ret.put("scheduled", true);
             ret.put("exact", exact);
             call.resolve(ret);
@@ -76,6 +84,20 @@ public class MainActivity extends BridgeActivity {
             ret.put("scheduled", false);
             ret.put("exact", false);
             call.resolve(ret);
+        }
+    }
+
+    @PluginMethod
+    public void setAppTheme(PluginCall call) {
+        try {
+            boolean isDark = Boolean.TRUE.equals(call.getBoolean("isDark", false));
+            getContext().getSharedPreferences("app_settings", Context.MODE_PRIVATE)
+                    .edit()
+                    .putBoolean("is_dark_mode", isDark)
+                    .apply();
+            call.resolve();
+        } catch (Exception e) {
+            call.reject("Failed to set app theme: " + e.getMessage());
         }
     }
 
