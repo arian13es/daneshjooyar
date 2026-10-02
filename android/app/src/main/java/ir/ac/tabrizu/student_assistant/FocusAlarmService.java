@@ -5,12 +5,14 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ServiceInfo;
 import android.graphics.BitmapFactory;
 import android.media.AudioAttributes;
 import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
@@ -24,7 +26,7 @@ import androidx.core.app.NotificationCompat;
  */
 public class FocusAlarmService extends Service {
 
-    public static final String CHANNEL_ID = "focus_alarm_clock_channel_v8";
+    public static final String CHANNEL_ID = "focus_alarm_clock_channel_v9";
     public static final int NOTIFICATION_ID = 8891;
     public static final String ACTION_STOP = "ir.ac.tabrizu.student_assistant.ACTION_STOP_FOCUS_ALARM";
     public static final String ACTION_START = "ir.ac.tabrizu.student_assistant.ACTION_START_FOCUS_ALARM";
@@ -120,7 +122,14 @@ public class FocusAlarmService extends Service {
     private void createChannel() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return;
         NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        if (nm == null || nm.getNotificationChannel(CHANNEL_ID) != null) return;
+        if (nm == null) return;
+
+        // Clean up previous silent channel version to guarantee fresh notification settings
+        try {
+            nm.deleteNotificationChannel("focus_alarm_clock_channel_v8");
+        } catch (Exception ignored) {}
+
+        if (nm.getNotificationChannel(CHANNEL_ID) != null) return;
 
         NotificationChannel channel = new NotificationChannel(
                 CHANNEL_ID,
@@ -129,10 +138,25 @@ public class FocusAlarmService extends Service {
         );
         channel.setDescription(getString(R.string.alarm_channel_description));
         channel.setBypassDnd(true);
-        // Audio and vibration are managed exclusively by FocusAlarmSound to avoid duplicate overlapping tracks
-        channel.enableVibration(false);
-        channel.setSound(null, null);
         channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+
+        // Vibration pattern required for high-priority heads-up / full-screen classification
+        channel.enableVibration(true);
+        channel.setVibrationPattern(new long[]{ 0, 800, 400, 800 });
+
+        // Set silent tone with USAGE_ALARM so Android OS permits fullScreenIntent to launch
+        // over lockscreen without producing audio conflict with FocusAlarmSound
+        try {
+            Uri silentUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getPackageName() + "/" + R.raw.silent_alarm);
+            AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_ALARM)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .build();
+            channel.setSound(silentUri, audioAttributes);
+        } catch (Exception e) {
+            Log.w(TAG, "Failed to bind silent_alarm raw sound to channel", e);
+        }
+
         nm.createNotificationChannel(channel);
     }
 
@@ -170,6 +194,8 @@ public class FocusAlarmService extends Service {
                 pendingIntentFlags()
         );
 
+        Uri silentUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getPackageName() + "/" + R.raw.silent_alarm);
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle(title)
                 .setContentText(body)
@@ -180,8 +206,8 @@ public class FocusAlarmService extends Service {
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setOngoing(true)
                 .setAutoCancel(false)
-                .setSilent(true)
-                .setSound(null)
+                .setVibrate(new long[]{ 0, 800, 400, 800 })
+                .setSound(silentUri)
                 .setContentIntent(fullScreenPending)
                 .setFullScreenIntent(fullScreenPending, true)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)

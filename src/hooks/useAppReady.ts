@@ -4,11 +4,11 @@ import { Capacitor } from "@capacitor/core";
 import { safeStorageGetString } from "../utils/storageUtils";
 
 /** Duration of the CSS cross-dissolve transition in milliseconds */
-const SPLASH_FADE_MS = 750;
+const SPLASH_FADE_MS = 450;
 /** Duration the motion logo plays before dissolving smoothly */
-const SPLASH_MIN_VISIBLE_MS = 1350;
+const SPLASH_MIN_VISIBLE_MS = 650;
 /** Failsafe maximum wait duration */
-const SPLASH_MAX_WAIT_MS = 2500;
+const SPLASH_MAX_WAIT_MS = 1500;
 
 export function useAppReady(): {
   isAppReady: boolean;
@@ -26,68 +26,38 @@ export function useAppReady(): {
       SplashScreen.hide({ fadeOutDuration: 100 }).catch(() => {});
     }
 
-    const mountedAt = Date.now();
-    let pollTimer: ReturnType<typeof setInterval> | undefined;
     let minVisibleTimer: ReturnType<typeof setTimeout> | undefined;
-    let maxWaitTimer: ReturnType<typeof setTimeout> | undefined;
     let removeTimer: ReturnType<typeof setTimeout> | undefined;
-    let rafId: number | undefined;
     let started = false;
-
-    const isAppMounted = () =>
-      Boolean((window as unknown as { __APP_MOUNTED__?: boolean }).__APP_MOUNTED__);
 
     const beginEntrance = () => {
       if (started) return;
       started = true;
-      if (pollTimer) clearInterval(pollTimer);
       if (minVisibleTimer) clearTimeout(minVisibleTimer);
-      if (maxWaitTimer) clearTimeout(maxWaitTimer);
 
-      rafId = requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
         const splashOverlay = document.querySelector("#native-splash .splash-overlay");
         if (splashOverlay) {
           splashOverlay.classList.add("is-fading");
         }
-        setIsAppReady(true);
 
+        // Defer React re-render until CSS transition finishes so JS does not compete with GPU fade
         removeTimer = setTimeout(() => {
+          setIsAppReady(true);
           const el = document.getElementById("native-splash");
           if (el) {
             el.style.display = "none";
             el.remove();
           }
-        }, SPLASH_FADE_MS + 60);
+        }, SPLASH_FADE_MS + 40);
       });
     };
 
-    const requestEntranceWhenAllowed = () => {
-      const elapsed = Date.now() - mountedAt;
-      const remaining = SPLASH_MIN_VISIBLE_MS - elapsed;
-      if (remaining > 0) {
-        if (!minVisibleTimer) {
-          minVisibleTimer = setTimeout(() => {
-            minVisibleTimer = undefined;
-            if (isAppMounted()) beginEntrance();
-          }, remaining);
-        }
-        return;
-      }
-      beginEntrance();
-    };
-
-    pollTimer = setInterval(() => {
-      if (isAppMounted()) requestEntranceWhenAllowed();
-    }, 16);
-
-    maxWaitTimer = setTimeout(beginEntrance, SPLASH_MAX_WAIT_MS);
+    minVisibleTimer = setTimeout(beginEntrance, SPLASH_MIN_VISIBLE_MS);
 
     return () => {
-      if (pollTimer) clearInterval(pollTimer);
       if (minVisibleTimer) clearTimeout(minVisibleTimer);
-      if (maxWaitTimer) clearTimeout(maxWaitTimer);
       if (removeTimer) clearTimeout(removeTimer);
-      if (rafId !== undefined) cancelAnimationFrame(rafId);
     };
   }, []);
 

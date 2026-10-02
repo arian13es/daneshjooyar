@@ -28,30 +28,97 @@ function parseAmount(displayStr: string): number {
   return isNaN(parsed) ? 0 : parsed;
 }
 
+const shamsiDateCache = new Map<string, string>();
+
 function formatShamsiDate(isoDateString?: string): string {
   if (!isoDateString) return "ثبت شده";
+  const cached = shamsiDateCache.get(isoDateString);
+  if (cached) return cached;
+
   try {
     const d = new Date(isoDateString);
-    if (isNaN(d.getTime())) return "ثبت شده";
+    const dTime = d.getTime();
+    if (isNaN(dTime)) return "ثبت شده";
 
-    const tehranTime = new Date(d.toLocaleString("en-US", { timeZone: "Asia/Tehran" }));
-    const nowTehran = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Tehran" }));
+    // Fast, pure-arithmetic conversion for Asia/Tehran (UTC + 3:30)
+    const tehranOffsetMs = 3.5 * 60 * 60 * 1000;
+    const tehranDate = new Date(dTime + tehranOffsetMs);
+    const nowDate = new Date(Date.now() + tehranOffsetMs);
 
-    const jDate = jalaali.toJalaali(tehranTime.getFullYear(), tehranTime.getMonth() + 1, tehranTime.getDate());
-    const jNow = jalaali.toJalaali(nowTehran.getFullYear(), nowTehran.getMonth() + 1, nowTehran.getDate());
+    const tYear = tehranDate.getUTCFullYear();
+    const tMonth = tehranDate.getUTCMonth() + 1;
+    const tDay = tehranDate.getUTCDate();
 
-    const hours = tehranTime.getHours().toString().padStart(2, "0");
-    const minutes = tehranTime.getMinutes().toString().padStart(2, "0");
+    const nYear = nowDate.getUTCFullYear();
+    const nMonth = nowDate.getUTCMonth() + 1;
+    const nDay = nowDate.getUTCDate();
+
+    const jDate = jalaali.toJalaali(tYear, tMonth, tDay);
+    const jNow = jalaali.toJalaali(nYear, nMonth, nDay);
+
+    const hours = tehranDate.getUTCHours().toString().padStart(2, "0");
+    const minutes = tehranDate.getUTCMinutes().toString().padStart(2, "0");
     const timeStr = toPersianDigits(`${hours}:${minutes}`);
 
+    let formatted: string;
     if (jDate.jy === jNow.jy && jDate.jm === jNow.jm && jDate.jd === jNow.jd) {
-      return `امروز، ${timeStr}`;
+      formatted = `امروز، ${timeStr}`;
+    } else {
+      formatted = `${toPersianDigits(String(jDate.jd))} ${PERSIAN_MONTHS[jDate.jm - 1]}، ${timeStr}`;
     }
-    return `${toPersianDigits(String(jDate.jd))} ${PERSIAN_MONTHS[jDate.jm - 1]}، ${timeStr}`;
+
+    shamsiDateCache.set(isoDateString, formatted);
+    return formatted;
   } catch {
     return "ثبت شده";
   }
 }
+
+interface ExpenseItemRowProps {
+  expense: BudgetExpense;
+  onDelete: (id: string) => void;
+}
+
+const ExpenseItemRow = React.memo(function ExpenseItemRow({
+  expense,
+  onDelete,
+}: ExpenseItemRowProps) {
+  const cat = EXPENSE_CATEGORIES.find((c) => c.id === expense.category) || EXPENSE_CATEGORIES[4];
+  const Icon = cat.icon;
+  const dateFormatted = formatShamsiDate(expense.date);
+
+  return (
+    <div className="bg-white dark:bg-slate-800/80 rounded-2xl p-3 px-3.5 border border-slate-200/80 dark:border-slate-700/60 flex items-center justify-between gap-3 shadow-xs">
+      <div className="flex items-center gap-3 min-w-0">
+        <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 border ${cat.bg}`}>
+          <Icon className={`w-4 h-4 ${cat.color}`} />
+        </div>
+        <div className="min-w-0">
+          <p className="text-xs font-black text-slate-800 dark:text-slate-200 truncate">
+            {expense.title}
+          </p>
+          <p className="text-[10px] font-bold text-slate-400 truncate">
+            {cat.name} • {dateFormatted}
+          </p>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-2 shrink-0">
+        <span className="font-sans font-black text-xs text-slate-900 dark:text-white" dir="ltr">
+          {expense.amount.toLocaleString()} <span className="text-[10px] font-bold text-slate-400">تومان</span>
+        </span>
+        <button
+          type="button"
+          onClick={() => onDelete(expense.id)}
+          className="w-7 h-7 rounded-lg text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 flex items-center justify-center transition-colors"
+          title="حذف هزینه"
+        >
+          <Trash2 className="w-3.5 h-3.5" />
+        </button>
+      </div>
+    </div>
+  );
+});
 
 export default function BudgetModal({ budgetState, onUpdateBudget, onClose }: BudgetModalProps) {
   // New Expense Form State
@@ -172,12 +239,15 @@ export default function BudgetModal({ budgetState, onUpdateBudget, onClose }: Bu
     setSavingsMode("none");
   };
 
-  const handleDeleteExpense = (id: string) => {
-    onUpdateBudget({
-      ...budgetState,
-      expenses: budgetState.expenses.filter((e) => e.id !== id),
-    });
-  };
+  const handleDeleteExpense = React.useCallback(
+    (id: string) => {
+      onUpdateBudget({
+        ...budgetState,
+        expenses: budgetState.expenses.filter((e) => e.id !== id),
+      });
+    },
+    [budgetState, onUpdateBudget]
+  );
 
   const handleResetMonth = () => {
     onUpdateBudget({
@@ -385,43 +455,38 @@ export default function BudgetModal({ budgetState, onUpdateBudget, onClose }: Bu
             </div>
 
             {/* Inline Savings Input Form */}
-            <AnimatePresence>
-              {savingsMode !== "none" && (
-                <motion.form
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  onSubmit={handleSavingsAction}
-                  className="flex gap-2 pt-2 border-t border-slate-100 dark:border-slate-700/50 overflow-hidden"
+            {savingsMode !== "none" && (
+              <form
+                onSubmit={handleSavingsAction}
+                className="flex gap-2 pt-2 border-t border-slate-100 dark:border-slate-700/50"
+              >
+                <input
+                  type="tel"
+                  inputMode="numeric"
+                  value={savingsInputDisplay}
+                  onChange={(e) => handleAmountChange(e.target.value, setSavingsInputDisplay)}
+                  placeholder={savingsMode === "deposit" ? "مبلغ واریز به تومان" : "مبلغ برداشت به تومان"}
+                  className="flex-1 bg-slate-50 dark:bg-slate-900 rounded-xl px-3 py-2 text-xs font-black text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 outline-none text-right"
+                  dir="ltr"
+                  autoFocus
+                />
+                <button
+                  type="submit"
+                  className={`px-4 rounded-xl text-xs font-black text-white transition-colors shrink-0 ${
+                    savingsMode === "deposit" ? "bg-indigo-600 hover:bg-indigo-700" : "bg-amber-600 hover:bg-amber-700"
+                  }`}
                 >
-                  <input
-                    type="tel"
-                    inputMode="numeric"
-                    value={savingsInputDisplay}
-                    onChange={(e) => handleAmountChange(e.target.value, setSavingsInputDisplay)}
-                    placeholder={savingsMode === "deposit" ? "مبلغ واریز به تومان" : "مبلغ برداشت به تومان"}
-                    className="flex-1 bg-slate-50 dark:bg-slate-900 rounded-xl px-3 py-2 text-xs font-black text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 outline-none text-right"
-                    dir="ltr"
-                    autoFocus
-                  />
-                  <button
-                    type="submit"
-                    className={`px-4 rounded-xl text-xs font-black text-white transition-colors shrink-0 ${
-                      savingsMode === "deposit" ? "bg-indigo-600 hover:bg-indigo-700" : "bg-amber-600 hover:bg-amber-700"
-                    }`}
-                  >
-                    تایید
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setSavingsMode("none")}
-                    className="px-3 rounded-xl text-xs font-bold text-slate-400 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200"
-                  >
-                    لغو
-                  </button>
-                </motion.form>
-              )}
-            </AnimatePresence>
+                  تایید
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSavingsMode("none")}
+                  className="px-3 rounded-xl text-xs font-bold text-slate-400 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200"
+                >
+                  لغو
+                </button>
+              </form>
+            )}
           </div>
 
           {/* 3. New Expense Entry Form */}
@@ -502,44 +567,13 @@ export default function BudgetModal({ budgetState, onUpdateBudget, onClose }: Bu
               </div>
             ) : (
               <div className="space-y-1.5">
-                {budgetState.expenses.map((expense) => {
-                  const cat = EXPENSE_CATEGORIES.find((c) => c.id === expense.category) || EXPENSE_CATEGORIES[4];
-                  const Icon = cat.icon;
-                  return (
-                    <div
-                      key={expense.id}
-                      className="bg-white dark:bg-slate-800/80 rounded-2xl p-3 px-3.5 border border-slate-200/80 dark:border-slate-700/60 flex items-center justify-between gap-3 shadow-xs"
-                    >
-                      <div className="flex items-center gap-3 min-w-0">
-                        <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 border ${cat.bg}`}>
-                          <Icon className={`w-4 h-4 ${cat.color}`} />
-                        </div>
-                        <div className="min-w-0">
-                          <p className="text-xs font-black text-slate-800 dark:text-slate-200 truncate">
-                            {expense.title}
-                          </p>
-                          <p className="text-[10px] font-bold text-slate-400 truncate">
-                            {cat.name} • {formatShamsiDate(expense.date)}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center gap-2 shrink-0">
-                        <span className="font-sans font-black text-xs text-slate-900 dark:text-white" dir="ltr">
-                          {expense.amount.toLocaleString()} <span className="text-[10px] font-bold text-slate-400">تومان</span>
-                        </span>
-                        <button
-                          type="button"
-                          onClick={() => handleDeleteExpense(expense.id)}
-                          className="w-7 h-7 rounded-lg text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 flex items-center justify-center transition-colors"
-                          title="حذف هزینه"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </button>
-                      </div>
-                    </div>
-                  );
-                })}
+                {budgetState.expenses.map((expense) => (
+                  <ExpenseItemRow
+                    key={expense.id}
+                    expense={expense}
+                    onDelete={handleDeleteExpense}
+                  />
+                ))}
               </div>
             )}
           </div>
@@ -552,7 +586,7 @@ export default function BudgetModal({ budgetState, onUpdateBudget, onClose }: Bu
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="absolute inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4"
+              className="absolute inset-0 z-50 bg-slate-900/60 flex items-center justify-center p-4"
             >
               <div className="bg-white dark:bg-slate-800 rounded-3xl p-5 max-w-sm w-full space-y-4 border border-slate-200 dark:border-slate-700 shadow-2xl">
                 <h3 className="text-sm font-black text-slate-900 dark:text-white">مدیریت و شروع ماه جدید</h3>

@@ -11,25 +11,24 @@ export function useAppTheme(): [boolean, Dispatch<SetStateAction<boolean>>] {
   });
 
   useEffect(() => {
-    if (Capacitor.isNativePlatform()) {
-      StatusBar.setOverlaysWebView({ overlay: true }).catch(() => {});
-      NativeHelper.setAppTheme?.({ isDark: isDarkMode }).catch(() => {});
-    }
     const metaTheme = document.querySelector('meta[name="theme-color"]');
     if (isDarkMode) {
       document.documentElement.classList.add("dark");
       safeStorageSet("tabriz_theme_v3", "dark");
       if (metaTheme) metaTheme.setAttribute("content", "#0f172a");
-      if (Capacitor.isNativePlatform()) {
-        StatusBar.setStyle({ style: Style.Dark }).catch(() => {});
-      }
     } else {
       document.documentElement.classList.remove("dark");
       safeStorageSet("tabriz_theme_v3", "light");
       if (metaTheme) metaTheme.setAttribute("content", "#f8fafc");
-      if (Capacitor.isNativePlatform()) {
-        StatusBar.setStyle({ style: Style.Light }).catch(() => {});
-      }
+    }
+
+    if (Capacitor.isNativePlatform()) {
+      const timer = setTimeout(() => {
+        StatusBar.setOverlaysWebView({ overlay: true }).catch(() => {});
+        NativeHelper.setAppTheme?.({ isDark: isDarkMode }).catch(() => {});
+        StatusBar.setStyle({ style: isDarkMode ? Style.Dark : Style.Light }).catch(() => {});
+      }, 60);
+      return () => clearTimeout(timer);
     }
   }, [isDarkMode]);
 
