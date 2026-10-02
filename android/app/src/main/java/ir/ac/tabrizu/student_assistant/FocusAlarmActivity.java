@@ -1,6 +1,7 @@
 package ir.ac.tabrizu.student_assistant;
 
 import android.app.Activity;
+import android.app.KeyguardManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -23,7 +24,8 @@ import java.util.Locale;
 
 /**
  * Full-screen alarm activity displayed directly over the lockscreen.
- * Uses native Vazirmatn typography and applies lockscreen window flags before super.onCreate().
+ * Uses native Vazirmatn typography and applies lockscreen window flags before and after super.onCreate().
+ * Acts identically to the native Android Clock application.
  */
 public class FocusAlarmActivity extends Activity {
 
@@ -53,7 +55,7 @@ public class FocusAlarmActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // Crucial: Set window flags BEFORE super.onCreate() so the WindowManager
+        // Crucial: Set window flags BEFORE super.onCreate() so WindowManager
         // assigns the lockscreen window tokens during the initial attachment phase.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
             setShowWhenLocked(true);
@@ -62,12 +64,26 @@ public class FocusAlarmActivity extends Activity {
 
         getWindow().addFlags(
                 WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+                        | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
                         | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
                         | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
                         | WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON
         );
 
         super.onCreate(savedInstanceState);
+
+        // Re-apply for devices requiring post-super execution
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+            setShowWhenLocked(true);
+            setTurnScreenOn(true);
+            try {
+                KeyguardManager km = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
+                if (km != null) {
+                    km.requestDismissKeyguard(this, null);
+                }
+            } catch (Exception ignored) {
+            }
+        }
 
         // Keep screen bright while alarm is ringing
         try {
@@ -133,10 +149,11 @@ public class FocusAlarmActivity extends Activity {
 
     private void updateClock() {
         if (clockView == null) return;
-        Calendar c = Calendar.getInstance();
-        String hh = String.format(Locale.US, "%02d", c.get(Calendar.HOUR_OF_DAY));
-        String mm = String.format(Locale.US, "%02d", c.get(Calendar.MINUTE));
-        clockView.setText(toPersianDigits(hh + ":" + mm));
+        Calendar cal = Calendar.getInstance();
+        int hour = cal.get(Calendar.HOUR_OF_DAY);
+        int minute = cal.get(Calendar.MINUTE);
+        String formatted = String.format(Locale.US, "%02d:%02d", hour, minute);
+        clockView.setText(toPersianDigits(formatted));
     }
 
     private static String toPersianDigits(String input) {
@@ -158,6 +175,9 @@ public class FocusAlarmActivity extends Activity {
 
         // Stop sound immediately via singleton
         FocusAlarmSound.getInstance().stop();
+
+        // Stop foreground service
+        FocusAlarmService.stop(this);
 
         // Cancel receiver notifications and wake locks
         FocusAlarmReceiver.cancel(this);
@@ -207,6 +227,7 @@ public class FocusAlarmActivity extends Activity {
     protected void onDestroy() {
         handler.removeCallbacks(ticker);
         FocusAlarmSound.getInstance().stop();
+        FocusAlarmService.stop(this);
 
         if (screenWakeLock != null && screenWakeLock.isHeld()) {
             try {

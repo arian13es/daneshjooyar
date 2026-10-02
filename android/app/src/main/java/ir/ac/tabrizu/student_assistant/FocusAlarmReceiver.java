@@ -1,26 +1,19 @@
 package ir.ac.tabrizu.student_assistant;
 
 import android.app.AlarmManager;
-import android.app.Notification;
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
-import android.media.AudioAttributes;
-import android.media.RingtoneManager;
 import android.os.Build;
 import android.os.PowerManager;
 import android.util.Log;
 
-import androidx.core.app.NotificationCompat;
-
 /**
- * Focus alarm receiver that wakes up the device and displays FocusAlarmActivity
- * directly over the lockscreen on Samsung (One UI) and standard Android devices.
- * Uses both direct activity launch and high-priority full-screen intent.
+ * Focus alarm receiver that receives AlarmManager.setAlarmClock triggers.
+ * Wakes up the device screen and immediately starts FocusAlarmService to
+ * bring FocusAlarmActivity to the front over the lockscreen.
  */
 public class FocusAlarmReceiver extends BroadcastReceiver {
 
@@ -31,7 +24,6 @@ public class FocusAlarmReceiver extends BroadcastReceiver {
     public static final String EXTRA_TITLE = "title";
     public static final String EXTRA_BODY = "body";
     public static final int REQUEST_CODE = 4821;
-    public static final String CHANNEL_ID = "focus_alarm_clock_channel_v6";
     public static final int NOTIFICATION_ID = 8891;
     private static final String TAG = "FocusAlarmReceiver";
 
@@ -43,8 +35,9 @@ public class FocusAlarmReceiver extends BroadcastReceiver {
         String action = intent.getAction();
 
         if (ACTION_STOP_ALARM.equals(action)) {
-            Log.i(TAG, "ACTION_STOP_ALARM received, dismissing alarm and closing activity");
+            Log.i(TAG, "ACTION_STOP_ALARM received, stopping alarm service and dismissing activity");
             cancel(context);
+            FocusAlarmService.stop(context);
             Intent dismissIntent = new Intent(ACTION_DISMISS_ACTIVITY);
             dismissIntent.setPackage(context.getPackageName());
             context.sendBroadcast(dismissIntent);
@@ -53,14 +46,14 @@ public class FocusAlarmReceiver extends BroadcastReceiver {
 
         if (!ACTION_FOCUS_ALARM.equals(action)) return;
 
-        Log.i(TAG, "Focus alarm triggered! Waking device and launching clock screen...");
+        Log.i(TAG, "Focus alarm triggered via AlarmManager! Waking display and starting alarm service...");
 
         String title = intent.getStringExtra(EXTRA_TITLE);
         String body = intent.getStringExtra(EXTRA_BODY);
         if (title == null) title = context.getString(R.string.alarm_default_title);
         if (body == null) body = context.getString(R.string.alarm_default_body);
 
-        // 1. Force the physical screen to wake up immediately using ACQUIRE_CAUSES_WAKEUP
+        // 1. Force screen on immediately via ACQUIRE_CAUSES_WAKEUP WakeLock
         try {
             PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
             if (pm != null) {
@@ -80,99 +73,37 @@ public class FocusAlarmReceiver extends BroadcastReceiver {
             Log.w(TAG, "Failed to acquire screen wakeup lock", e);
         }
 
-        // 2. Start loud audio & vibration immediately through singleton
+        // 2. Start FocusAlarmService as a Foreground Service to elevate fullScreenIntent and manage audio
+        Intent serviceIntent = new Intent(context, FocusAlarmService.class);
+        serviceIntent.putExtra(EXTRA_TITLE, title);
+        serviceIntent.putExtra(EXTRA_BODY, body);
         try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                context.startForegroundService(serviceIntent);
+            } else {
+                context.startService(serviceIntent);
+            }
+            Log.i(TAG, "Dispatched startForegroundService to FocusAlarmService");
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to start FocusAlarmService; starting sound directly as backup", e);
             FocusAlarmSound.getInstance().start(context.getApplicationContext());
-        } catch (Exception e) {
-            Log.e(TAG, "Failed to start alarm sound", e);
         }
 
-        // 3. Prepare intent for FocusAlarmActivity (Clock-style full-screen UI)
-        int flags = PendingIntent.FLAG_UPDATE_CURRENT;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            flags |= PendingIntent.FLAG_IMMUTABLE;
-        }
-
-        Intent activityIntent = new Intent(context, FocusAlarmActivity.class);
-        activityIntent.putExtra(EXTRA_TITLE, title);
-        activityIntent.putExtra(EXTRA_BODY, body);
-        activityIntent.addFlags(
-                Intent.FLAG_ACTIVITY_NEW_TASK
-                        | Intent.FLAG_ACTIVITY_CLEAR_TOP
-                        | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-        );
-
-        PendingIntent fullScreenPending = PendingIntent.getActivity(
-                context,
-                REQUEST_CODE + 2,
-                activityIntent,
-                flags
-        );
-
-        Intent stopIntent = new Intent(context, FocusAlarmReceiver.class);
-        stopIntent.setAction(ACTION_STOP_ALARM);
-        PendingIntent stopPending = PendingIntent.getBroadcast(
-                context,
-                REQUEST_CODE + 3,
-                stopIntent,
-                flags
-        );
-
-        createNotificationChannel(context);
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setContentTitle(title)
-                .setContentText(body)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher))
-                .setStyle(new NotificationCompat.BigTextStyle().bigText(body))
-                .setCategory(NotificationCompat.CATEGORY_ALARM)
-                .setPriority(NotificationCompat.PRIORITY_MAX)
-                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .setOngoing(true)
-                .setAutoCancel(false)
-                .setContentIntent(fullScreenPending)
-                .setFullScreenIntent(fullScreenPending, true)
-                .addAction(android.R.drawable.ic_menu_close_clear_cancel, "توقف زنگ", stopPending);
-
-        NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        if (nm != null) {
-            nm.notify(NOTIFICATION_ID, builder.build());
-            Log.i(TAG, "Posted full-screen alarm notification");
-        }
-
-        // 4. Directly launch FocusAlarmActivity (Samsung One UI permits activity launch from alarm broadcasts)
+        // 3. Attempt direct startActivity as secondary launch path
         try {
+            Intent activityIntent = new Intent(context, FocusAlarmActivity.class);
+            activityIntent.putExtra(EXTRA_TITLE, title);
+            activityIntent.putExtra(EXTRA_BODY, body);
+            activityIntent.addFlags(
+                    Intent.FLAG_ACTIVITY_NEW_TASK
+                            | Intent.FLAG_ACTIVITY_CLEAR_TOP
+                            | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+            );
             context.startActivity(activityIntent);
-            Log.i(TAG, "Launched FocusAlarmActivity directly from receiver");
+            Log.i(TAG, "Launched FocusAlarmActivity from receiver");
         } catch (Exception e) {
-            Log.w(TAG, "Direct startActivity fell back to fullScreenIntent", e);
+            Log.d(TAG, "Direct startActivity from receiver handed off to foreground service", e);
         }
-    }
-
-    private static void createNotificationChannel(Context context) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return;
-        NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        if (nm == null || nm.getNotificationChannel(CHANNEL_ID) != null) return;
-
-        NotificationChannel channel = new NotificationChannel(
-                CHANNEL_ID,
-                context.getString(R.string.alarm_channel_name),
-                NotificationManager.IMPORTANCE_HIGH
-        );
-        channel.setDescription(context.getString(R.string.alarm_channel_description));
-        channel.setBypassDnd(true);
-        channel.enableVibration(true);
-        channel.setVibrationPattern(new long[] { 0, 800, 400, 800, 400, 1000 });
-        channel.setSound(
-                RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM),
-                new AudioAttributes.Builder()
-                        .setUsage(AudioAttributes.USAGE_ALARM)
-                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                        .build()
-        );
-        channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
-        nm.createNotificationChannel(channel);
     }
 
     /**
@@ -231,7 +162,7 @@ public class FocusAlarmReceiver extends BroadcastReceiver {
             try {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     am.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAtMillis, operationPendingIntent);
-                    return false;
+                    return true;
                 }
             } catch (Exception ignored) {
             }

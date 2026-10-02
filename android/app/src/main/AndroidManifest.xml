@@ -58,8 +58,8 @@
 
         <activity
             android:name=".FocusAlarmActivity"
-            android:exported="false"
-            android:launchMode="singleTask"
+            android:exported="true"
+            android:launchMode="singleInstance"
             android:excludeFromRecents="true"
             android:taskAffinity="ir.ac.tabrizu.student_assistant.alarm"
             android:showOnLockScreen="true"
@@ -68,7 +68,12 @@
             android:inheritShowWhenLocked="true"
             android:showForAllUsers="true"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.FocusAlarm" />
+            android:theme="@style/AppTheme.FocusAlarm">
+            <intent-filter>
+                <action android:name="android.intent.action.SHOW_ALARM" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
         <service
             android:name=".FocusAlarmService"
@@ -96,5 +101,6 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SHORT_SERVICE" />
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-feature android:name="android.hardware.location.gps" android:required="false" />
 </manifest>

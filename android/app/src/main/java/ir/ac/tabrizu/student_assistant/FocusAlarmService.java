@@ -8,6 +8,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ServiceInfo;
+import android.graphics.BitmapFactory;
 import android.media.AudioAttributes;
 import android.media.RingtoneManager;
 import android.os.Build;
@@ -17,15 +18,16 @@ import android.util.Log;
 import androidx.core.app.NotificationCompat;
 
 /**
- * Foreground service fallback for the focus alarm.
- * Delegates directly to the FocusAlarmSound singleton so any stop command
- * immediately silences the alarm without orphaned MediaPlayer instances.
+ * Foreground Service for the Clock-style focus alarm.
+ * Running in the foreground gives the app the required Android 10+ OS privilege
+ * to display FocusAlarmActivity over the lockscreen and keep alarm audio playing.
  */
 public class FocusAlarmService extends Service {
 
-    public static final String CHANNEL_ID = "focus_alarm_fullscreen_v4";
+    public static final String CHANNEL_ID = "focus_alarm_clock_channel_v7";
     public static final int NOTIFICATION_ID = 8891;
     public static final String ACTION_STOP = "ir.ac.tabrizu.student_assistant.ACTION_STOP_FOCUS_ALARM";
+    public static final String ACTION_START = "ir.ac.tabrizu.student_assistant.ACTION_START_FOCUS_ALARM";
     private static final String TAG = "FocusAlarmService";
 
     private boolean foregroundStarted;
@@ -54,7 +56,27 @@ public class FocusAlarmService extends Service {
         // Ensure singleton audio is playing
         FocusAlarmSound.getInstance().start(this);
 
+        // Launch full-screen lockscreen activity from the foreground service
+        launchAlarmActivity(title, body);
+
         return START_NOT_STICKY;
+    }
+
+    private void launchAlarmActivity(String title, String body) {
+        try {
+            Intent activityIntent = new Intent(this, FocusAlarmActivity.class);
+            activityIntent.putExtra(FocusAlarmReceiver.EXTRA_TITLE, title);
+            activityIntent.putExtra(FocusAlarmReceiver.EXTRA_BODY, body);
+            activityIntent.addFlags(
+                    Intent.FLAG_ACTIVITY_NEW_TASK
+                            | Intent.FLAG_ACTIVITY_CLEAR_TOP
+                            | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+            );
+            startActivity(activityIntent);
+            Log.i(TAG, "Successfully started FocusAlarmActivity from foreground service");
+        } catch (Exception e) {
+            Log.w(TAG, "Failed to start FocusAlarmActivity directly from service; relying on fullScreenIntent", e);
+        }
     }
 
     private void promoteToForeground(String title, String body) {
@@ -77,8 +99,9 @@ public class FocusAlarmService extends Service {
                 startForeground(NOTIFICATION_ID, notification);
             }
             foregroundStarted = true;
+            Log.i(TAG, "Promoted FocusAlarmService to foreground");
         } catch (Exception e) {
-            Log.w(TAG, "startForeground failed, posting standard notification", e);
+            Log.w(TAG, "startForeground failed, posting standard notification fallback", e);
             try {
                 NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                 if (nm != null) nm.notify(NOTIFICATION_ID, notification);
@@ -100,7 +123,7 @@ public class FocusAlarmService extends Service {
         channel.setDescription(getString(R.string.alarm_channel_description));
         channel.setBypassDnd(true);
         channel.enableVibration(true);
-        channel.setVibrationPattern(new long[] { 0, 800, 400, 800, 400, 1000 });
+        channel.setVibrationPattern(new long[] { 0, 1000, 500, 1000, 500, 1200 });
         channel.setSound(
                 RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM),
                 new AudioAttributes.Builder()
@@ -150,6 +173,8 @@ public class FocusAlarmService extends Service {
                 .setContentTitle(title)
                 .setContentText(body)
                 .setSmallIcon(R.mipmap.ic_launcher)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(body))
                 .setCategory(NotificationCompat.CATEGORY_ALARM)
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setOngoing(true)
