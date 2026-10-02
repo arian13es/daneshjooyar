@@ -132,7 +132,10 @@ public class FocusAlarmActivity extends Activity {
             if (clockView != null) clockView.setTextColor(0xFF0F172A);
             if (titleView != null) titleView.setTextColor(0xFF1E293B);
             if (bodyView != null) bodyView.setTextColor(0xFF475569);
-            if (tagView != null) tagView.setTextColor(0xFF4338CA);
+            if (tagView != null) {
+                tagView.setBackgroundResource(R.drawable.widget_pill_bg_light);
+                tagView.setTextColor(0xFF4338CA);
+            }
             if (hintView != null) hintView.setTextColor(0xFF64748B);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -143,13 +146,20 @@ public class FocusAlarmActivity extends Activity {
                 }
                 getWindow().getDecorView().setSystemUiVisibility(flags);
             }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                getWindow().setStatusBarColor(0xFFF8FAFC);
+                getWindow().setNavigationBarColor(0xFFF8FAFC);
+            }
         } else {
             // Dark Theme styling: luxury deep dark background
             if (root != null) root.setBackgroundColor(0xFF0A0F1D);
             if (clockView != null) clockView.setTextColor(0xFFFFFFFF);
             if (titleView != null) titleView.setTextColor(0xFFF1F5F9);
             if (bodyView != null) bodyView.setTextColor(0xFF94A3B8);
-            if (tagView != null) tagView.setTextColor(0xFF818CF8);
+            if (tagView != null) {
+                tagView.setBackgroundResource(R.drawable.widget_pill_bg);
+                tagView.setTextColor(0xFF818CF8);
+            }
             if (hintView != null) hintView.setTextColor(0xFF64748B);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -159,6 +169,10 @@ public class FocusAlarmActivity extends Activity {
                     flags &= ~View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
                 }
                 getWindow().getDecorView().setSystemUiVisibility(flags);
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                getWindow().setStatusBarColor(0xFF0A0F1D);
+                getWindow().setNavigationBarColor(0xFF0A0F1D);
             }
         }
 

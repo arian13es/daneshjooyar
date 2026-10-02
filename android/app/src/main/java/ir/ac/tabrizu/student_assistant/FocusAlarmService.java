@@ -49,29 +49,28 @@ public class FocusAlarmService extends Service {
 
         String title = intent != null ? intent.getStringExtra(FocusAlarmReceiver.EXTRA_TITLE) : null;
         String body = intent != null ? intent.getStringExtra(FocusAlarmReceiver.EXTRA_BODY) : null;
+        boolean isDark = intent != null && intent.getBooleanExtra(FocusAlarmReceiver.EXTRA_IS_DARK_MODE, false);
         if (title == null) title = getString(R.string.alarm_default_title);
         if (body == null) body = getString(R.string.alarm_default_body);
 
         createChannel();
-        promoteToForeground(title, body);
+        promoteToForeground(title, body, isDark);
 
         // Ensure singleton audio is playing
         FocusAlarmSound.getInstance().start(this);
 
         // Launch full-screen lockscreen activity from the foreground service
-        launchAlarmActivity(title, body);
+        launchAlarmActivity(title, body, isDark);
 
         return START_NOT_STICKY;
     }
 
-    private void launchAlarmActivity(String title, String body) {
+    private void launchAlarmActivity(String title, String body, boolean isDark) {
         try {
             Intent activityIntent = new Intent(this, FocusAlarmActivity.class);
             activityIntent.putExtra(FocusAlarmReceiver.EXTRA_TITLE, title);
             activityIntent.putExtra(FocusAlarmReceiver.EXTRA_BODY, body);
-            if (intentHasDarkExtra(title)) {
-                // extra passed through intent if available
-            }
+            activityIntent.putExtra(FocusAlarmReceiver.EXTRA_IS_DARK_MODE, isDark);
             activityIntent.addFlags(
                     Intent.FLAG_ACTIVITY_NEW_TASK
                             | Intent.FLAG_ACTIVITY_CLEAR_TOP
@@ -84,13 +83,9 @@ public class FocusAlarmService extends Service {
         }
     }
 
-    private boolean intentHasDarkExtra(String unused) {
-        return false;
-    }
-
-    private void promoteToForeground(String title, String body) {
+    private void promoteToForeground(String title, String body, boolean isDark) {
         if (foregroundStarted) return;
-        Notification notification = buildNotification(title, body);
+        Notification notification = buildNotification(title, body, isDark);
         try {
             if (Build.VERSION.SDK_INT >= 34 /* Android 14+ */) {
                 startForeground(
@@ -168,10 +163,11 @@ public class FocusAlarmService extends Service {
         return flags;
     }
 
-    private Notification buildNotification(String title, String body) {
+    private Notification buildNotification(String title, String body, boolean isDark) {
         Intent fullScreenIntent = new Intent(this, FocusAlarmActivity.class);
         fullScreenIntent.putExtra(FocusAlarmReceiver.EXTRA_TITLE, title);
         fullScreenIntent.putExtra(FocusAlarmReceiver.EXTRA_BODY, body);
+        fullScreenIntent.putExtra(FocusAlarmReceiver.EXTRA_IS_DARK_MODE, isDark);
         fullScreenIntent.addFlags(
                 Intent.FLAG_ACTIVITY_NEW_TASK
                         | Intent.FLAG_ACTIVITY_CLEAR_TOP
