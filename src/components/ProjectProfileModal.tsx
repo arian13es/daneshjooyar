@@ -517,10 +517,8 @@ export default function ProjectProfileModal({ project, onClose, onUpdateProject 
                   </div>
                 ) : (
                   tasks.map((task) => (
-                    <motion.div
+                    <div
                       key={task.id}
-                      initial={{ opacity: 0, y: 6 }}
-                      animate={{ opacity: 1, y: 0 }}
                       className={`p-3 rounded-xl border transition-all flex items-center justify-between gap-3 ${
                         task.completed
                           ? "bg-emerald-50/60 dark:bg-emerald-950/20 border-emerald-200/80 dark:border-emerald-800/40 text-emerald-900 dark:text-emerald-200"
@@ -550,7 +548,7 @@ export default function ProjectProfileModal({ project, onClose, onUpdateProject 
                       >
                         <Trash className="w-3.5 h-3.5" />
                       </button>
-                    </motion.div>
+                    </div>
                   ))
                 )}
               </div>
@@ -614,10 +612,8 @@ export default function ProjectProfileModal({ project, onClose, onUpdateProject 
                   </div>
                 ) : (
                   (project.notes || []).map((note) => (
-                    <motion.div
+                    <div
                       key={note.id}
-                      initial={{ opacity: 0, y: 6 }}
-                      animate={{ opacity: 1, y: 0 }}
                       className="bg-white dark:bg-slate-800 p-3.5 rounded-xl border border-slate-200/80 dark:border-slate-700 shadow-xs space-y-2.5"
                     >
                       <p className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100 whitespace-pre-wrap leading-relaxed">
@@ -661,7 +657,7 @@ export default function ProjectProfileModal({ project, onClose, onUpdateProject 
                           </button>
                         </div>
                       </div>
-                    </motion.div>
+                    </div>
                   ))
                 )}
               </div>
