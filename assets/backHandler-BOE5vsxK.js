@@ -1,1 +1,0 @@
-import{a as n}from"./index-B0qVngec.js";const t=[],s=e=>{t.push(e)},c=e=>{const r=t.indexOf(e);r!==-1&&t.splice(r,1)},a=()=>{for(let e=t.length-1;e>=0;e--)if(t[e]())return!0;return!1},f=(e,r)=>{n.useEffect(()=>{if(r)return s(e),()=>c(e)},[r,e])};export{a as executeBackAction,s as registerBackHandler,c as unregisterBackHandler,f as useHardwareBack};
