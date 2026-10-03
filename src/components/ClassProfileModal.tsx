@@ -430,10 +430,8 @@ export default function ClassProfileModal({
                   </div>
                 ) : (
                   (classItem.notes || []).map(note => (
-                    <motion.div 
+                    <div 
                       key={note.id} 
-                      initial={{ opacity: 0, y: 6 }}
-                      animate={{ opacity: 1, y: 0 }}
                       className="bg-white dark:bg-slate-800 p-3.5 rounded-xl border border-slate-200/80 dark:border-slate-700 shadow-xs space-y-2.5"
                     >
                       <p className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100 whitespace-pre-wrap leading-relaxed">
@@ -472,7 +470,7 @@ export default function ClassProfileModal({
                           </button>
                         </div>
                       </div>
-                    </motion.div>
+                    </div>
                   ))
                 )}
               </div>
@@ -617,10 +615,8 @@ export default function ClassProfileModal({
                   </div>
                 ) : (
                   absences.map((abs, idx) => (
-                    <motion.div 
+                    <div 
                       key={abs.id} 
-                      initial={{ opacity: 0, y: 4 }}
-                      animate={{ opacity: 1, y: 0 }}
                       className="bg-white dark:bg-slate-800 px-4 py-3 rounded-xl border border-slate-200/80 dark:border-slate-700 shadow-2xs flex justify-between items-center"
                     >
                       <div className="flex items-center gap-2.5">
@@ -639,7 +635,7 @@ export default function ClassProfileModal({
                       >
                         <Trash className="w-3.5 h-3.5 shrink-0" />
                       </button>
-                    </motion.div>
+                    </div>
                   ))
                 )}
               </div>

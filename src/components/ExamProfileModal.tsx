@@ -482,10 +482,8 @@ export default function ExamProfileModal({ exam, onClose, onUpdateExam, onStartF
                   </div>
                 ) : (
                   checklist.map((item) => (
-                    <motion.div
+                    <div
                       key={item.id}
-                      initial={{ opacity: 0, y: 4 }}
-                      animate={{ opacity: 1, y: 0 }}
                       className={`p-3 rounded-xl border transition-all flex items-center justify-between gap-3 ${
                         item.completed
                           ? "bg-emerald-50/60 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800/40 text-emerald-900 dark:text-emerald-200"
@@ -515,7 +513,7 @@ export default function ExamProfileModal({ exam, onClose, onUpdateExam, onStartF
                       >
                         <Trash className="w-3.5 h-3.5" />
                       </button>
-                    </motion.div>
+                    </div>
                   ))
                 )}
               </div>
@@ -579,10 +577,8 @@ export default function ExamProfileModal({ exam, onClose, onUpdateExam, onStartF
                   </div>
                 ) : (
                   (exam.notesList || []).map((note) => (
-                    <motion.div
+                    <div
                       key={note.id}
-                      initial={{ opacity: 0, y: 4 }}
-                      animate={{ opacity: 1, y: 0 }}
                       className="bg-white dark:bg-slate-800 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-2xs space-y-2.5"
                     >
                       <p className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100 whitespace-pre-wrap leading-relaxed">
@@ -626,7 +622,7 @@ export default function ExamProfileModal({ exam, onClose, onUpdateExam, onStartF
                           </button>
                         </div>
                       </div>
-                    </motion.div>
+                    </div>
                   ))
                 )}
               </div>

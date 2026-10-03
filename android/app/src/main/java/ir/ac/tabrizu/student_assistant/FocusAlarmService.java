@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.pm.ServiceInfo;
 import android.graphics.BitmapFactory;
 import android.media.AudioAttributes;
+import android.media.AudioManager;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
@@ -26,7 +27,7 @@ import androidx.core.app.NotificationCompat;
  */
 public class FocusAlarmService extends Service {
 
-    public static final String CHANNEL_ID = "focus_alarm_clock_channel_v9";
+    public static final String CHANNEL_ID = "focus_alarm_clock_channel_v10";
     public static final int NOTIFICATION_ID = 8891;
     public static final String ACTION_STOP = "ir.ac.tabrizu.student_assistant.ACTION_STOP_FOCUS_ALARM";
     public static final String ACTION_START = "ir.ac.tabrizu.student_assistant.ACTION_START_FOCUS_ALARM";
@@ -56,10 +57,10 @@ public class FocusAlarmService extends Service {
         createChannel();
         promoteToForeground(title, body, isDark);
 
-        // Ensure singleton audio is playing
+        // Ensure alarm sound & vibration is ringing through STREAM_ALARM
         FocusAlarmSound.getInstance().start(this);
 
-        // Launch full-screen lockscreen activity from the foreground service
+        // Launch full-screen lockscreen activity
         launchAlarmActivity(title, body, isDark);
 
         return START_NOT_STICKY;
@@ -119,9 +120,10 @@ public class FocusAlarmService extends Service {
         NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         if (nm == null) return;
 
-        // Clean up previous silent channel version to guarantee fresh notification settings
+        // Clean up previous channel versions to guarantee fresh system settings
         try {
             nm.deleteNotificationChannel("focus_alarm_clock_channel_v8");
+            nm.deleteNotificationChannel("focus_alarm_clock_channel_v9");
         } catch (Exception ignored) {}
 
         if (nm.getNotificationChannel(CHANNEL_ID) != null) return;
@@ -135,22 +137,22 @@ public class FocusAlarmService extends Service {
         channel.setBypassDnd(true);
         channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
 
-        // Vibration pattern required for high-priority heads-up / full-screen classification
         channel.enableVibration(true);
         channel.setVibrationPattern(new long[]{ 0, 800, 400, 800 });
 
-        // Set silent tone with USAGE_ALARM so Android OS permits fullScreenIntent to launch
-        // over lockscreen without producing audio conflict with FocusAlarmSound
-        try {
-            Uri silentUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getPackageName() + "/" + R.raw.silent_alarm);
-            AudioAttributes audioAttributes = new AudioAttributes.Builder()
-                    .setUsage(AudioAttributes.USAGE_ALARM)
-                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                    .build();
-            channel.setSound(silentUri, audioAttributes);
-        } catch (Exception e) {
-            Log.w(TAG, "Failed to bind silent_alarm raw sound to channel", e);
+        Uri alarmSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+        if (alarmSoundUri == null) {
+            alarmSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
         }
+        if (alarmSoundUri == null) {
+            alarmSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        }
+
+        AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_ALARM)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .build();
+        channel.setSound(alarmSoundUri, audioAttributes);
 
         nm.createNotificationChannel(channel);
     }
@@ -190,7 +192,10 @@ public class FocusAlarmService extends Service {
                 pendingIntentFlags()
         );
 
-        Uri silentUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getPackageName() + "/" + R.raw.silent_alarm);
+        Uri alarmSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+        if (alarmSoundUri == null) {
+            alarmSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+        }
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle(title)
@@ -203,7 +208,7 @@ public class FocusAlarmService extends Service {
                 .setOngoing(true)
                 .setAutoCancel(false)
                 .setVibrate(new long[]{ 0, 800, 400, 800 })
-                .setSound(silentUri)
+                .setSound(alarmSoundUri, AudioManager.STREAM_ALARM)
                 .setContentIntent(fullScreenPending)
                 .setFullScreenIntent(fullScreenPending, true)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)

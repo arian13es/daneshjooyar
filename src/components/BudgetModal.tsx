@@ -280,10 +280,10 @@ export default function BudgetModal({ budgetState, onUpdateBudget, onClose }: Bu
       dir="rtl"
     >
       <motion.div
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        exit={{ y: 20, opacity: 0 }}
-        transition={{ duration: 0.18, ease: "easeOut" }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.15, ease: "easeOut" }}
         className="flex-1 flex flex-col w-full h-full md:h-auto md:max-h-[90vh] md:max-w-xl md:rounded-[2.5rem] bg-slate-50 dark:bg-slate-900 shadow-2xl relative overflow-hidden border border-slate-200/80 dark:border-slate-800"
       >
         {/* Minimal Header */}

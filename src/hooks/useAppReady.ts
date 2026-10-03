@@ -4,9 +4,9 @@ import { Capacitor } from "@capacitor/core";
 import { safeStorageGetString } from "../utils/storageUtils";
 
 /** Duration of the CSS cross-dissolve transition in milliseconds */
-const SPLASH_FADE_MS = 550;
-/** Duration the motion logo plays before dissolving smoothly (full spring + settle) */
-const SPLASH_MIN_VISIBLE_MS = 1400;
+const SPLASH_FADE_MS = 500;
+/** Duration the motion logo plays before dissolving smoothly (spring settle) */
+const SPLASH_MIN_VISIBLE_MS = 1100;
 
 export function useAppReady(): {
   isAppReady: boolean;
@@ -40,16 +40,16 @@ export function useAppReady(): {
             if (splashOverlay) {
               splashOverlay.classList.add("is-fading");
             }
+            setIsAppReady(true);
 
-            // Defer React re-render until CSS transition finishes so JS does not compete with GPU fade
             removeTimer = setTimeout(() => {
-              setIsAppReady(true);
               const el = document.getElementById("native-splash");
               if (el) {
                 el.style.display = "none";
                 el.remove();
               }
-            }, SPLASH_FADE_MS + 60);
+              setHasProfile(!!safeStorageGetString("tabriz_profile_v2", ""));
+            }, SPLASH_FADE_MS + 50);
           });
         });
       };
@@ -71,4 +71,3 @@ export function useAppReady(): {
 
   return { isAppReady, hasProfile, setHasProfile };
 }
-

@@ -8,12 +8,14 @@ import {
   BudgetState
 } from "../../types";
 
-const ScheduleGrid = React.lazy(() => import("../ScheduleGrid"));
-const ExamList = React.lazy(() => import("../ExamList"));
-const ProjectBoard = React.lazy(() => import("../ProjectBoard"));
-const ECEAssistant = React.lazy(() => import("../ECEAssistant"));
+import Dashboard from "../Dashboard";
+import ScheduleGrid from "../ScheduleGrid";
+import ExamList from "../ExamList";
+import ProjectBoard from "../ProjectBoard";
+import ECEAssistant from "../ECEAssistant";
+
+// CampusMap remains lazy-loaded because it includes Leaflet and 10k GIS coordinates
 const CampusMap = React.lazy(() => import("../CampusMap"));
-const Dashboard = React.lazy(() => import("../Dashboard"));
 
 export interface TabContentProps {
   activeTab: TabType;
@@ -83,125 +85,146 @@ export default function TabContent(props: TabContentProps) {
     setActiveTab("map");
   };
 
-  if (activeTab === "dashboard") {
-    return (
-      <Dashboard
-        classes={classes}
-        exams={exams}
-        projects={projects}
-        profile={profile}
-        onNavigate={setActiveTab}
-        onEditProfile={() => setShowProfileEditor(true)}
-        isDarkMode={isDarkMode}
-        onToggleTheme={() => setIsDarkMode(!isDarkMode)}
-        onUpdateProfile={setProfile}
-        budgetState={budgetState}
-        onOpenBudget={() => setShowBudgetModal(true)}
-        onAddStudyMinutes={onAddStudyMinutes}
-        onFocusBuildingOnMap={focusBuilding}
-      />
-    );
-  }
+  return (
+    <div className="h-full w-full flex-1 flex flex-col min-h-0 relative">
+      {/* 1. Dashboard Tab — Always mounted for instant 0ms home switching */}
+      <div
+        className={activeTab === "dashboard" ? "h-full w-full flex-1 flex flex-col min-h-0" : "hidden"}
+        aria-hidden={activeTab !== "dashboard"}
+      >
+        <Dashboard
+          classes={classes}
+          exams={exams}
+          projects={projects}
+          profile={profile}
+          onNavigate={setActiveTab}
+          onEditProfile={() => setShowProfileEditor(true)}
+          isDarkMode={isDarkMode}
+          onToggleTheme={() => setIsDarkMode(!isDarkMode)}
+          onUpdateProfile={setProfile}
+          budgetState={budgetState}
+          onOpenBudget={() => setShowBudgetModal(true)}
+          onAddStudyMinutes={onAddStudyMinutes}
+          onFocusBuildingOnMap={focusBuilding}
+        />
+      </div>
 
-  if (activeTab === "schedule") {
-    return (
-      <ScheduleGrid
-        classes={classes}
-        profile={profile}
-        onAddClass={(c) =>
-          setClasses((prev) => [...prev, { ...c, id: Date.now().toString() }])
-        }
-        onEditClass={(id, c) =>
-          setClasses((prev) => prev.map((cls) => (cls.id === id ? { ...c, id } : cls)))
-        }
-        onDeleteClass={(id) => setClasses((prev) => prev.filter((c) => c.id !== id))}
-        onClearSchedule={() => setClasses([])}
-        onOpenProfile={(cls) => setSelectedClassProfile(cls)}
-        onFocusBuildingOnMap={focusBuilding}
-      />
-    );
-  }
+      {/* 2. Schedule Grid Tab — Always mounted */}
+      <div
+        className={activeTab === "schedule" ? "h-full w-full flex-1 flex flex-col min-h-0" : "hidden"}
+        aria-hidden={activeTab !== "schedule"}
+      >
+        <ScheduleGrid
+          classes={classes}
+          profile={profile}
+          onAddClass={(c) =>
+            setClasses((prev) => [...prev, { ...c, id: Date.now().toString() }])
+          }
+          onEditClass={(id, c) =>
+            setClasses((prev) => prev.map((cls) => (cls.id === id ? { ...c, id } : cls)))
+          }
+          onDeleteClass={(id) => setClasses((prev) => prev.filter((c) => c.id !== id))}
+          onClearSchedule={() => setClasses([])}
+          onOpenProfile={(cls) => setSelectedClassProfile(cls)}
+          onFocusBuildingOnMap={focusBuilding}
+        />
+      </div>
 
-  if (activeTab === "map") {
-    return (
-      <CampusMap
-        profile={profile}
-        classes={classes}
-        initialFocusBuildingId={mapFocusBuildingId}
-        onClearInitialFocus={() => setMapFocusBuildingId(null)}
-        isDarkMode={isDarkMode}
-        onBack={() => setActiveTab("dashboard")}
-      />
-    );
-  }
+      {/* 3. Exams Tab — Always mounted */}
+      <div
+        className={activeTab === "exams" ? "h-full w-full flex-1 flex flex-col min-h-0" : "hidden"}
+        aria-hidden={activeTab !== "exams"}
+      >
+        <ExamList
+          exams={exams}
+          onAddExam={(e) => setExams((prev) => [...prev, { ...e, id: Date.now().toString() }])}
+          onEditExam={(id, e) =>
+            setExams((prev) => prev.map((ex) => (ex.id === id ? { ...ex, ...e } : ex)))
+          }
+          onToggleCompleted={(id) =>
+            setExams((prev) =>
+              prev.map((ex) => (ex.id === id ? { ...ex, completed: !ex.completed } : ex))
+            )
+          }
+          onDeleteExam={(id) => setExams((prev) => prev.filter((ex) => ex.id !== id))}
+          onOpenProfile={(e) => setSelectedExamProfile(e)}
+          pendingAddCourse={pendingAddExamCourse}
+          onClearPendingAdd={() => setPendingAddExamCourse(null)}
+        />
+      </div>
 
-  if (activeTab === "exams") {
-    return (
-      <ExamList
-        exams={exams}
-        onAddExam={(e) => setExams((prev) => [...prev, { ...e, id: Date.now().toString() }])}
-        onEditExam={(id, e) =>
-          setExams((prev) => prev.map((ex) => (ex.id === id ? { ...ex, ...e } : ex)))
-        }
-        onToggleCompleted={(id) =>
-          setExams((prev) =>
-            prev.map((ex) => (ex.id === id ? { ...ex, completed: !ex.completed } : ex))
-          )
-        }
-        onDeleteExam={(id) => setExams((prev) => prev.filter((ex) => ex.id !== id))}
-        onOpenProfile={(e) => setSelectedExamProfile(e)}
-        pendingAddCourse={pendingAddExamCourse}
-        onClearPendingAdd={() => setPendingAddExamCourse(null)}
-      />
-    );
-  }
+      {/* 4. Projects Tab — Always mounted */}
+      <div
+        className={activeTab === "projects" ? "h-full w-full flex-1 flex flex-col min-h-0" : "hidden"}
+        aria-hidden={activeTab !== "projects"}
+      >
+        <ProjectBoard
+          projects={projects}
+          onAddProject={(p) =>
+            setProjects((prev) => [...prev, { ...p, id: Date.now().toString() }])
+          }
+          onEditProject={(id, p) =>
+            setProjects((prev) => prev.map((proj) => (proj.id === id ? { ...proj, ...p } : proj)))
+          }
+          onUpdateProjectStatus={(id, status) =>
+            setProjects((prev) => prev.map((p) => (p.id === id ? { ...p, status } : p)))
+          }
+          onDeleteProject={(id) => setProjects((prev) => prev.filter((p) => p.id !== id))}
+          onOpenProfile={(p) => setSelectedProjectProfile(p)}
+          pendingAddCourse={pendingAddProjectCourse}
+          onClearPendingAdd={() => setPendingAddProjectCourse(null)}
+        />
+      </div>
 
-  if (activeTab === "projects") {
-    return (
-      <ProjectBoard
-        projects={projects}
-        onAddProject={(p) =>
-          setProjects((prev) => [...prev, { ...p, id: Date.now().toString() }])
-        }
-        onEditProject={(id, p) =>
-          setProjects((prev) => prev.map((proj) => (proj.id === id ? { ...proj, ...p } : proj)))
-        }
-        onUpdateProjectStatus={(id, status) =>
-          setProjects((prev) => prev.map((p) => (p.id === id ? { ...p, status } : p)))
-        }
-        onDeleteProject={(id) => setProjects((prev) => prev.filter((p) => p.id !== id))}
-        onOpenProfile={(p) => setSelectedProjectProfile(p)}
-        pendingAddCourse={pendingAddProjectCourse}
-        onClearPendingAdd={() => setPendingAddProjectCourse(null)}
-      />
-    );
-  }
+      {/* 5. Assistant Tab — Always mounted */}
+      <div
+        className={activeTab === "assistant" ? "h-full w-full flex-1 flex flex-col min-h-0" : "hidden"}
+        aria-hidden={activeTab !== "assistant"}
+      >
+        <ECEAssistant
+          profile={profile}
+          initialSubTab={assistantSubTab}
+          exams={exams}
+          projects={projects}
+          calendarNotes={calendarNotes}
+          onSaveNote={(k, v) => setCalendarNotes((prev) => ({ ...prev, [k]: v }))}
+          onDeleteNote={(k, idx) => {
+            setCalendarNotes((prev) => {
+              const newN = { ...prev };
+              if (idx !== undefined && Array.isArray(newN[k])) {
+                newN[k] = [...newN[k]];
+                newN[k].splice(idx, 1);
+                if (newN[k].length === 0) delete newN[k];
+              } else {
+                delete newN[k];
+              }
+              return newN;
+            });
+          }}
+        />
+      </div>
 
-  if (activeTab === "assistant") {
-    return (
-      <ECEAssistant
-        profile={profile}
-        initialSubTab={assistantSubTab}
-        exams={exams}
-        projects={projects}
-        calendarNotes={calendarNotes}
-        onSaveNote={(k, v) => setCalendarNotes((prev) => ({ ...prev, [k]: v }))}
-        onDeleteNote={(k, idx) => {
-          setCalendarNotes((prev) => {
-            const newN = { ...prev };
-            if (idx !== undefined && Array.isArray(newN[k])) {
-              newN[k] = [...newN[k]];
-              newN[k].splice(idx, 1);
-              if (newN[k].length === 0) delete newN[k];
-            } else {
-              delete newN[k];
+      {/* 6. Map Tab — Loaded on demand */}
+      {activeTab === "map" && (
+        <div className="h-full w-full flex-1 flex flex-col min-h-0">
+          <React.Suspense
+            fallback={
+              <div className="flex-1 flex items-center justify-center p-8 bg-slate-900">
+                <div className="w-7 h-7 border-3 border-sky-500/30 border-t-sky-500 rounded-full animate-spin"></div>
+              </div>
             }
-            return newN;
-          });
-        }}
-      />
-    );
-  }
-
-  return null;
+          >
+            <CampusMap
+              profile={profile}
+              classes={classes}
+              initialFocusBuildingId={mapFocusBuildingId}
+              onClearInitialFocus={() => setMapFocusBuildingId(null)}
+              isDarkMode={isDarkMode}
+              onBack={() => setActiveTab("dashboard")}
+            />
+          </React.Suspense>
+        </div>
+      )}
+    </div>
+  );
 }
