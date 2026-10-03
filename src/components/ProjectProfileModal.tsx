@@ -28,7 +28,8 @@ import {
   AlertCircle,
   FileText,
   Briefcase,
-  ChevronDown
+  ChevronDown,
+  Pencil
 } from "lucide-react";
 import { ProjectItem, Note, Attachment, ChecklistItem } from "../types";
 import { FileStorageService } from "../services/FileStorageService";
@@ -98,6 +99,8 @@ export default function ProjectProfileModal({ project, onClose, onUpdateProject 
   // Note State
   const [newNote, setNewNote] = useState("");
   const [copiedNoteId, setCopiedNoteId] = useState<string | null>(null);
+  const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
+  const [editingNoteText, setEditingNoteText] = useState("");
 
   // File State
   const [isUploading, setIsUploading] = useState(false);
@@ -194,6 +197,30 @@ export default function ProjectProfileModal({ project, onClose, onUpdateProject 
 
   const handleDeleteNote = (id: string) => {
     onUpdateProject({ ...project, notes: (project.notes || []).filter(n => n.id !== id) });
+    if (editingNoteId === id) {
+      setEditingNoteId(null);
+      setEditingNoteText("");
+    }
+  };
+
+  const handleStartEditNote = (note: Note) => {
+    setEditingNoteId(note.id);
+    setEditingNoteText(note.text);
+  };
+
+  const handleCancelEditNote = () => {
+    setEditingNoteId(null);
+    setEditingNoteText("");
+  };
+
+  const handleSaveEditNote = (id: string) => {
+    if (!editingNoteText.trim()) return;
+    const updated = (project.notes || []).map((n) =>
+      n.id === id ? { ...n, text: editingNoteText.trim() } : n
+    );
+    onUpdateProject({ ...project, notes: updated });
+    setEditingNoteId(null);
+    setEditingNoteText("");
   };
 
   const handleCopyNote = async (id: string, text: string) => {
@@ -616,47 +643,95 @@ export default function ProjectProfileModal({ project, onClose, onUpdateProject 
                       key={note.id}
                       className="bg-white dark:bg-slate-800 p-3.5 rounded-xl border border-slate-200/80 dark:border-slate-700 shadow-xs space-y-2.5"
                     >
-                      <p className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100 whitespace-pre-wrap leading-relaxed">
-                        {note.text}
-                      </p>
-
-                      <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-700/60 text-[10px] text-slate-400">
-                        <span>
-                          {note.timestamp
-                            ? new Date(note.timestamp).toLocaleDateString("fa-IR")
-                            : "یادداشت پروژه"}
-                        </span>
-
-                        <div className="flex items-center gap-1.5">
-                          <button
-                            type="button"
-                            onClick={() => handleCopyNote(note.id, note.text)}
-                            className="h-7 px-2.5 rounded-lg bg-slate-100 dark:bg-slate-700/80 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-300 font-bold transition-colors inline-flex items-center gap-1 cursor-pointer"
-                            title="کپی متن"
-                          >
-                            {copiedNoteId === note.id ? (
-                              <>
-                                <Check className="w-3.5 h-3.5 text-emerald-500" />
-                                <span className="text-emerald-500 font-black">کپی شد</span>
-                              </>
-                            ) : (
-                              <>
-                                <Copy className="w-3.5 h-3.5" />
-                                <span>کپی</span>
-                              </>
-                            )}
-                          </button>
-
-                          <button
-                            type="button"
-                            onClick={() => handleDeleteNote(note.id)}
-                            className="h-7 w-7 rounded-lg text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors inline-flex items-center justify-center cursor-pointer"
-                            title="حذف یادداشت"
-                          >
-                            <Trash className="w-3.5 h-3.5" />
-                          </button>
+                      {editingNoteId === note.id ? (
+                        <div className="space-y-2.5">
+                          <textarea
+                            value={editingNoteText}
+                            onChange={(e) => setEditingNoteText(e.target.value)}
+                            placeholder="متن ویرایش‌شده یادداشت..."
+                            className="w-full bg-slate-50 dark:bg-slate-900/80 border border-emerald-400 dark:border-emerald-500 rounded-lg p-2.5 text-xs sm:text-sm font-bold outline-none text-slate-800 dark:text-slate-100 min-h-[75px] resize-y focus:ring-1 focus:ring-emerald-500"
+                            autoFocus
+                          />
+                          <div className="flex items-center justify-between">
+                            <span className="text-[10px] text-slate-400 font-bold">
+                              {toPersianDigits(editingNoteText.length)} کاراکتر
+                            </span>
+                            <div className="flex items-center gap-1.5">
+                              <button
+                                type="button"
+                                onClick={handleCancelEditNote}
+                                className="h-6 px-2.5 rounded-md bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-300 font-bold transition-colors text-[11px] inline-flex items-center gap-1 cursor-pointer"
+                              >
+                                <X className="w-3 h-3" />
+                                <span>انصراف</span>
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => handleSaveEditNote(note.id)}
+                                disabled={!editingNoteText.trim()}
+                                className="h-6 px-3 rounded-md bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-white font-black transition-colors text-[11px] inline-flex items-center gap-1 cursor-pointer shadow-xs"
+                              >
+                                <Check className="w-3 h-3" />
+                                <span>ذخیره</span>
+                              </button>
+                            </div>
+                          </div>
                         </div>
-                      </div>
+                      ) : (
+                        <>
+                          <p className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100 whitespace-pre-wrap leading-relaxed">
+                            {note.text}
+                          </p>
+
+                          <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-700/60 text-[10px] text-slate-400">
+                            <span>
+                              {note.timestamp
+                                ? new Date(note.timestamp).toLocaleDateString("fa-IR")
+                                : "یادداشت پروژه"}
+                            </span>
+
+                            <div className="flex items-center gap-1.5">
+                              <button
+                                type="button"
+                                onClick={() => handleCopyNote(note.id, note.text)}
+                                className="h-7 px-2.5 rounded-lg bg-slate-100 dark:bg-slate-700/80 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-300 font-bold transition-colors inline-flex items-center gap-1 cursor-pointer"
+                                title="کپی متن"
+                              >
+                                {copiedNoteId === note.id ? (
+                                  <>
+                                    <Check className="w-3.5 h-3.5 text-emerald-500" />
+                                    <span className="text-emerald-500 font-black">کپی شد</span>
+                                  </>
+                                ) : (
+                                  <>
+                                    <Copy className="w-3.5 h-3.5" />
+                                    <span>کپی</span>
+                                  </>
+                                )}
+                              </button>
+
+                              <button
+                                type="button"
+                                onClick={() => handleStartEditNote(note)}
+                                className="h-7 px-2.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 text-emerald-600 dark:text-emerald-400 font-bold transition-colors inline-flex items-center gap-1 cursor-pointer"
+                                title="ویرایش یادداشت"
+                              >
+                                <Pencil className="w-3.5 h-3.5" />
+                                <span>ویرایش</span>
+                              </button>
+
+                              <button
+                                type="button"
+                                onClick={() => handleDeleteNote(note.id)}
+                                className="h-7 w-7 rounded-lg text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors inline-flex items-center justify-center cursor-pointer"
+                                title="حذف یادداشت"
+                              >
+                                <Trash className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          </div>
+                        </>
+                      )}
                     </div>
                   ))
                 )}
