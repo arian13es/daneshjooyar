@@ -172,27 +172,12 @@ public class MainActivity extends BridgeActivity {
     public void requestIgnoreBatteryOptimizations(PluginCall call) {
         try {
             Context ctx = getContext();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                Intent intent = new Intent();
-                String packageName = ctx.getPackageName();
-                PowerManager pm = (PowerManager) ctx.getSystemService(Context.POWER_SERVICE);
-                if (pm != null && !pm.isIgnoringBatteryOptimizations(packageName)) {
-                    intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
-                    intent.setData(Uri.parse("package:" + packageName));
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    ctx.startActivity(intent);
-                }
-            }
+            Intent intent = new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            ctx.startActivity(intent);
             call.resolve();
         } catch (Exception e) {
-            try {
-                Intent fallback = new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
-                fallback.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                getContext().startActivity(fallback);
-                call.resolve();
-            } catch (Exception ex) {
-                call.reject(ex.getMessage());
-            }
+            call.reject(e.getMessage());
         }
     }
 
