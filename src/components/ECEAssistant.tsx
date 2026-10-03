@@ -574,7 +574,7 @@ export default function ECEAssistant({
                 </div>
 
                 {/* Floating Command Bar - Ergonomically spaced just above the fixed bottom navigation bar */}
-                <div className="px-3 sm:px-4 pt-1.5 pb-[calc(4.25rem+env(safe-area-inset-bottom,0px))] sm:pb-20 md:pb-16 bg-gradient-to-t from-slate-50 via-slate-50/95 to-transparent dark:from-slate-900 dark:via-slate-900/95 shrink-0 relative z-30">
+                <div className="px-3 sm:px-4 pt-1.5 pb-[calc(6rem+env(safe-area-inset-bottom,0px))] sm:pb-[calc(6.5rem+env(safe-area-inset-bottom,0px))] md:pb-32 bg-gradient-to-t from-slate-50 via-slate-50/95 to-transparent dark:from-slate-900 dark:via-slate-900/95 shrink-0 relative z-30">
                   <form 
                     onSubmit={handleSend}
                     className="max-w-xl mx-auto bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-xl p-1.5 flex items-center gap-2 ring-1 ring-slate-900/5 dark:ring-white/5"
