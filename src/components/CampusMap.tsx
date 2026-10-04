@@ -139,11 +139,49 @@ const CATEGORY_FILTERS = [
   { id: "sports_culture", label: "ورزشی و رفاهی", icon: "⚽" },
 ];
 
-// Esri World Imagery satellite tiles (free for dev/basic use, no Google ToS issues)
-const SATELLITE_TILE_URL =
-  "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
-const SATELLITE_ATTRIBUTION =
-  'Tiles &copy; <a href="https://www.esri.com/">Esri</a>, Maxar, Earthstar Geographics';
+export type MapTileLayerKey = "carto_voyager" | "esri_satellite" | "osm_standard";
+
+export interface MapTileConfig {
+  id: MapTileLayerKey;
+  name: string;
+  icon: string;
+  url: string;
+  subdomains?: string[];
+  attribution: string;
+  maxZoom: number;
+  description: string;
+}
+
+export const MAP_TILE_CONFIGS: Record<MapTileLayerKey, MapTileConfig> = {
+  carto_voyager: {
+    id: "carto_voyager",
+    name: "شهری دانشگاه (پرسرعت)",
+    icon: "🗺️",
+    url: "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+    subdomains: ["a", "b", "c", "d"],
+    attribution: '&copy; <a href="https://carto.com/">CARTO</a> &bull; &copy; OpenStreetMap',
+    maxZoom: 20,
+    description: "نقشه خیابانی دقیق، پرسرعت و پایدار در تمام اپراتورها و اینترنت دانشگاه"
+  },
+  esri_satellite: {
+    id: "esri_satellite",
+    name: "تصویر ماهواره‌ای",
+    icon: "🛰️",
+    url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+    attribution: 'Tiles &copy; Esri, Maxar, Earthstar Geographics',
+    maxZoom: 19,
+    description: "تصویر هوایی باکیفیت پردیس (سوئیچ خودکار در صورت کندی یا قطعی شبکه)"
+  },
+  osm_standard: {
+    id: "osm_standard",
+    name: "اوپن‌استریت‌مپ",
+    icon: "🌐",
+    url: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    maxZoom: 19,
+    description: "نقشه آزاد جهانی استاندارد با سازگاری همگانی"
+  }
+};
 
 function buildBuildingDivIcon(
   bldg: CampusBuilding,
@@ -350,10 +388,80 @@ export default function CampusMap({
   const [remainingMeters, setRemainingMeters] = useState<number>(0);
   const [mapToast, setMapToast] = useState<string | null>(null);
 
+  // Map Tile Layer state with resilient local storage persistence
+  const [selectedLayerKey, setSelectedLayerKey] = useState<MapTileLayerKey>(() => {
+    try {
+      const saved = localStorage.getItem("tabriz_campus_map_layer");
+      if (saved && (saved === "carto_voyager" || saved === "esri_satellite" || saved === "osm_standard")) {
+        return saved as MapTileLayerKey;
+      }
+    } catch {}
+    return "carto_voyager";
+  });
+  const [showLayerSelector, setShowLayerSelector] = useState(false);
+  const consecutiveTileErrorsRef = useRef(0);
+
   const showMapToast = useCallback((msg: string) => {
     setMapToast(msg);
     setTimeout(() => setMapToast(null), 3500);
   }, []);
+
+  const applyTileLayer = useCallback((layerKey: MapTileLayerKey) => {
+    if (!mapInstanceRef.current) return;
+    const map = mapInstanceRef.current;
+    const conf = MAP_TILE_CONFIGS[layerKey];
+    if (!conf) return;
+
+    if (activeTileLayerRef.current) {
+      try {
+        map.removeLayer(activeTileLayerRef.current);
+      } catch (e) {
+        console.warn("[CampusMap] removeLayer error:", e);
+      }
+      activeTileLayerRef.current = null;
+    }
+
+    consecutiveTileErrorsRef.current = 0;
+
+    const layerOptions: L.TileLayerOptions = {
+      maxZoom: conf.maxZoom,
+      attribution: conf.attribution,
+      updateWhenIdle: true,
+      updateWhenZooming: false,
+      keepBuffer: 3,
+      crossOrigin: true
+    };
+    if (conf.subdomains) {
+      layerOptions.subdomains = conf.subdomains;
+    }
+
+    const newLayer = L.tileLayer(conf.url, layerOptions);
+
+    newLayer.on("tileerror", () => {
+      consecutiveTileErrorsRef.current += 1;
+      // Auto failover if satellite encounters blocking/errors
+      if (layerKey === "esri_satellite" && consecutiveTileErrorsRef.current >= 3) {
+        console.warn("[CampusMap] Satellite tiles unreachable. Auto-failing over to CartoDB Voyager.");
+        consecutiveTileErrorsRef.current = 0;
+        showMapToast("به دلیل محدودیت اتصال اینترنت، نقشه به لایه شهری پایدار تغییر یافت.");
+        setSelectedLayerKey("carto_voyager");
+        try {
+          localStorage.setItem("tabriz_campus_map_layer", "carto_voyager");
+        } catch {}
+      }
+    });
+
+    newLayer.addTo(map);
+    newLayer.bringToBack();
+    activeTileLayerRef.current = newLayer;
+  }, [showMapToast]);
+
+  // Keep map tile layer in sync when user toggles
+  useEffect(() => {
+    if (mapInstanceRef.current) {
+      applyTileLayer(selectedLayerKey);
+    }
+  }, [selectedLayerKey, applyTileLayer]);
 
   // Safety guard: prevent HUD freeze if routeResult is null
   useEffect(() => {
@@ -383,6 +491,10 @@ export default function CampusMap({
   }, [plannerSearchQuery]);
 
   const handleBack = useCallback(() => {
+    if (showLayerSelector) {
+      setShowLayerSelector(false);
+      return true;
+    }
     if (showStepsPreview) {
       setShowStepsPreview(false);
       return true;
@@ -412,10 +524,11 @@ export default function CampusMap({
       return true;
     }
     return false;
-  }, [showStepsPreview, showOriginPicker, showDestPicker, isRoutePlannerOpen, selectedBuilding, selectedGate, isLiveNavigating, routeResult]);
+  }, [showLayerSelector, showStepsPreview, showOriginPicker, showDestPicker, isRoutePlannerOpen, selectedBuilding, selectedGate, isLiveNavigating, routeResult]);
 
   useHardwareBack(
     handleBack,
+    showLayerSelector ||
     showStepsPreview ||
     showOriginPicker ||
     showDestPicker ||
@@ -430,11 +543,17 @@ export default function CampusMap({
   useEffect(() => {
     if (!mapContainerRef.current || mapInstanceRef.current) return;
 
+    // Safety guard: Clear stale _leaflet_id if container was reused
+    const containerEl = mapContainerRef.current as HTMLElement & { _leaflet_id?: number | string };
+    if (containerEl._leaflet_id) {
+      delete containerEl._leaflet_id;
+    }
+
     const sw = L.latLng(CAMPUS_METADATA.bounds.sw[0], CAMPUS_METADATA.bounds.sw[1]);
     const ne = L.latLng(CAMPUS_METADATA.bounds.ne[0], CAMPUS_METADATA.bounds.ne[1]);
     const bounds = L.latLngBounds(sw, ne);
 
-    const map = L.map(mapContainerRef.current, {
+    const map = L.map(containerEl, {
       center: [CAMPUS_METADATA.center[0], CAMPUS_METADATA.center[1]],
       zoom: CAMPUS_METADATA.zoom,
       minZoom: CAMPUS_METADATA.minZoom,
@@ -505,29 +624,28 @@ export default function CampusMap({
     });
     gateMarkersRef.current = gMap;
 
-    // Initial Base Tile Layer — satellite only
-    const baseLayer = L.tileLayer(SATELLITE_TILE_URL, {
-      maxZoom: 19,
-      attribution: SATELLITE_ATTRIBUTION,
-      updateWhenIdle: true,
-      updateWhenZooming: false,
-      keepBuffer: 2
-    }).addTo(map);
-    activeTileLayerRef.current = baseLayer;
+    // Initial Base Tile Layer — applies resilient multi-source tile layer
+    applyTileLayer(selectedLayerKey);
 
     // Force Leaflet to recalculate container bounds after mount & animations
     const invalidate = () => {
       try {
         if (mapInstanceRef.current) {
-          mapInstanceRef.current.invalidateSize();
+          mapInstanceRef.current.invalidateSize({ pan: false });
         }
       } catch (e) {
         console.warn("[CampusMap] invalidateSize failed", e);
       }
     };
-    const t1 = setTimeout(invalidate, 100);
-    const t2 = setTimeout(invalidate, 300);
-    const t3 = setTimeout(invalidate, 600);
+    const t0 = setTimeout(invalidate, 50);
+    const t1 = setTimeout(invalidate, 150);
+    const t2 = setTimeout(invalidate, 350);
+    const t3 = setTimeout(invalidate, 700);
+    const t4 = setTimeout(invalidate, 1200);
+
+    const handleWindowResize = () => invalidate();
+    window.addEventListener("resize", handleWindowResize);
+    window.addEventListener("orientationchange", handleWindowResize);
 
     let resizeObserver: ResizeObserver | null = null;
     if (typeof ResizeObserver !== "undefined" && mapContainerRef.current) {
@@ -540,9 +658,13 @@ export default function CampusMap({
     }
 
     return () => {
+      clearTimeout(t0);
       clearTimeout(t1);
       clearTimeout(t2);
       clearTimeout(t3);
+      clearTimeout(t4);
+      window.removeEventListener("resize", handleWindowResize);
+      window.removeEventListener("orientationchange", handleWindowResize);
       if (resizeObserver) resizeObserver.disconnect();
       if (watchIdRef.current !== null) {
         const activeWatchId = watchIdRef.current;
@@ -1145,6 +1267,20 @@ export default function CampusMap({
             <RouteIcon className="w-5 h-5" />
           </button>
 
+          {/* Map Layer Switcher Button */}
+          <button
+            onClick={() => setShowLayerSelector(!showLayerSelector)}
+            className={`w-11 h-11 rounded-2xl border shadow-lg flex items-center justify-center active:scale-95 transition-all cursor-pointer ${
+              showLayerSelector
+                ? "bg-sky-600 text-white border-sky-500 shadow-sky-600/35"
+                : "bg-white/95 dark:bg-slate-900/95 border-slate-200/90 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400"
+            }`}
+            title="انتخاب سبک و لایه نقشه"
+            aria-label="انتخاب سبک و لایه نقشه"
+          >
+            <Layers className="w-5 h-5" />
+          </button>
+
           {/* Re-center Campus Button */}
           <button
             onClick={() => {
@@ -1732,6 +1868,70 @@ export default function CampusMap({
             <Navigation className="w-3.5 h-3.5" />
             <span>مسیریابی از این مکان</span>
           </button>
+        </div>
+      )}
+
+      {/* 9. MAP LAYER SELECTOR DRAWER */}
+      {showLayerSelector && (
+        <div className="fixed inset-0 z-[600] bg-black/75 flex items-end sm:items-center justify-center p-0 sm:p-4">
+          <div className="w-full sm:max-w-md bg-white dark:bg-slate-900 rounded-t-3xl sm:rounded-3xl p-4 shadow-2xl border border-slate-200 dark:border-slate-800 flex flex-col gap-3 max-h-[75vh] overflow-hidden animate-in slide-in-from-bottom duration-250">
+            <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+              <h3 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white flex items-center gap-2">
+                <Layers className="w-4 h-4 text-sky-500" />
+                <span>سبک و لایه نقشه پردیس</span>
+              </h3>
+              <button
+                type="button"
+                onClick={() => setShowLayerSelector(false)}
+                className="w-7 h-7 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 hover:text-slate-600 cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="flex flex-col gap-2 p-1 overflow-y-auto">
+              {(Object.keys(MAP_TILE_CONFIGS) as MapTileLayerKey[]).map((key) => {
+                const conf = MAP_TILE_CONFIGS[key];
+                const isActive = selectedLayerKey === key;
+                return (
+                  <button
+                    key={key}
+                    type="button"
+                    onClick={() => {
+                      setSelectedLayerKey(key);
+                      try {
+                        localStorage.setItem("tabriz_campus_map_layer", key);
+                      } catch {}
+                      setShowLayerSelector(false);
+                      showMapToast(`لایه نقشه به «${conf.name}» تغییر کرد.`);
+                    }}
+                    className={`p-3 rounded-2xl text-right flex items-center justify-between border transition-all cursor-pointer ${
+                      isActive
+                        ? "bg-sky-50 dark:bg-sky-950/40 border-sky-400 dark:border-sky-700 text-sky-800 dark:text-sky-200 shadow-sm"
+                        : "bg-slate-50 dark:bg-slate-800/60 border-slate-200/80 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300"
+                    }`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <span className="text-2xl mt-0.5">{conf.icon}</span>
+                      <div>
+                        <div className="text-xs font-black text-slate-900 dark:text-white flex items-center gap-2">
+                          <span>{conf.name}</span>
+                          {isActive && (
+                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-sky-500 text-white font-bold">
+                              فعال
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-[10px] text-slate-500 dark:text-slate-400 font-bold mt-1 leading-relaxed">
+                          {conf.description}
+                        </p>
+                      </div>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
         </div>
       )}
 

@@ -35,6 +35,15 @@ public class MainActivity extends BridgeActivity {
         registerPlugin(NativeNotificationHelperPlugin.class);
         super.onCreate(savedInstanceState);
         androidx.core.view.WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+
+        // WebView optimization for high-performance mapping and broad Android 7-14 compatibility
+        if (this.bridge != null && this.bridge.getWebView() != null) {
+            android.webkit.WebSettings webSettings = this.bridge.getWebView().getSettings();
+            webSettings.setDomStorageEnabled(true);
+            webSettings.setDatabaseEnabled(true);
+            webSettings.setMixedContentMode(android.webkit.WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+            webSettings.setCacheMode(android.webkit.WebSettings.LOAD_DEFAULT);
+        }
     }
 
 

@@ -13,9 +13,8 @@ import ScheduleGrid from "../ScheduleGrid";
 import ExamList from "../ExamList";
 import ProjectBoard from "../ProjectBoard";
 import ECEAssistant from "../ECEAssistant";
-
-// CampusMap remains lazy-loaded because it includes Leaflet and 10k GIS coordinates
-const CampusMap = React.lazy(() => import("../CampusMap"));
+import CampusMap from "../CampusMap";
+import ErrorBoundary from "../ErrorBoundary";
 
 export interface TabContentProps {
   activeTab: TabType;
@@ -204,16 +203,10 @@ export default function TabContent(props: TabContentProps) {
         />
       </div>
 
-      {/* 6. Map Tab — Loaded on demand */}
+      {/* 6. Map Tab */}
       {activeTab === "map" && (
         <div className="h-full w-full flex-1 flex flex-col min-h-0">
-          <React.Suspense
-            fallback={
-              <div className="flex-1 flex items-center justify-center p-8 bg-slate-900">
-                <div className="w-7 h-7 border-3 border-sky-500/30 border-t-sky-500 rounded-full animate-spin"></div>
-              </div>
-            }
-          >
+          <ErrorBoundary>
             <CampusMap
               profile={profile}
               classes={classes}
@@ -222,7 +215,7 @@ export default function TabContent(props: TabContentProps) {
               isDarkMode={isDarkMode}
               onBack={() => setActiveTab("dashboard")}
             />
-          </React.Suspense>
+          </ErrorBoundary>
         </div>
       )}
     </div>
