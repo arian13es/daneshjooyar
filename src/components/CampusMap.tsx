@@ -139,7 +139,7 @@ const CATEGORY_FILTERS = [
   { id: "sports_culture", label: "ورزشی و رفاهی", icon: "⚽" },
 ];
 
-export type MapTileLayerKey = "carto_voyager" | "esri_satellite" | "osm_standard";
+export type MapTileLayerKey = "esri_satellite" | "esri_street" | "osm_standard" | "esri_topo";
 
 export interface MapTileConfig {
   id: MapTileLayerKey;
@@ -153,33 +153,42 @@ export interface MapTileConfig {
 }
 
 export const MAP_TILE_CONFIGS: Record<MapTileLayerKey, MapTileConfig> = {
-  carto_voyager: {
-    id: "carto_voyager",
-    name: "شهری دانشگاه (پرسرعت)",
-    icon: "🗺️",
-    url: "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
-    subdomains: ["a", "b", "c", "d"],
-    attribution: '&copy; <a href="https://carto.com/">CARTO</a> &bull; &copy; OpenStreetMap',
-    maxZoom: 20,
-    description: "نقشه خیابانی دقیق، پرسرعت و پایدار در تمام اپراتورها و اینترنت دانشگاه"
-  },
   esri_satellite: {
     id: "esri_satellite",
-    name: "تصویر ماهواره‌ای",
+    name: "تصویر ماهواره‌ای (پیش‌فرض)",
     icon: "🛰️",
     url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
     attribution: 'Tiles &copy; Esri, Maxar, Earthstar Geographics',
     maxZoom: 19,
-    description: "تصویر هوایی باکیفیت پردیس (سوئیچ خودکار در صورت کندی یا قطعی شبکه)"
+    description: "تصویر هوایی باکیفیت و دقیق پردیس دانشگاه تبریز"
+  },
+  esri_street: {
+    id: "esri_street",
+    name: "نقشه شهری و معابر",
+    icon: "🗺️",
+    url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
+    attribution: 'Tiles &copy; Esri, HERE, Garmin, USGS',
+    maxZoom: 19,
+    description: "نقشه معابر و خیابان‌ها، پرسرعت و پایدار در تمام اپراتورها"
   },
   osm_standard: {
     id: "osm_standard",
-    name: "اوپن‌استریت‌مپ",
+    name: "اوپن‌استریت‌مپ استاندارد",
     icon: "🌐",
-    url: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+    url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    subdomains: ["a", "b", "c"],
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
     maxZoom: 19,
     description: "نقشه آزاد جهانی استاندارد با سازگاری همگانی"
+  },
+  esri_topo: {
+    id: "esri_topo",
+    name: "نقشه توپوگرافی",
+    icon: "⛰️",
+    url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}",
+    attribution: 'Tiles &copy; Esri, USGS, FAO',
+    maxZoom: 19,
+    description: "نقشه عوارض و پستی‌بلندی‌های محیطی پردیس"
   }
 };
 
@@ -392,11 +401,15 @@ export default function CampusMap({
   const [selectedLayerKey, setSelectedLayerKey] = useState<MapTileLayerKey>(() => {
     try {
       const saved = localStorage.getItem("tabriz_campus_map_layer");
-      if (saved && (saved === "carto_voyager" || saved === "esri_satellite" || saved === "osm_standard")) {
+      if (saved && (saved === "esri_satellite" || saved === "esri_street" || saved === "osm_standard" || saved === "esri_topo")) {
         return saved as MapTileLayerKey;
       }
+      // Migrate from deprecated carto_voyager
+      if (saved === "carto_voyager") {
+        localStorage.setItem("tabriz_campus_map_layer", "esri_satellite");
+      }
     } catch {}
-    return "carto_voyager";
+    return "esri_satellite";
   });
   const [showLayerSelector, setShowLayerSelector] = useState(false);
   const consecutiveTileErrorsRef = useRef(0);
@@ -440,13 +453,13 @@ export default function CampusMap({
     newLayer.on("tileerror", () => {
       consecutiveTileErrorsRef.current += 1;
       // Auto failover if satellite encounters blocking/errors
-      if (layerKey === "esri_satellite" && consecutiveTileErrorsRef.current >= 3) {
-        console.warn("[CampusMap] Satellite tiles unreachable. Auto-failing over to CartoDB Voyager.");
+      if (layerKey === "esri_satellite" && consecutiveTileErrorsRef.current >= 4) {
+        console.warn("[CampusMap] Satellite tiles unreachable. Auto-failing over to Esri World Street.");
         consecutiveTileErrorsRef.current = 0;
-        showMapToast("به دلیل محدودیت اتصال اینترنت، نقشه به لایه شهری پایدار تغییر یافت.");
-        setSelectedLayerKey("carto_voyager");
+        showMapToast("به دلیل محدودیت اتصال اینترنت، نقشه به لایه شهری تغییر یافت.");
+        setSelectedLayerKey("esri_street");
         try {
-          localStorage.setItem("tabriz_campus_map_layer", "carto_voyager");
+          localStorage.setItem("tabriz_campus_map_layer", "esri_street");
         } catch {}
       }
     });
