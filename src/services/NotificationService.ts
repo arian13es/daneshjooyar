@@ -57,6 +57,9 @@ export interface NativeNotificationHelperPlugin {
     examTitle: string;
     examDate: string;
     todayDate: string;
+    classesJson?: string;
+    examsJson?: string;
+    weekParityOffset?: number;
   }): Promise<void>;
 }
 

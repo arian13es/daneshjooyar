@@ -334,6 +334,9 @@ public class MainActivity extends BridgeActivity {
             String examTitle = call.getString("examTitle", "امتحان ثبت‌نشده");
             String examDate = call.getString("examDate", "--");
             String todayDate = call.getString("todayDate", "امروز");
+            String classesJson = call.getString("classesJson", "");
+            String examsJson = call.getString("examsJson", "");
+            int weekParityOffset = call.getInt("weekParityOffset", 0);
 
             editor.putString("class_title", classTitle);
             editor.putString("class_time", classTime);
@@ -341,6 +344,14 @@ public class MainActivity extends BridgeActivity {
             editor.putString("exam_title", examTitle);
             editor.putString("exam_date", examDate);
             editor.putString("today_date", todayDate);
+
+            if (classesJson != null && !classesJson.isEmpty()) {
+                editor.putString("classes_json", classesJson);
+            }
+            if (examsJson != null && !examsJson.isEmpty()) {
+                editor.putString("exams_json", examsJson);
+            }
+            editor.putInt("week_parity_offset", weekParityOffset);
             editor.apply();
 
             StudentAppWidgetProvider.updateAllWidgets(ctx);

@@ -14,7 +14,7 @@
     "lint:fix": "eslint . --fix",
     "test": "vitest run",
     "test:watch": "vitest",
-    "android:sync": "npm run build && npx cap sync",
+    "android:sync": "npm run build && npx cap sync && node -e \"const fs=require('fs'); const p='android/capacitor.settings.gradle'; if (fs.existsSync(p)) { let c=fs.readFileSync(p,'utf8'); c=c.replace(/\\.\\.\\/\\.\\.\\/\\.\\.\\/[^']*node_modules/g, '../node_modules'); fs.writeFileSync(p, c); }\"",
     "android:open": "npx cap open android"
   },
   "dependencies": {
