@@ -208,17 +208,17 @@ export default function ProjectProfileModal({ project, onClose, onUpdateProject 
     setEditingNoteText(note.text);
   };
 
-  const handleCancelEditNote = () => {
+  const handleSaveEditNote = (id: string) => {
+    if (!editingNoteText.trim()) return;
+    const updated = (project.notes || []).map(n =>
+      n.id === id ? { ...n, text: editingNoteText.trim() } : n
+    );
+    onUpdateProject({ ...project, notes: updated });
     setEditingNoteId(null);
     setEditingNoteText("");
   };
 
-  const handleSaveEditNote = (id: string) => {
-    if (!editingNoteText.trim()) return;
-    const updated = (project.notes || []).map((n) =>
-      n.id === id ? { ...n, text: editingNoteText.trim() } : n
-    );
-    onUpdateProject({ ...project, notes: updated });
+  const handleCancelEditNote = () => {
     setEditingNoteId(null);
     setEditingNoteText("");
   };
@@ -648,31 +648,36 @@ export default function ProjectProfileModal({ project, onClose, onUpdateProject 
                           <textarea
                             value={editingNoteText}
                             onChange={(e) => setEditingNoteText(e.target.value)}
-                            placeholder="متن ویرایش‌شده یادداشت..."
-                            className="w-full bg-slate-50 dark:bg-slate-900/80 border border-emerald-400 dark:border-emerald-500 rounded-lg p-2.5 text-xs sm:text-sm font-bold outline-none text-slate-800 dark:text-slate-100 min-h-[75px] resize-y focus:ring-1 focus:ring-emerald-500"
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
+                                e.preventDefault();
+                                handleSaveEditNote(note.id);
+                              }
+                            }}
+                            className="w-full bg-slate-50 dark:bg-slate-900/80 border border-emerald-500/80 rounded-lg p-2.5 text-xs sm:text-sm font-bold outline-none text-slate-800 dark:text-slate-100 min-h-[75px] resize-y"
                             autoFocus
+                            placeholder="متن یادداشت..."
                           />
                           <div className="flex items-center justify-between">
-                            <span className="text-[10px] text-slate-400 font-bold">
-                              {toPersianDigits(editingNoteText.length)} کاراکتر
+                            <span className="text-[10px] text-slate-400 font-medium">
+                              Ctrl + Enter برای ثبت سریع
                             </span>
                             <div className="flex items-center gap-1.5">
                               <button
                                 type="button"
                                 onClick={handleCancelEditNote}
-                                className="h-6 px-2.5 rounded-md bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-300 font-bold transition-colors text-[11px] inline-flex items-center gap-1 cursor-pointer"
+                                className="h-7 px-2.5 rounded-lg bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-300 font-bold text-xs transition-colors cursor-pointer"
                               >
-                                <X className="w-3 h-3" />
-                                <span>انصراف</span>
+                                انصراف
                               </button>
                               <button
                                 type="button"
                                 onClick={() => handleSaveEditNote(note.id)}
                                 disabled={!editingNoteText.trim()}
-                                className="h-6 px-3 rounded-md bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-white font-black transition-colors text-[11px] inline-flex items-center gap-1 cursor-pointer shadow-xs"
+                                className="h-7 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-white font-black text-xs transition-colors flex items-center gap-1 cursor-pointer shadow-xs"
                               >
-                                <Check className="w-3 h-3" />
-                                <span>ذخیره</span>
+                                <Check className="w-3.5 h-3.5" />
+                                <span>ذخیره تغییرات</span>
                               </button>
                             </div>
                           </div>
@@ -693,6 +698,16 @@ export default function ProjectProfileModal({ project, onClose, onUpdateProject 
                             <div className="flex items-center gap-1.5">
                               <button
                                 type="button"
+                                onClick={() => handleStartEditNote(note)}
+                                className="h-7 px-2.5 rounded-lg bg-slate-100 dark:bg-slate-700/80 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 font-bold transition-colors inline-flex items-center gap-1 cursor-pointer"
+                                title="ویرایش یادداشت"
+                              >
+                                <Pencil className="w-3.5 h-3.5" />
+                                <span>ویرایش</span>
+                              </button>
+
+                              <button
+                                type="button"
                                 onClick={() => handleCopyNote(note.id, note.text)}
                                 className="h-7 px-2.5 rounded-lg bg-slate-100 dark:bg-slate-700/80 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-300 font-bold transition-colors inline-flex items-center gap-1 cursor-pointer"
                                 title="کپی متن"
@@ -708,16 +723,6 @@ export default function ProjectProfileModal({ project, onClose, onUpdateProject 
                                     <span>کپی</span>
                                   </>
                                 )}
-                              </button>
-
-                              <button
-                                type="button"
-                                onClick={() => handleStartEditNote(note)}
-                                className="h-7 px-2.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 text-emerald-600 dark:text-emerald-400 font-bold transition-colors inline-flex items-center gap-1 cursor-pointer"
-                                title="ویرایش یادداشت"
-                              >
-                                <Pencil className="w-3.5 h-3.5" />
-                                <span>ویرایش</span>
                               </button>
 
                               <button

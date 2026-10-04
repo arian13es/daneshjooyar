@@ -336,13 +336,24 @@ export default function CalendarTab({ notes, onSaveNote, onDeleteNote, exams = [
                       placeholder="یادداشت جدید..."
                       className="flex-1 px-3.5 h-10 bg-slate-50 dark:bg-slate-900/50 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-bold focus:border-purple-500 outline-none transition-colors text-slate-800 dark:text-slate-200 placeholder:text-slate-400"
                     />
+                    {editingNote && (
+                      <button
+                        onClick={() => {
+                          setEditingNote(null);
+                          setNoteText("");
+                        }}
+                        className="h-10 px-3 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-xl font-bold text-xs transition-colors cursor-pointer"
+                      >
+                        انصراف
+                      </button>
+                    )}
                     <button 
                       onClick={handleAddNote}
                       disabled={!noteText.trim()}
-                      className={`h-10 px-3.5 text-white rounded-xl font-black text-xs transition-colors flex items-center justify-center gap-1.5 disabled:opacity-50 ${editingNote ? 'bg-indigo-600 hover:bg-indigo-700 disabled:hover:bg-indigo-600' : 'bg-purple-600 hover:bg-purple-700 disabled:hover:bg-purple-600'}`}
+                      className={`h-10 px-3.5 text-white rounded-xl font-black text-xs transition-colors flex items-center justify-center gap-1.5 disabled:opacity-50 cursor-pointer ${editingNote ? 'bg-indigo-600 hover:bg-indigo-700 disabled:hover:bg-indigo-600' : 'bg-purple-600 hover:bg-purple-700 disabled:hover:bg-purple-600'}`}
                     >
                       {editingNote ? <CheckCircle className="h-3.5 w-3.5" /> : <Plus className="h-3.5 w-3.5" />}
-                      <span>{editingNote ? "ویرایش" : "ثبت"}</span>
+                      <span>{editingNote ? "ذخیره" : "ثبت"}</span>
                     </button>
                   </div>
                 </div>
