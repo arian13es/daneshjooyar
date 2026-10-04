@@ -24,24 +24,26 @@
             android:orientation="horizontal"
             android:gravity="center_vertical"
             android:background="@drawable/widget_brand_pill_bg"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:paddingTop="3dp"
-            android:paddingBottom="3dp">
+            android:paddingLeft="9dp"
+            android:paddingRight="9dp"
+            android:paddingTop="3.5dp"
+            android:paddingBottom="3.5dp">
 
             <ImageView
                 android:layout_width="14dp"
                 android:layout_height="14dp"
                 android:src="@drawable/logo"
                 android:scaleType="fitCenter"
-                android:layout_marginEnd="5dp" />
+                android:layout_marginEnd="6dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/vazirmatn_bold"
+                android:includeFontPadding="false"
                 android:text="دانشجویار تبریز"
                 android:textColor="#38BDF8"
-                android:textSize="10.5sp"
+                android:textSize="11sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -53,13 +55,15 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:background="@drawable/widget_date_pill_bg"
+            android:fontFamily="@font/vazirmatn_bold"
+            android:includeFontPadding="false"
             android:paddingLeft="9dp"
             android:paddingRight="9dp"
-            android:paddingTop="3dp"
-            android:paddingBottom="3dp"
+            android:paddingTop="3.5dp"
+            android:paddingBottom="3.5dp"
             android:text="امروز"
             android:textColor="#A5B4FC"
-            android:textSize="10sp"
+            android:textSize="10.5sp"
             android:textStyle="bold" />
     </RelativeLayout>
 
@@ -71,7 +75,7 @@
         android:layout_weight="1"
         android:orientation="vertical"
         android:background="@drawable/widget_pill_bg"
-        android:padding="8dp"
+        android:padding="8.5dp"
         android:layout_marginBottom="6dp">
 
         <!-- Class Card Header: Status on Right, Time on Left -->
@@ -86,10 +90,12 @@
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
                 android:background="@drawable/widget_badge_blue"
-                android:paddingLeft="7dp"
-                android:paddingRight="7dp"
-                android:paddingTop="2dp"
-                android:paddingBottom="2dp"
+                android:fontFamily="@font/vazirmatn_bold"
+                android:includeFontPadding="false"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="3dp"
+                android:paddingBottom="3dp"
                 android:text="کلاس بعدی"
                 android:textColor="#38BDF8"
                 android:textSize="9.5sp"
@@ -101,9 +107,11 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
+                android:fontFamily="@font/vazirmatn_bold"
+                android:includeFontPadding="false"
                 android:text="--:--"
                 android:textColor="#E2E8F0"
-                android:textSize="10.5sp"
+                android:textSize="11sp"
                 android:textStyle="bold" />
         </RelativeLayout>
 
@@ -112,10 +120,12 @@
             android:id="@+id/tv_widget_class_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
+            android:layout_marginTop="3.5dp"
+            android:fontFamily="@font/vazirmatn_bold"
+            android:includeFontPadding="false"
             android:text="کلاس فعالی ثبت نشده است"
             android:textColor="#FFFFFF"
-            android:textSize="13sp"
+            android:textSize="13.5sp"
             android:textStyle="bold"
             android:maxLines="1"
             android:ellipsize="end" />
@@ -125,10 +135,12 @@
             android:id="@+id/tv_widget_class_location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="1dp"
+            android:layout_marginTop="2dp"
+            android:fontFamily="@font/vazirmatn"
+            android:includeFontPadding="false"
             android:text=""
             android:textColor="#94A3B8"
-            android:textSize="10sp"
+            android:textSize="10.5sp"
             android:maxLines="1"
             android:ellipsize="end" />
     </LinearLayout>
@@ -141,7 +153,7 @@
         android:layout_weight="1"
         android:orientation="vertical"
         android:background="@drawable/widget_card_exam_bg"
-        android:padding="8dp">
+        android:padding="8.5dp">
 
         <!-- Exam Card Header: Status on Right, Date on Left -->
         <RelativeLayout
@@ -155,10 +167,12 @@
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
                 android:background="@drawable/widget_badge_amber"
-                android:paddingLeft="7dp"
-                android:paddingRight="7dp"
-                android:paddingTop="2dp"
-                android:paddingBottom="2dp"
+                android:fontFamily="@font/vazirmatn_bold"
+                android:includeFontPadding="false"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="3dp"
+                android:paddingBottom="3dp"
                 android:text="امتحان بعدی"
                 android:textColor="#FBBF24"
                 android:textSize="9.5sp"
@@ -170,9 +184,11 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
+                android:fontFamily="@font/vazirmatn_bold"
+                android:includeFontPadding="false"
                 android:text="--"
                 android:textColor="#FDE68A"
-                android:textSize="10sp"
+                android:textSize="11sp"
                 android:textStyle="bold" />
         </RelativeLayout>
 
@@ -181,10 +197,12 @@
             android:id="@+id/tv_widget_exam_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
+            android:layout_marginTop="3.5dp"
+            android:fontFamily="@font/vazirmatn_bold"
+            android:includeFontPadding="false"
             android:text="امتحان ثبت‌نشده"
             android:textColor="#FFFFFF"
-            android:textSize="13sp"
+            android:textSize="13.5sp"
             android:textStyle="bold"
             android:maxLines="1"
             android:ellipsize="end" />
@@ -194,10 +212,12 @@
             android:id="@+id/tv_widget_exam_countdown"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="1dp"
+            android:layout_marginTop="2dp"
+            android:fontFamily="@font/vazirmatn"
+            android:includeFontPadding="false"
             android:text="وضعیت تحصیلی آرام"
             android:textColor="#94A3B8"
-            android:textSize="10sp"
+            android:textSize="10.5sp"
             android:maxLines="1"
             android:ellipsize="end" />
     </LinearLayout>

@@ -119,25 +119,25 @@ public class StudentAppWidgetProvider extends AppWidgetProvider {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_student_assistant);
 
         // Header
-        views.setTextViewText(R.id.tv_widget_date, state.todayDate);
+        views.setTextViewText(R.id.tv_widget_date, toPersianDigits(state.todayDate));
 
         // Class Card
         views.setTextViewText(R.id.tv_widget_class_status, state.classStatusBadge);
         views.setTextColor(R.id.tv_widget_class_status, state.classStatusTextColor);
         views.setInt(R.id.tv_widget_class_status, "setBackgroundResource", state.classStatusBadgeBgRes);
 
-        views.setTextViewText(R.id.tv_widget_class_time, state.classTime);
+        views.setTextViewText(R.id.tv_widget_class_time, toPersianDigits(state.classTime));
         views.setTextViewText(R.id.tv_widget_class_name, state.className);
-        views.setTextViewText(R.id.tv_widget_class_location, state.classLocation);
+        views.setTextViewText(R.id.tv_widget_class_location, toPersianDigits(state.classLocation));
 
         // Exam Card
         views.setTextViewText(R.id.tv_widget_exam_status, state.examStatusBadge);
         views.setTextColor(R.id.tv_widget_exam_status, state.examStatusTextColor);
         views.setInt(R.id.tv_widget_exam_status, "setBackgroundResource", state.examStatusBadgeBgRes);
 
-        views.setTextViewText(R.id.tv_widget_exam_date, state.examDate);
+        views.setTextViewText(R.id.tv_widget_exam_date, toPersianDigits(state.examDate));
         views.setTextViewText(R.id.tv_widget_exam_name, state.examName);
-        views.setTextViewText(R.id.tv_widget_exam_countdown, state.examCountdown);
+        views.setTextViewText(R.id.tv_widget_exam_countdown, toPersianDigits(state.examCountdown));
 
         // Click to launch App
         Intent intent = new Intent(context, MainActivity.class);
