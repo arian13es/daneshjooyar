@@ -34,6 +34,7 @@ android/*.jks
 # Application binaries
 *.apk
 *.aab
+*.zip
 releases/
 app/*.apk
 
